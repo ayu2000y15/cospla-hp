@@ -11,10 +11,10 @@
         <div class="container-box">
             <section class="cosplay-page">
                 <div class="cosplay-content">
-                    <h2>コスプレ衣装の販売・買取・レンタル</h2>
+                    <h2>オーダーメイド衣装製作</h2>
                     <div class="cosplay-content-box">
-                        <p>弊社で製作しましたコスプレ衣装の販売・買取・レンタルを行っております。</p>
-                        <p>あああああああああああああああああああああああああああ</p>
+                        <p>コスプレやアイドルの衣装、カフェの制服などオーダーメイドでの衣装製作を承っております。</p>
+                        <a href="{{ route('contact') }}">制作のご相談はこちら</a>
                     </div>
                 </div>
                 <div class="cosplay-grid">
@@ -27,10 +27,9 @@
 
                 <hr class="hr-line">
                 <div class="cosplay-content2">
-                    <h2>コスプレ・衣装の制作</h2>
+                    <h2>コスプレ衣装の販売・レンタル、買取</h2>
                     <div class="cosplay-content-box2">
-                        <p>コスプレやアイドルの衣装やカフェなどのコスチューム制作</p>
-                        <p>あああああああああああああああああああああああああああ</p>
+                        <p>弊社で製作したコスプレ衣装の販売・レンタル、買取を行っております。</p>
                     </div>
                 </div>
                 <div class="cosplay-grid">

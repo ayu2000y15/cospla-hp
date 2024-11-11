@@ -1,0 +1,622 @@
+html {
+    font-size: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans JP', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: white;
+    min-height: 100vh;
+    font-size: 1rem;
+    margin: 0;
+    background-image: url(../img/hp/background.png);
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+.hr-line {
+    border-top: 1px solid #583F99;
+    border-bottom: 1px solid #583F99;
+    margin: 1rem 0;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: 0.3s;
+}
+
+.main-nav {
+    display: flex;
+}
+
+.main-nav a {
+    color: #666;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: bold;
+}
+
+.main-nav a:hover {
+    color: #ff69b4;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: none;
+}
+
+.back-to-top:hover {
+    background-color: #0056b3;
+}
+
+.social-icons {
+    display: flex;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #ff69b4;
+    transform: scale(1.1);
+}
+
+.social-icons svg {
+    width: 20px;
+    height: 20px;
+    fill: #f5f5f5;
+    transition: fill 0.3s ease;
+}
+
+.social-icons a:hover svg {
+    fill: #ffffff;
+}
+
+.subpage-hero h1 {
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+    padding: 4rem 0 0;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgb(0,0,0,0.5);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1rem 4rem;
+}
+
+.container-box {
+    color:#583F99;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 2rem 2rem 1rem 2rem;
+    margin-left: 8rem;
+    margin-right: 8rem;
+    border-radius:40px;
+}
+
+.tabs {
+    width: 100%;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #8e44ad;
+}
+
+.tab-button {
+    padding: 0.75rem 1.5rem;
+    background-color: white;
+    color: #8e44ad;
+    border: 2px solid #8e44ad;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    white-space: nowrap;
+    margin-bottom: -2px;
+}
+
+.tab-button:hover,
+.tab-button.active {
+    background-color: #8e44ad;
+    color: white;
+    border-bottom: 2px solid #8e44ad;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.talent-header{
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 1rem;
+}
+
+.form-area{
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 1rem auto;
+}
+
+.form-area h2 {
+    margin-bottom: 0.8rem;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+}
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.required {
+    color: #ff69b4;
+    margin-left: 0.5rem;
+}
+
+.hr-line {
+    border-top: 1px solid #583F99;
+    border-bottom: 1px solid #583F99;
+    margin: 1rem 0;
+}
+
+.submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.5rem 2rem;
+    background-color: white;
+    color: #8e44ad;
+    border: 2px solid #8e44ad;
+    border-radius: 100px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    background-color: white;
+    color: #8e44ad;
+    border: 2px solid #8e44ad;
+    border-radius: 100px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    white-space: nowrap;
+    
+}
+
+.button:hover, .button.active,
+.submit-button:hover, .submit-button.active {
+    background-color: #8e44ad;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.check-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.check-box {
+    display: flex;
+    align-items: center;
+}
+
+.check-box input[type="radio"] {
+    margin-right: 5px;
+}
+
+.checkbox-label {
+    font-weight: normal;
+    font-size: 0.8rem;
+    margin-right: 2rem;
+}
+
+
+/* テーブルのスタイルを追加 */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* 横スクロールを可能にする */
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+}
+
+.table-container th, 
+.table-container td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container th {
+    background-color: #8e44ad;
+    text-align: center;
+    color:white;
+    font-weight: bold;
+}
+
+/* 奇数行と偶数行で背景色を変える */
+.table-container tr:nth-child(odd) {
+    background-color: #f4d3f4;
+}
+
+/* ホバー時の行のスタイル */
+.table-container tr:hover {
+    background-color: #e6e6e6;
+    cursor: pointer;
+}
+
+/* 選択された行のスタイル */
+.table-container tr.selected {
+    background-color: #d4e6f1;
+}
+
+/* リンクのスタイルを削除 */
+.table-container table a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.table-container tr:last-child td {
+    border-bottom: none;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.tag {
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.multi-button {
+    padding: 0.5rem 1rem;
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    width: 100px;
+}
+
+.multi-button:hover {
+    background-color: #9b59b6;
+    transform: translateY(-2px);
+}
+
+.multi-button.delete-button {
+    background-color: #e74c3c;
+}
+
+.multi-button.delete-button:hover {
+    background-color: #c0392b;
+}
+
+.multi-button.submit-button {
+    background-color: #3498db;
+    width: auto;
+    display: inline-block;
+}
+
+.multi-button.submit-button:hover {
+    background-color: #2980b9;
+}
+
+.tag-table{
+    margin-right: 1rem;
+}
+
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}
+
+/* カラーピッカー */
+.color-input-wrapper {
+    display: flex;
+    align-items: center;
+}
+.color-preview {
+    padding: 4px 12px;
+    border-radius: 9999px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+#TAG_COLOR {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+#TAG_COLOR::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+#TAG_COLOR::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        position: relative;
+        justify-content: center;
+    }
+
+    .logo {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .menu-toggle {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .main-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        display: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .main-nav.active {
+        display: flex;
+    }
+
+    .main-nav a {
+        margin: 0.5rem 0;
+    }
+
+    .social-icons {
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+
+    .social-icons a {
+        margin: 0 0.5rem;
+    }
+
+    .container-box {
+        padding-bottom: 4rem;
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    .tab-button {
+        width: 100%;
+        max-width: 250px;
+        font-size: 1rem;
+        padding: 0.5rem 2rem;
+    }
+
+    .form-area {
+        max-width: 100%;
+    }
+
+    .check-area {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .check-box {
+        margin-top: 0.5rem;
+    }
+
+    .button {
+        width: 100%;
+        max-width: 250px;
+
+        font-size: 1rem;
+        padding: 0.5rem 2rem;
+    }
+
+    table {
+        font-size: 0.9rem; /* フォントサイズを少し小さくする */
+    }
+    
+    th, td {
+        padding: 0.5rem; /* パディングを少し小さくする */
+    }
+    
+    /* タレントIDと削除フラグの列を非表示にする */
+    .table-container th:first-child,
+    .table-container td:first-child,
+    .table-container th:last-child,
+    .table-container td:last-child {
+        display: none;
+    }
+
+}
+
+@media (max-width: 576px) {
+    .header-container {
+        padding: 0.5rem;
+    }
+
+    .logo img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+
+/* さらに小さな画面向けのスタイル */
+@media (max-width: 480px) {
+    table {
+      font-size: 0.8rem; /* フォントサイズをさらに小さくする */
+    }
+
+    th, td {
+      padding: 0.4rem; /* パディングをさらに小さくする */
+    }
+
+    /* 退職日の列も非表示にする */
+    .table-container th:nth-child(4), 
+    .table-container td:nth-child(4) {
+    display: none;
+    }
+}

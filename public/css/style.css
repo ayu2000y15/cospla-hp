@@ -659,6 +659,16 @@ h2 {
     line-height: 1.5;
 }
 
+.cosplay-content-box a{
+    color: #6bbdf0;
+    text-decoration: none;
+}
+
+.cosplay-content-box a:hover{
+    color: #0688d8;
+    text-decoration: none;
+}
+
 .profile-content {
     display: flex;
     flex-wrap: wrap;

@@ -11,8 +11,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $talent = Talent::active()->take(4)->get();
-        $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()->take(6)->get();
+        $talent = Image::where('VIEW_FLG', '01')->active()->visible()->whereRaw('PRIORITY > 0')->orderBy('PRIORITY')->take(4)->get();
+        $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()->orderBy('PRIORITY')->take(6)->get();
         $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()->get();
         $slidesCnt = $slides->count();
         $newsTitle = News::active()->orderBy('POST_DATE', 'desc')->take(5)->get();

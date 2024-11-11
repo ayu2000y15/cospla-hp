@@ -34,7 +34,7 @@ class Talent extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'talent_tag', 'TALENT_ID', 'TAG_ID');
+        return $this->belongsToMany(Tag::class, 'talent_tags', 'TALENT_ID', 'TAG_ID');
     }
 
     public function images()

@@ -3,7 +3,7 @@
         <div class="footer-content">
             <div class="footer-logo">
             @if($logoImg)
-                <img src="{{ $logoImg->FILE_PATH . $logoImg->FILE_NAME }}" alt="{{ $logoImg->ALT }}">
+                <img src="{{ asset($logoImg->FILE_PATH . $logoImg->FILE_NAME) }}" alt="{{ $logoImg->ALT }}">
             @else
                 COSPLATFORM
             @endif
@@ -38,7 +38,7 @@
         </div>
         <p class="copyright">&copy; {{ date('Y') }} COSPLATFORM. All rights reserved.</p>
         <div class="admin">
-            <a href="{{ route('admin.dashboard') }}">管理者ページ</a>
+            <a href="{{ route('admin') }}">管理者ページ</a>
         </div>
     </div>
 </footer>
