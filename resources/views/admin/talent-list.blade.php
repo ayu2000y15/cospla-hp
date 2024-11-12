@@ -3,7 +3,7 @@
     <p>※タレント名をクリックすることでタレント詳細ページに遷移します。<br>
         　タレント詳細ページではタレントの写真や経歴、ハッシュタグの情報の更新が行えます。<br></p>
     <br>
-    <div class="table-container">
+    <div class="table-container talent">
         <table>
             <tr>
                 <th>タレントID</th>
@@ -13,6 +13,8 @@
                 <th>在籍状況</th>
             </tr>
             @foreach ($talentList as $talent)
+            @csrf
+            @method('PUT')
             <tr data-talent-id="{{ $talent->TALENT_ID }}">
                 <td>{{ $talent->TALENT_ID }}</td>
                 <td>{{ $talent->LAYER_NAME }}</td>
@@ -35,7 +37,10 @@
     </div>
 </div>
 
-@section('scripts')
+@push('scripts')
+<script src="{{ asset('js/admin-script.js') }}"></script>
+@endpush
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const table = document.querySelector('table');
@@ -45,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             row.classList.toggle('selected');
             const form = document.createElement('form');
             form.method = 'post';
-            form.action = '';
+            form.action = '{{ route( 'admin.talent.detail' )}}';
             const talentIdInput = document.createElement('input');
             talentIdInput.type = 'hidden';
             talentIdInput.name = 'TALENT_ID';
@@ -62,4 +67,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection
+@endpush

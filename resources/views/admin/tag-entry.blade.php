@@ -6,7 +6,7 @@
             　ここではハッシュタグの登録や削除が行えます。</p>
 
         <h3>◆タグを新しく作成</h3>
-        <form action="{{ route('admin.tag.store') }}" method="POST">
+        <form action="{{ route('admin.tag.store') }}" onsubmit="return checkSubmit('登録');" method="POST">
             @csrf
             <div class="form-group">
                 <label for="TAG_NAME">タグ名<span class="required"></span></label>
@@ -36,7 +36,7 @@
                         </span>
                     </td>
                     <td>
-                        <form action="{{ route('admin.tag.delete', $tag->TAG_ID) }}" method="POST">
+                        <form action="{{ route('admin.tag.delete', $tag->TAG_ID) }}"onsubmit="return checkSubmit('削除');"  method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="multi-button delete-button">削除する</button>
@@ -49,10 +49,13 @@
     </div>
 </main>
 
-@section('scripts')
+@push('scripts')
+<script src="{{ asset('js/admin-script.js') }}"></script>
+@endpush
+@push('scripts')
 <script>
 document.getElementById('TAG_COLOR').addEventListener('input', function(e) {
     document.getElementById('colorPreview').style.backgroundColor = e.target.value;
 });
 </script>
-@endsection
+@endpush

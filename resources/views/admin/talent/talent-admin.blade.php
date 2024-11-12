@@ -10,7 +10,7 @@
     <div class="container">
         <div class="container-box">
             <div class="talent-header">
-                <a href="{{ route('admin.index') }}">管理画面トップに戻る</a>
+                <a href="{{ route('admin') }}">管理画面トップに戻る</a>
                 <h3>タレントID：{{ $talent->TALENT_ID }}</h3>
                 <h3>レイヤーネーム：{{ $talent->LAYER_NAME }}</h3>
             </div>
@@ -31,31 +31,12 @@
                     <button class="tab-button {{ $activeTab === 'talent-retire' ? 'active' : '' }}" data-tab="talent-retire">タレント退職</button>
                 </div>
 
-                <div class="tab-content {{ $activeTab === 'talent-edit' ? 'active' : '' }}" id="talent-edit">
-                    @include('admin.talent.edit')
-                </div>
-
-                <div class="tab-content {{ $activeTab === 'talent-photos' ? 'active' : '' }}" id="talent-photos">
-                    @include('admin.talent.photos')
-                </div>
-
-                <div class="tab-content {{ $activeTab === 'talent-career' ? 'active' : '' }}" id="talent-career">
-                    @include('admin.talent.career')
-                </div>
-
-                <div class="tab-content {{ $activeTab === 'talent-tag' ? 'active' : '' }}" id="talent-tag">
-                    @include('admin.talent.tag')
-                </div>
-
-                <div class="tab-content {{ $activeTab === 'talent-retire' ? 'active' : '' }}" id="talent-retire">
-                    @include('admin.talent.retire')
-                </div>
             </div>
         </div>
     </div>
 </main>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('js/admin-script.js') }}"></script>
-@endsection
+@endpush

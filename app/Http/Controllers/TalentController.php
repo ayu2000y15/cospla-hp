@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use App\Models\Talent;
-use App\Models\CareerCategory;
-use App\Models\TalentTag;
+use App\Models\Company;
 use App\Models\TalentCareer;
 use App\Models\TalentInfoControl;
 use Illuminate\Http\Request;
@@ -38,8 +37,9 @@ class TalentController extends Controller
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG', 'S003')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $sns = Company::first();
 
-        return view('talent.index', compact('talentImg', 'topImg', 'backImg', 'logoImg'));
+        return view('talent.index', compact('talentImg', 'topImg', 'backImg', 'logoImg','sns'));
     }
 
     public function show(Request $request)
@@ -72,6 +72,7 @@ class TalentController extends Controller
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG','S003')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $sns = Company::first();
 
         return view('talent.profile', compact(
             'talent',
@@ -83,7 +84,8 @@ class TalentController extends Controller
             'talentCareer',
             'topImg',
             'backImg',
-            'logoImg'
+            'logoImg',
+            'sns'
         ));
     }
 }

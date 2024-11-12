@@ -6,7 +6,7 @@
             　写真を登録しないとHPには表示されません。
         </p>
         <hr class="hr-line">
-        <form action="{{ route('admin.talent.store') }}" method="POST">
+        <form action="{{ route('admin.talent.store') }}" onsubmit="return checkSubmit('登録');" method="POST">
             @csrf
             <div class="form-group">
                 <label for="TALENT_NAME">タレント名（本名）<span class="required">※HPには表示されません</span></label>
@@ -265,6 +265,6 @@
     </div>
 </main>
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('js/admin-script.js') }}"></script>
-@endsection
+@endpush

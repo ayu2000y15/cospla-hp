@@ -7,38 +7,83 @@ use App\Models\Image;
 
 class FileUploadService
 {
-    public function uploadFiles($files)
+    public function uploadFiles($files, $uploadDir, $talentId)
     {
+        //フォルダを作成する
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+            // 単一のファイルの場合は配列に変換
         if (!is_array($files)) {
             $files = [$files];
         }
 
-        $uploadedFiles = [];
         foreach ($files as $file) {
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = 'uploads/';
-            
-            if ($file->storeAs('public/' . $filePath, $fileName)) {
-                Image::create([
-                    'FILE_NAME' => $fileName,
-                    'FILE_PATH' => $filePath,
-                    'VIEW_FLG' => '0', // デフォルト値
-                    'PRIORITY' => 0 // デフォルト値
-                ]);
-                $uploadedFiles[] = $fileName;
+            // ファイルが有効かチェック
+            if ($file->isValid()) {
+                // 元のファイル名
+                $originalFileName = $file->getClientOriginalName();
+                
+                // ファイルの拡張子
+                $extension = $file->getClientOriginalExtension();
+                
+                // ファイルのMIMEタイプ
+                $mimeType = $file->getMimeType();
+                
+                // ファイルサイズ（バイト）
+                $size = $file->getSize();
+                
+                // ファイルサイズの制限（5MB）
+                $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                
+                if ($size > $maxSize) {
+                    \Log::warning("ファイルサイズが制限を超えています: {$originalFileName}, サイズ: {$size}");
+                    continue; // 次のファイルへ
+                }
+                
+                // 許可されるMIMEタイプ
+                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                
+                if (!in_array($mimeType, $allowedMimeTypes)) {
+                    \Log::warning("無効なファイルタイプです: {$originalFileName}, タイプ: {$mimeType}");
+                    continue; // 次のファイルへ
+                }
+                
+                try {
+                    // ユニークなIDを生成
+                    $uniqueId = uniqid();
+                    
+                    // 新しいファイル名を生成（元のファイル名 + ユニークID + 拡張子）
+                    $newFileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . $uniqueId . '.' . $extension;
+                    
+                    // ファイルを保存
+                    $storedPath = $file->storeAs($uploadDir, $newFileName, 'public');
+                    
+                    // DBへ保存
+                    Image::create([
+                        'FILE_NAME' => $newFileName,
+                        'FILE_PATH' => 'storage/img/' . basename($uploadDir) . '/',
+                        'TALENT_ID' => $talentId,
+                        'VIEW_FLG' => '00', // デフォルト値
+                        'PRIORITY' => 0 // デフォルト値
+                    ]);
+                    
+                    \Log::info("ファイルがアップロードされました: 元のファイル名: {$originalFileName}, 新しいファイル名: {$newFileName}, サイズ: {$size}, タイプ: {$mimeType}, 保存先: {$storedPath}");
+                } catch (\Exception $e) {
+                    \Log::error("ファイルのアップロード中にエラーが発生しました: {$originalFileName}. エラー: " . $e->getMessage());
+                }
+            } else {
+                \Log::warning("無効なファイルです: {$file->getClientOriginalName()}");
             }
         }
-
-        if (count($uploadedFiles) > 0) {
-            return ['success' => true, 'files' => $uploadedFiles];
-        } else {
-            return ['success' => false, 'message' => 'ファイルのアップロードに失敗しました。'];
-        }
+        return ['success' => true, 'message' => 'ファイルが正常にアップロードされました。'];
     }
 
     public function deleteFile($filePath)
     {
-        if (Storage::delete('public/' . $filePath)) {
+        
+        if (Storage::disk('public')->delete(str_replace('storage/','',$filePath))) {
             return true;
         }
         return false;

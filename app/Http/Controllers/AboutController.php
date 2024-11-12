@@ -16,7 +16,8 @@ class AboutController extends Controller
         $aboutImg = Image::where('VIEW_FLG', 'S301')->active()->visible()->get();
         $backImg = Image::where('VIEW_FLG', 'S002')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $sns = Company::first();
 
-        return view('about', compact('topImg', 'company', 'aboutImg', 'backImg', 'logoImg'));
+        return view('about', compact('topImg', 'company', 'aboutImg', 'backImg', 'logoImg','sns'));
     }
 }

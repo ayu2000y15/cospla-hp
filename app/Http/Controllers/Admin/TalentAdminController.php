@@ -5,20 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Talent;
-use App\Models\TalentInfoCtl;
-use App\Models\TalentTag;
+use App\Models\TalentInfoControl;
+use App\Models\Image;
 
 class TalentAdminController extends Controller
 {
     public function list()
     {
         $talentList = Talent::all()->sortByDesc('TALENT_ID');
-        return view('admin.talent.list', compact('talentList'));
+        return view('admin', compact('talentList'));
     }
 
     public function entry()
     {
-        return view('admin.talent.entry');
+        return view('admin');
     }
 
     public function store(Request $request)
@@ -32,14 +32,30 @@ class TalentAdminController extends Controller
             'TEL_NO', 'SNS_1', 'SNS_2', 'SNS_3'
         ]);
 
-        $viewInfo = $request->only([
-            'FOLLOWERS_FLG', 'HEIGHT_FLG', 'AGE_FLG', 'BIRTHDAY_FLG',
-            'THREE_SIZES_B_FLG', 'THREE_SIZES_W_FLG', 'THREE_SIZES_H_FLG',
-            'HOBBY_SPECIALTY_FLG', 'COMMENT_FLG', 'SNS_1_FLG', 'SNS_2_FLG', 'SNS_3_FLG'
-        ]);
-
+        //talentsテーブルに登録
         $talent = Talent::create($talentInfo);
-        $talent->infoCtl()->create($viewInfo);
+        $talentId = Talent::select('TALENT_ID')->max('TALENT_ID');
+        $threeSizeFlg = '0';
+        if($request->THREE_SIZES_B_FLG == '1' || $request->THREE_SIZES_W_FLG == '1' || $request->THREE_SIZES_H_FLG == '1'){
+            $threeSizeFlg = '1';
+        }
+        //talent_info_controlsテーブルに登録
+        TalentInfoControl::create([
+            'TALENT_ID'          =>  $talentId                      ,
+            'FOLLOWERS_FLG'      =>  $request->FOLLOWERS_FLG        ,
+            'HEIGHT_FLG'         =>  $request->HEIGHT_FLG           ,
+            'AGE_FLG'            =>  $request->AGE_FLG              ,
+            'BIRTHDAY_FLG'       =>  $request->BIRTHDAY_FLG         ,
+            'THREE_SIZES_FLG'    =>  $threeSizeFlg                  ,
+            'THREE_SIZES_B_FLG'  =>  $request->THREE_SIZES_B_FLG    ,
+            'THREE_SIZES_W_FLG'  =>  $request->THREE_SIZES_W_FLG    ,
+            'THREE_SIZES_H_FLG'  =>  $request->THREE_SIZES_H_FLG    ,
+            'HOBBY_SPECIALTY_FLG'=>  $request->HOBBY_SPECIALTY_FLG  ,
+            'COMMENT_FLG'        =>  $request->COMMENT_FLG          ,
+            'SNS_1_FLG'          =>  $request->SNS_1_FLG            ,
+            'SNS_2_FLG'          =>  $request->SNS_2_FLG            ,
+            'SNS_3_FLG'          =>  $request->SNS_3_FLG
+        ]);
 
         if ($request->COS_FLG == '1' || $request->COS_FLG == '3') {
             $talent->tags()->attach(1);
@@ -48,14 +64,18 @@ class TalentAdminController extends Controller
             $talent->tags()->attach(2);
         }
 
-        return redirect()->route('admin.talent.list')->with('message', 'タレントが登録されました。タレント詳細ページで各種登録を行ってください。');
+        return redirect()->route('admin')
+        ->with('message', 'タレントが登録されました。タレント詳細ページで各種登録を行ってください。');
     }
 
-    public function detail($id)
+    public function detail(Request $request)
     {
-        $talent = Talent::findOrFail($id);
+        $talent = Talent::findOrFail($request->TALENT_ID);
         $activeTab = request('active_tab', 'talent-edit');
-        return view('admin.talent.admin', compact('talent', 'activeTab'));
+        //ロゴ
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+
+        return view('admin.talent.talent-admin', compact('talent', 'activeTab','logoImg'));
     }
 
     public function update(Request $request, $id)

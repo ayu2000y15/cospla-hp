@@ -70,10 +70,6 @@ function checkSubmit(type){
     }
 }
 
-function checkSubmit(action) {
-    return confirm(action ? `この${itemName}を${action}してもよろしいですか？` : 'この操作を実行してもよろしいですか？');
-}
-
 function resetForm() {
     document.getElementById('adminForm').reset();
     document.getElementById('ITEM_ID').value = '';
@@ -89,3 +85,53 @@ window.addEventListener('scroll', function() {
         backToTopButton.style.display = 'none';
     }
 });
+
+//ファイルアップロードのチェック
+function updateFileNames(input) {
+    const filesDiv = document.getElementById('selected-files');
+    filesDiv.innerHTML = '';
+    if (input.files && input.files.length > 0) {
+        const fileList = document.createElement('ul');
+        fileList.className = 'file-list';
+        for (let i = 0; i < input.files.length; i++) {
+            const li = document.createElement('li');
+            const file = input.files[i];
+            const fileSize = (file.size / 1024 / 1024).toFixed(2); // サイズをMBに変換
+            if (!file.type.startsWith('image/')) {
+                li.textContent = `${file.name} - エラー: 画像ファイルではありません`;
+                li.style.color = 'red';
+                hasError = true;
+            } else if (fileSize > 5) {
+                li.textContent = `${file.name} (${fileSize} MB) - エラー: ファイルサイズが5MBを超えています`;
+                li.style.color = 'red';
+                hasError = true;
+            } else {
+                li.textContent = `${file.name} (${fileSize} MB)`;
+            }
+            fileList.appendChild(li);
+        }
+        filesDiv.appendChild(fileList);
+    }
+}
+
+
+// Image Preview Modal
+function openImagePreview(imgSrc) {
+    const modal = document.getElementById('imagePreviewModal');
+    const modalImg = document.getElementById('previewImage');
+    modal.style.display = 'block';
+    modalImg.src = imgSrc;
+}
+
+const modal = document.getElementById('imagePreviewModal');
+const span = document.getElementsByClassName('close')[0];
+
+span.onclick = function() {
+    modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}

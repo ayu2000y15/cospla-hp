@@ -39,7 +39,6 @@ Route::get('/cosplay', [CosplayController::class, 'index'])->name('cosplay');
 
 // Contactページ
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 Route::get('/contact/ok', [ContactController::class, 'ok'])->name('contact.ok');
 
 // Newsページ
@@ -48,17 +47,16 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 // 管理者ページ
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 // タレント管理
-Route::get('/admin/talent', [TalentAdminController::class, 'list'])->name('admin.talent.list');
-Route::get('/admin/talent/entry', [TalentAdminController::class, 'entry'])->name('admin.talent.entry');
-Route::post('/admin/talent', [TalentAdminController::class, 'store'])->name('admin.talent.store');
-Route::get('/admin/talent/{id}', [TalentAdminController::class, 'detail'])->name('admin.talent.detail');
-Route::put('/admin/talent/{id}', [TalentAdminController::class, 'update'])->name('admin.talent.update');
-Route::put('/admin/talent/{id}/retire', [TalentAdminController::class, 'retire'])->name('admin.talent.retire');
+Route::get('/admin/talent/list', [TalentAdminController::class, 'list'])->name('admin.talent.list');
+Route::post('/admin/talent/store', [TalentAdminController::class, 'store'])->name('admin.talent.store');
+Route::post('/admin/talent-admin', [TalentAdminController::class, 'detail'])->name('admin.talent.detail');
+Route::post('/admin/talent-admin/edit', [TalentAdminController::class, 'update'])->name('admin.talent.edit');
+Route::post('/admin/talent-admin/retire', [TalentAdminController::class, 'retire'])->name('admin.talent.retire');
 
 // ニュース管理
 Route::get('/admin/news', [NewsAdminController::class, 'entry'])->name('admin.news.entry');
 Route::post('/admin/news', [NewsAdminController::class, 'store'])->name('admin.news.store');
-Route::put('/admin/news/{id}', [NewsAdminController::class, 'update'])->name('admin.news.update');
+Route::post('/admin/news/{id}', [NewsAdminController::class, 'update'])->name('admin.news.update');
 Route::delete('/admin/news/{id}', [NewsAdminController::class, 'delete'])->name('admin.news.delete');
 
 // 写真管理
