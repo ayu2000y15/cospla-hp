@@ -10,7 +10,9 @@ class Image extends Model
     protected $primaryKey = 'FILE_NAME';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'FILE_NAME', 'TALENT_ID', 'FILE_PATH', 'VIEW_FLG', 'PRIORITY',

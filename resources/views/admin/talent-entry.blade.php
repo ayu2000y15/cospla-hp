@@ -47,7 +47,21 @@
             </div>
 
             <!-- ここから表示情報 -->
-            <!-- 以下、フォームの残りの部分を同様に変換します -->
+            <div class="form-group">
+                <label for="STREAM_FLG">配信可・不可<span class="required"></span></label>
+                <select id="STREAM_FLG" name="STREAM_FLG">
+                    <option value="0">配信不可</option>
+                    <option value="1">配信可</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="COS_FLG">コスプレの種類（男装、女装）<span class="required"></span></label>
+                <select id="COS_FLG" name="COS_FLG">
+                    <option value="1">男装</option>
+                    <option value="2">女装</option>
+                    <option value="3">男装・女装</option>
+                </select>
+            </div>
             <div class="form-group">
                 <div class="check-area">
                     <label for="FOLLOWERS">フォロワー数（およそ）<span class="required"></span></label>
@@ -63,21 +77,6 @@
                     </div>
                 </div>
                 <input type="number" id="FOLLOWERS" name="FOLLOWERS" placeholder="100" />
-            </div>
-            <div class="form-group">
-                <label for="STREAM_FLG">配信可・不可<span class="required"></span></label>
-                <select id="STREAM_FLG" name="STREAM_FLG">
-                    <option value="0">配信不可</option>
-                    <option value="1">配信可</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="COS_FLG">コスプレの種類（男装、女装）<span class="required"></span></label>
-                <select id="COS_FLG" name="COS_FLG">
-                    <option value="1">男装</option>
-                    <option value="2">女装</option>
-                    <option value="3">男装・女装</option>
-                </select>
             </div>
             <div class="form-group">
                 <div class="check-area">

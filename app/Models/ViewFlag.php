@@ -38,9 +38,10 @@ class ViewFlag extends Model
      * タイムスタンプを更新するカラム名
      *
      * @var array
-     */
+     */    
     const CREATED_AT = 'INS_DATE';
     const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     /**
      * 複数代入可能な属性

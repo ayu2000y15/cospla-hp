@@ -9,11 +9,6 @@ class FileUploadService
 {
     public function uploadFiles($files, $uploadDir, $talentId)
     {
-        //フォルダを作成する
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
             // 単一のファイルの場合は配列に変換
         if (!is_array($files)) {
             $files = [$files];

@@ -10,7 +10,9 @@ class Company extends Model
     protected $primaryKey = 'COMPANY_NAME';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'COMPANY_NAME', 'ESTABLISHMENT_DATE', 'DIRECTOR', 'POST_CODE',

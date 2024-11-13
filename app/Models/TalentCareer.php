@@ -8,7 +8,9 @@ class TalentCareer extends Model
 {
     protected $table = 'talent_careers';
     protected $primaryKey = 'CAREER_ID';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'TALENT_ID', 'CAREER_CATEGORY_ID', 'CONTENT', 'DETAIL',

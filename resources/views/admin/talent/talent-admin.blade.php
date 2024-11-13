@@ -16,21 +16,47 @@
             </div>
 
             @if (session('message'))
-                <div class="success-message">{{ session('message') }}</div>
+            <div class="success-message">{{ session('message') }}</div>
             @endif
             @if (session('error'))
-                <div class="error-message">{{ session('error') }}</div>
+            <div class="error-message">{{ session('error') }}</div>
             @endif
 
             <div class="tabs">
                 <div class="tab-buttons">
-                    <button class="tab-button {{ $activeTab === 'talent-edit' ? 'active' : '' }}" data-tab="talent-edit">タレント情報変更</button>
-                    <button class="tab-button {{ $activeTab === 'talent-photos' ? 'active' : '' }}" data-tab="talent-photos">タレント写真登録・変更</button>
-                    <button class="tab-button {{ $activeTab === 'talent-career' ? 'active' : '' }}" data-tab="talent-career">タレント経歴登録・変更</button>
-                    <button class="tab-button {{ $activeTab === 'talent-tag' ? 'active' : '' }}" data-tab="talent-tag">ハッシュタグ登録・変更</button>
-                    <button class="tab-button {{ $activeTab === 'talent-retire' ? 'active' : '' }}" data-tab="talent-retire">タレント退職</button>
+                    <button class="tab-button {{ session('activeTabT') === 'talent-edit' ? 'active' : '' }}"
+                        data-tab="talent-edit">タレント情報変更</button>
+                    <button class="tab-button {{ session('activeTabT') === 'talent-photos' ? 'active' : '' }}"
+                        data-tab="talent-photos">タレント写真登録・変更</button>
+                    <button class="tab-button {{ session('activeTabT') === 'talent-career' ? 'active' : '' }}"
+                        data-tab="talent-career">タレント経歴登録・変更</button>
+                    <button class="tab-button {{ session('activeTabT') === 'talent-tag' ? 'active' : '' }}"
+                        data-tab="talent-tag">ハッシュタグ登録・変更</button>
+                    <button class="tab-button {{ session('activeTabT') === 'talent-retire' ? 'active' : '' }}"
+                        data-tab="talent-retire">タレント退職</button>
                 </div>
 
+                <div class="tab-content {{ session('activeTabT') === 'talent-edit' ? 'active' : '' }}" id="talent-edit">
+                    @include('admin.talent.talent-edit')
+                </div>
+
+                <div class="tab-content {{ session('activeTabT') === 'talent-photos' ? 'active' : '' }}"
+                    id="talent-photos">
+                    @include('admin.talent.talent-photos')
+                </div>
+
+                <div class="tab-content {{ session('activeTabT') === 'talent-career' ? 'active' : '' }}" id="talent-career">
+                    @include('admin.talent.talent-career')
+                </div>
+
+                <div class="tab-content {{ session('activeTabT') === 'talent-tag' ? 'active' : '' }}"
+                    id="talent-tag">
+                    @include('admin.talent.talent-tag')
+                </div>
+
+                <div class="tab-content {{ session('activeTabT') === 'talent-retire' ? 'active' : '' }}" id="talent-retire">
+                    @include('admin.talent.talent-retire')
+                </div>
             </div>
         </div>
     </div>

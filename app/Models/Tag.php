@@ -8,7 +8,9 @@ class Tag extends Model
 {
     protected $table = 'tags';
     protected $primaryKey = 'TAG_ID';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'TAG_NAME', 'TAG_COLOR', 'SPARE1', 'SPARE2', 'DEL_FLG'

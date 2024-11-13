@@ -8,7 +8,10 @@ class Talent extends Model
 {
     protected $table = 'talents';
     protected $primaryKey = 'TALENT_ID';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
+
 
     protected $fillable = [
         'TALENT_NAME', 'TALENT_FURIGANA_JP', 'TALENT_FURIGANA_EN',

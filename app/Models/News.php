@@ -8,7 +8,9 @@ class News extends Model
 {
     protected $table = 'news';
     protected $primaryKey = 'NEWS_ID';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'TITLE', 'CONTENT', 'POST_DATE', 'SPARE1', 'SPARE2', 'DEL_FLG'

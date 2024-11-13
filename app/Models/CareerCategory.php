@@ -8,7 +8,9 @@ class CareerCategory extends Model
 {
     protected $table = 'career_categories';
     protected $primaryKey = 'CAREER_CATEGORY_ID';
-    public $timestamps = false;
+    const CREATED_AT = 'INS_DATE';
+    const UPDATED_AT = 'UPD_DATE';
+    public $timestamps = true;
 
     protected $fillable = [
         'CAREER_CATEGORY_NAME', 'SPARE1', 'SPARE2', 'DEL_FLG'
