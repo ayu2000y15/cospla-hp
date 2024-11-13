@@ -16,7 +16,7 @@ body {
     min-height: 100vh;
     font-size: 1rem;
     margin: 0;
-    background-image: url(../img/hp/background.png);
+    background-image: url(../storage/img/hp/background.png);
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;

@@ -40,7 +40,7 @@
                     @endforeach
                 </div>
                 <hr class="hr-line">
-                <img src="{{ asset('img/hp/logo1.png') }}" alt="ロゴ" style="width:200px; height:200px; margin-left:4rem;">
+                <img src="{{ asset('storage/img/hp/logo1.png') }}" alt="ロゴ" style="width:200px; height:200px; margin-left:4rem;">
             </section>
         </div>
     </div>
