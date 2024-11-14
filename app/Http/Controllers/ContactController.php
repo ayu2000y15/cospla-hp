@@ -44,22 +44,10 @@ class ContactController extends Controller
 
         //管理者に通知メールを知らせる(CompanyのSPARE1とSPARE2に入っているメールアドレスに送信)
         $sendMail = Company::select('SPARE1', 'SPARE2')->first();
-        if(!is_null($sendMail['SPARE1']) || !empty($sendMail['SPARE1'])){
-            if(!is_null($sendMail['SPARE2']) || !empty($sendMail['SPARE2'])){
-                \Mail::to($sendMail['SPARE1'])
-                ->cc($sendMail['SPARE2'])
-                ->send(new ContactSendmail($contact,'contact.mail_kanri'));
-                $request->session()->regenerateToken();
-            }else{
-                \Mail::to($sendMail['SPARE1'])
-                ->send(new ContactSendmail($contact,'contact.mail_kanri'));
-                $request->session()->regenerateToken();
-            }
-        }
-
+        \Mail::send(new ContactSendmail($contact,'contact.mail_kanri', $sendMail));
         //入力されたメールに返信する
-        \Mail::to($request->email)
-        ->send(new ContactSendmail($contact,'contact.mail'));
+        \Mail::send(new ContactSendmail($contact,'contact.mail', null));
+
         $request->session()->regenerateToken();
         return redirect()->route('contact')
         ->with('message', 'フォームが送信されました。返答をお待ちください。');
