@@ -43,7 +43,7 @@
                 </div>
                 <div class="confirm-group">
                     <label>質問内容 または 自己PR等</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{!! nl2br(e($contact['CONTENT'])) !!}</p>
+                    <p style="font-size:1.3rem; margin-left: 3rem; text-align: left; ">{!! nl2br(e($contact['CONTENT'])) !!}</p>
                 </div>
 
                 <div class="button-group">
@@ -83,7 +83,7 @@ body {
     color:black;
     margin: 0;
     line-height: 1;
-    display: inline-block
+    display: inline-block;
 }
 
 .button-group {
