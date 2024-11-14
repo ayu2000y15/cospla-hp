@@ -40,6 +40,9 @@ class CreateCompaniesTable extends Migration
             'POST_CODE' => '105-0014',
             'LOCATION' => '東京都港区芝１丁目９−２',
             'CONTENT' => 'タレントマネジメント、衣装販売、レンタル、製作',
+            'SNS_1' => 'https://x.com/cosplatform',
+            'SNS_2' => 'https://instagram.com/cosplatform',
+            'SNS_3' => 'https://tiktok.com/@cosplatform',
             'INS_DATE' => DB::raw('CURRENT_TIMESTAMP'),
             'UPD_DATE' => DB::raw('CURRENT_TIMESTAMP'),
             'DEL_FLG' => '0'
