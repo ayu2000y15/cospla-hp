@@ -31,13 +31,18 @@ class TalentAdminController extends Controller
         return view('admin', compact('talentList'));
     }
 
-    public function entry()
+    public function delete(Request $request)
     {
-        return view('admin');
+        Talent::where('TALENT_ID', $request->TALENT_ID)->delete();
+        session()->flash('activeTab', 'talent-list');
+        return redirect()->route('admin')
+        ->with('message', 'タレントが削除されました。');
+
     }
 
     public function store(Request $request)
     {
+
         $talentInfo = $request->only([
             'TALENT_NAME', 'TALENT_FURIGANA_JP', 'TALENT_FURIGANA_EN',
             'LAYER_NAME', 'LAYER_FURIGANA_JP', 'LAYER_FURIGANA_EN',
@@ -46,6 +51,11 @@ class TalentAdminController extends Controller
             'HOBBY_SPECIALTY', 'COMMENT', 'AFFILIATION_DATE', 'MAIL',
             'TEL_NO', 'SNS_1', 'SNS_2', 'SNS_3'
         ]);
+
+        if($request->BIRTHDAY_FLG == '2'){
+            $talentInfo['AGE'] = null;
+            $request->AGE_FLG = '0';
+        }
 
         //talentsテーブルに登録
         $talent = Talent::create($talentInfo);
@@ -174,6 +184,16 @@ class TalentAdminController extends Controller
     {
         $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
         $talentInfoCtl = TalentInfoControl::where('TALENT_ID', $request->TALENT_ID)->first();
+        $retirementDate = '2099-01-01';
+        $delFlg = '0';
+        if($request->RETIREMENT_DATE <> null){
+            $retirementDate = $request->RETIREMENT_DATE;
+            $delFlg = '1';
+        }
+        if($request->BIRTHDAY_FLG == '2'){
+            $request->AGE = null;
+            $request->AGE_FLG = '0';
+        }
         $talent->update([
             'TALENT_ID'            => $request->TALENT_ID,
             'TALENT_NAME'          => $request->TALENT_NAME,
@@ -194,12 +214,13 @@ class TalentAdminController extends Controller
             'HOBBY_SPECIALTY'      => $request->HOBBY_SPECIALTY,
             'COMMENT'              => $request->COMMENT,
             'AFFILIATION_DATE'     => $request->AFFILIATION_DATE,
-            'RETIREMENT_DATE'      => $request->RETIREMENT_DATE,
+            'RETIREMENT_DATE'      => $retirementDate,
             'MAIL'                 => $request->MAIL,
             'TEL_NO'               => $request->TEL_NO,
             'SNS_1'                => $request->SNS_1,
             'SNS_2'                => $request->SNS_2,
-            'SNS_3'                => $request->SNS_3
+            'SNS_3'                => $request->SNS_3,
+            'DEL_FLG'              => $delFlg
         ]);
 
         $threeSizeFlg = '0';

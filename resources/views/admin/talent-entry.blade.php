@@ -96,7 +96,7 @@
             </div>
             <div class="form-group">
                 <div class="check-area">
-                    <label for="AGE">年齢<span class="required"></span></label>
+                    <label for="AGE">年齢<span class="required">※誕生日をもとに入力するため入力は不要です。</span></label>
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="AGE_FLG" value="0" checked />
@@ -108,11 +108,11 @@
                         </label>
                     </div>
                 </div>
-                <input type="number" id="AGE" name="AGE" placeholder="25" />
+                <input type="number" id="AGE" name="AGE" readonly/>
             </div>
             <div class="form-group">
                 <div class="check-area">
-                    <label for="BIRTHDAY">誕生日<span class="required"></span></label>
+                    <label for="BIRTHDAY">誕生日<span class="required">※年を非公開にする場合は年を入力しても表示されません。</span></label>
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="BIRTHDAY_FLG" value="0" checked />
@@ -128,7 +128,7 @@
                         </label>
                     </div>
                 </div>
-                <input type="date" id="BIRTHDAY" name="BIRTHDAY" />
+                <input type="date" id="BIRTHDAY" name="BIRTHDAY" onchange="calculateAge()"/>
             </div>
             <div class="form-group">
                 <div class="check-area">
@@ -266,4 +266,16 @@
 
 @push('scripts')
 <script src="{{ asset('js/admin-script.js') }}"></script>
+<script>
+    function calculateAge() {
+    var birthday = new Date(document.getElementById('BIRTHDAY').value);
+    var today = new Date();
+    var age = today.getFullYear() - birthday.getFullYear();
+    var m = today.getMonth() - birthday.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+        age--;
+    }
+    document.getElementById('AGE').value = age;
+}
+</script>
 @endpush

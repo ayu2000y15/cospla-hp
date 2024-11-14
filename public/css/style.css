@@ -144,10 +144,10 @@ h2 {
 
 .slideshow-container {
     position: absolute;
-    top: 4rem;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100%; /* 全高を使用 */
     overflow: hidden;
 }
 
@@ -161,6 +161,10 @@ h2 {
 
 .slide.active {
     opacity: 1;
+}
+
+#back {
+    margin-top: 4rem; /* ヘッダーの高さ分のマージンを追加 */
 }
 
 .slide img {
@@ -244,6 +248,7 @@ h2 {
 }
 
 .subpage-hero {
+    margin-top: 4rem;
     margin-bottom: 4rem;
     height: 300px;
     background-size: cover;
@@ -1151,9 +1156,14 @@ h2 {
         margin: 0 0.5rem;
     }
 
-    .hero {
-        padding-top: 56.25%;
+    .subpage-hero {
+        margin-top: 3rem;
     }
+
+    #back {
+        margin-top: 3rem; /* モバイルではヘッダーが小さくなるため調整 */
+    }
+
 
     .slide-content {
         padding: 10px;
@@ -1339,15 +1349,6 @@ h2 {
 }
 
 @media (max-width: 576px) {
-    .header-container {
-        padding: 0.5rem;
-    }
-
-    .logo img {
-        width: 40px;
-        height: 40px;
-    }
-
     .talent-page .talent-grid {
         grid-template-columns: 1fr;
     }

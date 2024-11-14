@@ -112,7 +112,7 @@
                                 @if($talentProfile->COMMENT_FLG === '1')
                                 <tr>
                                     <th>COMMENT</th>
-                                    <td>{{ $talent->COMMENT }}</td>
+                                    <td>{!! nl2br(e($talent->COMMENT)) !!}</td>
                                 </tr>
                                 @endif
                             </table>

@@ -11,6 +11,7 @@
                 <th>所属日</th>
                 <th>退職日</th>
                 <th>在籍状況</th>
+                <th></th>
             </tr>
             @foreach ($talentList as $talent)
             @csrf
@@ -21,15 +22,24 @@
                 <td>{{ $talent->AFFILIATION_DATE }}</td>
                 <td>
                     @if($talent->RETIREMENT_DATE != '2099-01-01')
-                        {{ $talent->RETIREMENT_DATE }}
+                    {{ $talent->RETIREMENT_DATE }}
                     @endif
                 </td>
                 <td>
                     @if($talent->RETIREMENT_DATE <= date('Y-m-d') && $talent->DEL_FLG === '1')
                         退職済み
-                    @else
+                        @else
                         在籍
-                    @endif
+                        @endif
+                </td>
+                <td>
+                <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.delete') }}"
+                    method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                    <button type="submit" class="multi-button delete-button">削除する</button>
+                </form>
                 </td>
             </tr>
             @endforeach

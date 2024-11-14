@@ -50,6 +50,7 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 // タレント管理
 Route::get('/admin/talent/list', [TalentAdminController::class, 'list'])->name('admin.talent.list');
+Route::delete('/admin/talent/delete', [TalentAdminController::class, 'delete'])->name('admin.talent.delete');
 Route::post('/admin/talent/store', [TalentAdminController::class, 'store'])->name('admin.talent.store');
 Route::get('/admin/talent-admin', [TalentAdminController::class, 'talentAdmin'])->name('admin.talent.admin');
 

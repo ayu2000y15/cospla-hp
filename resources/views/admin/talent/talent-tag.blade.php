@@ -7,23 +7,23 @@
         <table class="tag-table">
             <div class="tag-container">
                 @foreach ($tagList as $tag)
-                <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.tag.delete') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                    <input type="hidden" name="TAG_ID" value="{{ $tag->TAG_ID }}">
-
-                    <tr>
-                        <td>
-                            <span class="tag" style="background-color: {{ $tag->TAG_COLOR }}">
-                                #{{ $tag->TAG_NAME }}
-                            </span>
-                        </td>
-                        <td>
+                <tr>
+                    <td>
+                        <span class="tag" style="background-color: {{ $tag->TAG_COLOR }}">
+                            #{{ $tag->TAG_NAME }}
+                        </span>
+                    </td>
+                    <td>
+                        <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.tag.delete') }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                            <input type="hidden" name="TAG_ID" value="{{ $tag->TAG_ID }}">
                             <button type="submit" class="multi-button delete-button">削除する</button>
-                        </td>
-                    </tr>
-                </form>
+                        </form>
+                    </td>
+                </tr>
                 @endforeach
             </div>
         </table>

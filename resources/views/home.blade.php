@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'ホーム - COSPLATFORM')
+@section('title', 'TOP - COSPLATFORM')
 
 @section('content')
 <main>

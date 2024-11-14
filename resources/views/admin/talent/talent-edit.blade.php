@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label for="RETIREMENT_DATE">退職日<span class="required"></span></label>
                 <input type="date" id="RETIREMENT_DATE" name="RETIREMENT_DATE"
-                    value="{{ old('RETIREMENT_DATE', $talent->RETIREMENT_DATE) }}" />
+                    value="{{ old('RETIREMENT_DATE', $talent->RETIREMENT_DATE)=== '2099-01-01' ? '' : $talent->RETIREMENT_DATE }}"" />
             </div>
             <div class="form-group">
                 <label for="MAIL">メールアドレス<span class="required"></span></label>
@@ -116,7 +116,7 @@
             </div>
             <div class="form-group">
                 <div class="check-area">
-                    <label for="AGE">年齢<span class="required"></span></label>
+                    <label for="AGE">年齢<span class="required">※誕生日をもとに入力するため入力は不要です。</span></label>
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="AGE_FLG" value="0"
@@ -130,11 +130,11 @@
                         </label>
                     </div>
                 </div>
-                <input type="number" id="AGE" name="AGE" placeholder="25" value="{{ old('AGE', $talent->AGE) }}" />
+                <input type="number" id="AGE" name="AGE" value="{{ old('AGE', $talent->AGE) }}" readonly/>
             </div>
             <div class="form-group">
                 <div class="check-area">
-                    <label for="BIRTHDAY">誕生日<span class="required"></span></label>
+                    <label for="BIRTHDAY">誕生日<span class="required">※年を非公開にする場合は2099年を指定してください</span></label>
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="BIRTHDAY_FLG" value="0"
@@ -153,7 +153,7 @@
                         </label>
                     </div>
                 </div>
-                <input type="date" id="BIRTHDAY" name="BIRTHDAY" value="{{ old('BIRTHDAY', $talent->BIRTHDAY) }}" />
+                <input type="date" id="BIRTHDAY" name="BIRTHDAY" value="{{ old('BIRTHDAY', $talent->BIRTHDAY) }}" onchange="calculateAge()"/>
             </div>
             <div class="form-group">
                 <div class="check-area">
@@ -311,4 +311,17 @@
 
 @push('scripts')
 <script src="{{ asset('js/admin-script.js') }}"></script>
+<script>
+    function calculateAge() {
+    var birthday = new Date(document.getElementById('BIRTHDAY').value);
+    var today = new Date();
+    var age = today.getFullYear() - birthday.getFullYear();
+    var m = today.getMonth() - birthday.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+        age--;
+    }
+    document.getElementById('AGE').value = age;
+}
+</script>
+
 @endpush

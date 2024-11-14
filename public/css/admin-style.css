@@ -238,6 +238,21 @@ body {
     font-size: 1rem;
 }
 
+.form-group input[readonly],
+.form-group textarea[readonly],
+.form-group select[readonly] {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+}
+
+.form-group input[readonly]:hover,
+.form-group textarea[readonly]:hover,
+.form-group select[readonly]:hover {
+    border-color: #ccc;
+}
+
 .required {
     color: #ff69b4;
     margin-left: 0.5rem;
@@ -585,8 +600,8 @@ body {
     /* タレントIDと削除フラグの列を非表示にする */
     .table-container.talent th:first-child,
     .table-container.talent td:first-child,
-    .table-container.talent th:last-child,
-    .table-container.talent td:last-child {
+    .table-container.talent th:nth-last-child(2),
+    .table-container.talent td:nth-last-child(2) {
         display: none;
     }
 

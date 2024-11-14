@@ -8,7 +8,7 @@
             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
             <div class="form-group">
                 <label for="RETIREMENT_DATE">退職日</label>
-                <input type="date" id="RETIREMENT_DATE" name="RETIREMENT_DATE" value="{{ old('RETIREMENT_DATE', $talent->RETIREMENT_DATE) }}" required />
+                <input type="date" id="RETIREMENT_DATE" name="RETIREMENT_DATE" value="{{ old('RETIREMENT_DATE', $talent->RETIREMENT_DATE)=== '2099-01-01' ? '' : $talent->RETIREMENT_DATE }}" required />
             </div>
             <button type="submit" class="submit-button">送信する</button>
         </form>
