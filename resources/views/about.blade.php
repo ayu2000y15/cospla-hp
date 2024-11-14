@@ -70,11 +70,11 @@
 @push('styles')
 <style>
 body {
-    background-image: url("{{ $backImg->FILE_PATH . $backImg->FILE_NAME }}");
+    background-image: url("{{ asset($backImg->FILE_PATH . $backImg->FILE_NAME) }}");
 }
 
 .subpage-hero {
-    background-image: url("{{ $topImg->FILE_PATH . $topImg->FILE_NAME }}");
+    background-image: url("{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}");
 }
 </style>
 @endpush

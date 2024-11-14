@@ -4,7 +4,8 @@
     <div class="form-area">
         <div class="form-area-common">
             <h2>タレント経歴登録・編集</h2>
-            <form id="adminForm" onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.career.store') }}" method="POST">
+            <form id="adminForm" onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.career.store') }}"
+                method="POST">
                 @csrf
                 <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
                 <input type="hidden" name="CAREER_ID" id="CAREER_ID">
@@ -31,8 +32,10 @@
                     <label for="DETAIL">経歴詳細</label>
                     <textarea id="DETAIL" name="DETAIL" rows="5"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" id="submitBtn">登録</button>
-                <button type="button" class="btn btn-secondary" onclick="resetForm()">リセット</button>
+                <div class="btn-area">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">登録</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">リセット</button>
+                </div>
             </form>
         </div>
         <div class="list-area">
@@ -54,7 +57,9 @@
                         <td>{{ $career->CONTENT }}</td>
                         <td>
                             <button class="btn btn-edit" onclick='editItem({!! json_encode($career) !!})'>編集</button>
-                            <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.career.delete') }}" method="POST" style="display: inline;">
+                            <form onsubmit="return checkSubmit('削除');"
+                                action="{{ route('admin.talent.career.delete') }}" method="POST"
+                                style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
@@ -81,7 +86,7 @@ function editItem(item) {
     document.getElementById('CONTENT').value = item.CONTENT;
     document.getElementById('ACTIVE_DATE').value = item.ACTIVE_DATE;
     document.getElementById('DETAIL').value = item.DETAIL;
-    document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}/" ;
+    document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}/";
     document.getElementById('submitBtn').textContent = '更新';
 
     window.scrollTo({

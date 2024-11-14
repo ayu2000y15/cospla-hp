@@ -4,7 +4,8 @@
     <div class="form-area">
         <div class="form-area-common">
             <h2>ニュース登録・編集</h2>
-            <form id="adminForm" action="{{ route('admin.news.store') }}" onsubmit="return checkSubmit('登録');" method="POST">
+            <form id="adminForm" action="{{ route('admin.news.store') }}" onsubmit="return checkSubmit('登録');"
+                method="POST">
                 @csrf
                 <input type="hidden" name="NEWS_ID" id="NEWS_ID">
                 <div class="form-group">
@@ -19,8 +20,10 @@
                     <label for="CONTENT">詳細</label>
                     <textarea id="CONTENT" name="CONTENT" rows="5" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" id="submitBtn">登録</button>
-                <button type="button" class="btn btn-secondary" onclick="resetForm()">リセット</button>
+                <div class="btn-area">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">登録</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">リセット</button>
+                </div>
             </form>
         </div>
         <div class="list-area">
@@ -40,7 +43,8 @@
                         <td>{{ $news->TITLE }}</td>
                         <td>
                             <button class="btn btn-edit" onclick='editItem({!! json_encode($news) !!})'>編集</button>
-                            <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" onsubmit="return checkSubmit('削除');" method="POST" style="display: inline;">
+                            <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}"
+                                onsubmit="return checkSubmit('削除');" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-delete">削除</button>

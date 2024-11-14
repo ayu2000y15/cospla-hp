@@ -104,7 +104,7 @@
 @push('styles')
 <style>
     body {
-        background-image: url("{{ $backImg->FILE_PATH . $backImg->FILE_NAME }}");
+        background-image: url("{{ asset($backImg->FILE_PATH . $backImg->FILE_NAME) }}");
     }
 
 </style>

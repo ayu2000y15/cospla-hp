@@ -41,7 +41,10 @@ Route::get('/cosplay', [CosplayController::class, 'index'])->name('cosplay');
 
 // Contactページ
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/contact/ok', [ContactController::class, 'ok'])->name('contact.ok');
+// Contact 確認ページ
+Route::post('/contact/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
+// Contact 送信完了ページ
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 
 // Newsページ
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
