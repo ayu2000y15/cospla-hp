@@ -213,14 +213,17 @@
         const previewOverlay = document.querySelector('.preview-overlay');
         const previewImage = document.querySelector('.preview-image');
         const closePreview = document.querySelector('.close-preview');
+        const previewPrevArrow = document.createElement('button');
+        const previewNextArrow = document.createElement('button');
 
         let currentPosition = 0;
         let startX = 0;
         let scrollLeft = 0;
         let isDragging = false;
-        let lastTouchX = 0;
-        let currentTouchX = 0;
-        let touchStartTime = 0;
+        let currentPreviewIndex = 0;
+
+        // プレビューオーバーレイを初期状態で非表示にする
+        previewOverlay.style.display = 'none';
 
         function hideAllSections() {
             careerInfo.style.display = 'none';
@@ -246,21 +249,53 @@
         photosInfo.style.display = 'block';
         photosButton.classList.add('active');
 
-        // Preview functionality
-        photoItems.forEach(item => {
+        // プレビュー機能の拡張
+        previewPrevArrow.classList.add('preview-arrow', 'preview-prev-arrow');
+        previewPrevArrow.innerHTML = '&lt;';
+        previewPrevArrow.setAttribute('aria-label', '前の画像');
+        previewNextArrow.classList.add('preview-arrow', 'preview-next-arrow');
+        previewNextArrow.innerHTML = '&gt;';
+        previewNextArrow.setAttribute('aria-label', '次の画像');
+        previewOverlay.appendChild(previewPrevArrow);
+        previewOverlay.appendChild(previewNextArrow);
+
+        function showPreview(index) {
+            const img = photoItems[index].querySelector('img');
+            previewImage.src = img.src;
+            previewImage.alt = img.alt;
+            previewOverlay.style.display = 'flex';
+            currentPreviewIndex = index;
+            updatePreviewArrows();
+        }
+
+        function updatePreviewArrows() {
+            previewPrevArrow.style.display = currentPreviewIndex > 0 ? 'block' : 'none';
+            previewNextArrow.style.display = currentPreviewIndex < photoItems.length - 1 ? 'block' : 'none';
+        }
+
+        photoItems.forEach((item, index) => {
             item.addEventListener('click', function() {
-                const img = this.querySelector('img');
-                previewImage.src = img.src;
-                previewImage.alt = img.alt;
-                previewOverlay.style.display = 'flex';
+                showPreview(index);
             });
 
             item.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    this.click();
+                    showPreview(index);
                 }
             });
+        });
+
+        previewPrevArrow.addEventListener('click', function() {
+            if (currentPreviewIndex > 0) {
+                showPreview(currentPreviewIndex - 1);
+            }
+        });
+
+        previewNextArrow.addEventListener('click', function() {
+            if (currentPreviewIndex < photoItems.length - 1) {
+                showPreview(currentPreviewIndex + 1);
+            }
         });
 
         closePreview.addEventListener('click', function() {
@@ -270,6 +305,19 @@
         previewOverlay.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.style.display = 'none';
+            }
+        });
+
+        // キーボードナビゲーションの追加
+        document.addEventListener('keydown', function(e) {
+            if (previewOverlay.style.display === 'flex') {
+                if (e.key === 'ArrowLeft' && currentPreviewIndex > 0) {
+                    showPreview(currentPreviewIndex - 1);
+                } else if (e.key === 'ArrowRight' && currentPreviewIndex < photoItems.length - 1) {
+                    showPreview(currentPreviewIndex + 1);
+                } else if (e.key === 'Escape') {
+                    previewOverlay.style.display = 'none';
+                }
             }
         });
 
@@ -293,6 +341,7 @@
         }
 
         function updateSlidePosition() {
+            photosGrid.style.transition = 'transform 0.5s ease';
             photosGrid.style.transform = `translateX(-${currentPosition}%)`;
         }
 
@@ -313,56 +362,28 @@
         prevArrow.addEventListener('click', () => moveSlider(-1));
         nextArrow.addEventListener('click', () => moveSlider(1));
 
-        // Touch event handling
+        // タッチイベントの処理
         function handleTouchStart(e) {
             isDragging = true;
             startX = e.touches[0].pageX - sliderContainer.offsetLeft;
             scrollLeft = currentPosition;
-            lastTouchX = e.touches[0].pageX;
-            touchStartTime = Date.now();
             photosGrid.style.transition = 'none';
         }
 
         function handleTouchMove(e) {
             if (!isDragging) return;
             e.preventDefault();
-
-            currentTouchX = e.touches[0].pageX;
-            const touchDelta = lastTouchX - currentTouchX;
-            lastTouchX = currentTouchX;
-
-            const containerWidth = sliderContainer.offsetWidth;
-            const movePercent = (touchDelta / containerWidth) * 100;
-
-            currentPosition = Math.max(0, Math.min(currentPosition + movePercent, getMaxPosition()));
-            updateSlidePosition();
+            const x = e.touches[0].pageX - sliderContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            currentPosition = scrollLeft - walk / sliderContainer.offsetWidth * 100;
+            photosGrid.style.transform = `translateX(-${currentPosition}%)`;
         }
 
-        function handleTouchEnd(e) {
-            if (!isDragging) return;
+        function handleTouchEnd() {
             isDragging = false;
-            photosGrid.style.transition = 'transform 0.3s ease';
-
-            const touchEndTime = Date.now();
-            const touchDuration = touchEndTime - touchStartTime;
-            const touchDistance = currentTouchX - startX;
-            const velocity = Math.abs(touchDistance) / touchDuration;
-
-            if (velocity > 0.5) {
-                const direction = touchDistance < 0 ? 1 : -1;
-                moveToNextSlide(direction);
-            } else {
-                snapToNearestSlide();
-            }
-
+            photosGrid.style.transition = 'transform 0.5s ease';
+            snapToNearestSlide();
             updateArrowVisibility();
-        }
-
-        function moveToNextSlide(direction) {
-            const slideWidth = 100 / getVisibleSlides();
-            currentPosition += direction * slideWidth;
-            currentPosition = Math.max(0, Math.min(currentPosition, getMaxPosition()));
-            updateSlidePosition();
         }
 
         function snapToNearestSlide() {
@@ -370,10 +391,6 @@
             const nearestSlide = Math.round(currentPosition / slideWidth);
             currentPosition = nearestSlide * slideWidth;
             updateSlidePosition();
-        }
-
-        function getMaxPosition() {
-            return (photoItems.length - getVisibleSlides()) * (100 / getVisibleSlides());
         }
 
         sliderContainer.addEventListener('touchstart', handleTouchStart, {

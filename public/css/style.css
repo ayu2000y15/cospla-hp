@@ -1105,6 +1105,26 @@ h2 {
     border-radius: 4px;
 }
 
+.preview-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.preview-prev-arrow {
+    left: 5rem;
+}
+
+.preview-next-arrow {
+    right: 5rem;
+}
+
 @media (max-width: 768px) {
     .header-container {
         position: relative;
