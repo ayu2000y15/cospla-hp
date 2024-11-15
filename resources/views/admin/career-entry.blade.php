@@ -18,22 +18,23 @@
         <table class="table-container edit">
             <thead>
                 <th>カテゴリ名</th>
-                <th></th>
+                <th class="btn-none"></th>
                 <th></th>
             </thead>
             @foreach ($careerList as $career)
             <tr>
+                <td>{{ $career->CAREER_CATEGORY_NAME }}</td>
                 <form action="{{ route('admin.career.update', $career->CAREER_CATEGORY_ID) }}"
                     onsubmit="return checkSubmit('変更');" method="POST">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="CAREER_CATEGORY_ID" value="{{ $career->CAREER_CATEGORY_ID }}">
-                    <td>
+                    <td class="btn-none">
                         <div class="form-group multi">
                             <input type="text" name="CAREER_CATEGORY_NAME" value="{{ $career->CAREER_CATEGORY_NAME }}">
                         </div>
                     </td>
-                    <td class="edit-btn-none">
+                    <td class="btn-none">
                         <button type="submit" class="btn btn-edit">変更する</button>
                     </td>
                 </form>

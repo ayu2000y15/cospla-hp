@@ -11,7 +11,7 @@
                 <th>所属日</th>
                 <th>退職日</th>
                 <th>在籍状況</th>
-                <th></th>
+                <th>操作</th>
             </tr>
             @foreach ($talentList as $talent)
             @csrf

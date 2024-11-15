@@ -437,6 +437,10 @@ body {
     border-bottom: none;
 }
 
+.table-container.edit td:first-child {
+    display: none;
+}
+
 .tag-container {
     display: flex;
     flex-wrap: wrap;
@@ -621,17 +625,21 @@ body {
     /* タレントIDと削除フラグの列を非表示にする */
     .table-container.talent th:first-child,
     .table-container.talent td:first-child,
-    .table-container.talent th:nth-last-child(2),
-    .table-container.talent td:nth-last-child(2) {
+    .table-container.talent th:last-child,
+    .table-container.talent td:last-child {
         display: none;
     }
 
-    /* 変更ボタンを非表示にする */
-    .table-container.edit th:nth-child(2),
-    .edit-btn-none {
+    /* 変更ボタンと削除ボタンを非表示にする */
+    .btn-none {
         display: none;
     }
+
+    .table-container.edit td:first-child {
+        display: inline;
+    }
     
+
 }
 
 @media (max-width: 576px) {
@@ -656,7 +664,9 @@ body {
       padding: 0.4rem; /* パディングをさらに小さくする */
     }
 
-    /* 退職日の列も非表示にする */
+    /* 所属日・退職日の列も非表示にする */
+    .table-container.talent th:nth-child(3), 
+    .table-container.talent td:nth-child(3),
     .table-container.talent th:nth-child(4), 
     .table-container.talent td:nth-child(4) {
     display: none;
