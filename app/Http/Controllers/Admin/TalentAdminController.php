@@ -365,6 +365,12 @@ class TalentAdminController extends Controller
     // タレントにタグを追加
     public function addTag(Request $request)
     {
+        $count = Tag::where('TAG_NAME', $request->TAG_NAME)->count();
+        if($count > 0){
+            return redirect()->route('admin.talent.admin')
+            ->with('error', 'タグが既に登録されています。タグ名を変更してください。')
+            ->with('activeTabT', 'talent-tag');
+        }
         $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
         $talent->tags()->attach($request->TAG_ID);
         session()->flash('activeTabT', 'talent-tag');

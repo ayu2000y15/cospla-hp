@@ -38,7 +38,7 @@
                     @csrf
                     @method('DELETE')
                     <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                    <button type="submit" class="multi-button delete-button">削除する</button>
+                    <button type="submit" class="btn btn-delete">削除する</button>
                 </form>
                 </td>
             </tr>

@@ -1,10 +1,10 @@
 <main>
     <div class="form-area">
-        <h2>ハッシュタグ登録・変更</h2>
+        <h2>ハッシュタグ登録・削除</h2>
 
         <p>※タレントに紐つくハッシュタグはタレント編集より行ってください。<br>
-            　ここではハッシュタグの登録や削除が行えます。</p>
-
+            　ここでは新しいハッシュタグの登録や削除が行えます。</p>
+        <br>
         <h3>◆タグを新しく作成</h3>
         <form action="{{ route('admin.tag.store') }}" onsubmit="return checkSubmit('登録');" method="POST">
             @csrf
@@ -39,7 +39,7 @@
                         <form action="{{ route('admin.tag.delete', $tag->TAG_ID) }}"onsubmit="return checkSubmit('削除');"  method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="multi-button delete-button">削除する</button>
+                            <button type="submit" class="btn btn-delete">削除する</button>
                         </form>
                     </td>
                 </tr>

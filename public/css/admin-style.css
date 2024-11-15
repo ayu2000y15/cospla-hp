@@ -219,6 +219,9 @@ body {
     margin-bottom: 0.8rem;
 }
 
+.form-group.multi {
+    margin-top: 0;
+}
 
 .form-group {
     display: flex;
@@ -265,6 +268,58 @@ body {
     margin: 1rem 0;
 }
 
+.btn-area{
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    margin-top: 30px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    margin-top: 10px;
+    background-color: #6c757d;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
 .submit-button {
     width: 100%;
     margin-top: 1.5rem;
@@ -396,41 +451,6 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     display: inline-block;
-}
-
-.multi-button {
-    padding: 0.5rem 1rem;
-    background-color: #8e44ad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-    width: 100px;
-}
-
-.multi-button:hover {
-    background-color: #9b59b6;
-    transform: translateY(-2px);
-}
-
-.multi-button.delete-button {
-    background-color: #e74c3c;
-}
-
-.multi-button.delete-button:hover {
-    background-color: #c0392b;
-}
-
-.multi-button.submit-button {
-    background-color: #3498db;
-    width: auto;
-    display: inline-block;
-}
-
-.multi-button.submit-button:hover {
-    background-color: #2980b9;
 }
 
 .tag-table{
@@ -606,6 +626,12 @@ body {
         display: none;
     }
 
+    /* 変更ボタンを非表示にする */
+    .table-container.edit th:nth-child(2),
+    .edit-btn-none {
+        display: none;
+    }
+    
 }
 
 @media (max-width: 576px) {

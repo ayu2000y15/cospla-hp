@@ -12,7 +12,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\NewsAdminController;
 use App\Http\Controllers\Admin\PhotoAdminController;
 use App\Http\Controllers\Admin\TagAdminController;
-
+use App\Http\Controllers\Admin\CompanyAdminController;
+use App\Http\Controllers\Admin\CareerAdminController;
 use App\Http\Controllers\Admin\TalentAdminController;
 
 /*
@@ -76,9 +77,14 @@ Route::post('/admin/talent-admin/tag/add', [TalentAdminController::class, 'addTa
 //タレント退職
 Route::put('/admin/talent-admin/retire', [TalentAdminController::class, 'retire'])->name('admin.talent.retire');
 
-
 // タグ作成（全体で使用）
 Route::post('/admin/tag', [TalentController::class, 'storeTag'])->name('admin.tag.store');
+
+//経歴カテゴリ管理
+Route::post('/admin/career/entry', [CareerAdminController::class, 'entry'])->name('admin.career.entry');
+Route::put('/admin/career/update', [CareerAdminController::class, 'update'])->name('admin.career.update');
+Route::delete('/admin/career/delete', [CareerAdminController::class, 'delete'])->name('admin.career.delete');
+
 
 // ニュース管理
 Route::get('/admin/news', [NewsAdminController::class, 'entry'])->name('admin.news.entry');
@@ -96,4 +102,8 @@ Route::delete('/admin/photos', [PhotoAdminController::class, 'delete'])->name('a
 Route::get('/admin/tag', [TagAdminController::class, 'entry'])->name('admin.tag.entry');
 Route::post('/admin/tag', [TagAdminController::class, 'store'])->name('admin.tag.store');
 Route::delete('/admin/tag/{id}', [TagAdminController::class, 'delete'])->name('admin.tag.delete');
+
+//会社情報・問い合わせメール管理
+Route::post('/admin/company/mail', [CompanyAdminController::class, 'mail'])->name('admin.company.mail');
+Route::post('/admin/company/update', [CompanyAdminController::class, 'update'])->name('admin.company.update');
 

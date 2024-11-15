@@ -54,7 +54,7 @@
             </div>
             <div class="form-group">
                 <label for="TEL_NO">電話番号<span class="required"></span></label>
-                <input type="tel" id="TEL_NO" name="TEL_NO" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                <input type="tel" id="TEL_NO" name="TEL_NO" pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
                     value="{{ old('TEL_NO', $talent->TEL_NO) }}" placeholder="080-1234-5678" />
             </div>
 

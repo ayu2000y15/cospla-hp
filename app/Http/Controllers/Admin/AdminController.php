@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Models\Talent;
 use App\Models\News;
 use App\Models\Image;
 use App\Models\Tag;
 use App\Models\ViewFlag;
+use App\Models\CareerCategory;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Session;
 class AdminController extends Controller
@@ -24,6 +26,10 @@ class AdminController extends Controller
     {
         //タレント一覧
         $talentList = Talent::all()->sortByDesc('TALENT_ID');
+        //タグ登録・削除
+        $tagList = Tag::all()->sortBy('TAG_ID');
+        //経歴カテゴリ登録・削除
+        $careerList = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
         //ニュース登録・変更
         $newsList = News::all()->sortByDesc('POST_DATE');
         //HP画像登録・変更
@@ -34,8 +40,9 @@ class AdminController extends Controller
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', 'S%')
         ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
-        //タグ登録・変更
-        $tagList = Tag::all()->sortBy('TAG_ID');
+        //会社情報
+        $company = Company::all()->first();
+
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
 
@@ -49,6 +56,8 @@ class AdminController extends Controller
         ,'talentImgList'
         ,'viewFlags'
         ,'tagList'
+        ,'careerList'
+        ,'company'
         ,'logoImg'
         ));
     }

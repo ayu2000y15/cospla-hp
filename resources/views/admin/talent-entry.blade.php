@@ -5,7 +5,7 @@
         <p>※タレントの写真や経歴、ハッシュタグについては、<br>　タレント登録完了後、タレント詳細情報から登録してください。<br>
             　写真を登録しないとHPには表示されません。
         </p>
-        <hr class="hr-line">
+        <br>
         <form action="{{ route('admin.talent.store') }}" onsubmit="return checkSubmit('登録');" method="POST">
             @csrf
             <div class="form-group">
@@ -42,7 +42,7 @@
             </div>
             <div class="form-group">
                 <label for="TEL_NO">電話番号<span class="required"></span></label>
-                <input type="tel" id="TEL_NO" name="TEL_NO" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                <input type="tel:" id="TEL_NO" name="TEL_NO" pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
                     placeholder="080-1234-5678" />
             </div>
 

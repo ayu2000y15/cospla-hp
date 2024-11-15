@@ -20,7 +20,7 @@
                             @method('DELETE')
                             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
                             <input type="hidden" name="TAG_ID" value="{{ $tag->TAG_ID }}">
-                            <button type="submit" class="multi-button delete-button">削除する</button>
+                            <button type="submit" class="btn btn-delete">削除する</button>
                         </form>
                     </td>
                 </tr>
