@@ -104,6 +104,11 @@ class TalentAdminController extends Controller
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', '__')
         ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
+        $viewFlagsBulk = ViewFlag::select('VIEW_FLG', 'COMMENT')
+        ->where('MAX_COUNT', '<>', 1)
+        ->where('VIEW_FLG', 'like', '__')
+        ->orWhere('VIEW_FLG', '=', '00')
+        ->distinct()->get();
 
         //タレント経歴
         //タレントが持っている経歴ジャンル
@@ -166,6 +171,7 @@ class TalentAdminController extends Controller
         ,'talentInfo'
         , 'talentImgList'
         , 'viewFlags'
+        , 'viewFlagsBulk'
         , 'careerCategories'
         , 'talentCareer'
         , 'tagList'

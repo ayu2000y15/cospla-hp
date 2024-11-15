@@ -40,6 +40,11 @@ class AdminController extends Controller
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', 'S%')
         ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
+        $viewFlagsBulk = ViewFlag::select('VIEW_FLG', 'COMMENT')
+        ->where('MAX_COUNT', '<>', 1)
+        ->where('VIEW_FLG', 'like', 'S%')
+        ->orWhere('VIEW_FLG', '=', '00')
+        ->distinct()->get();
         //会社情報
         $company = Company::all()->first();
 
@@ -55,6 +60,7 @@ class AdminController extends Controller
         ,'imgList'
         ,'talentImgList'
         ,'viewFlags'
+        ,'viewFlagsBulk'
         ,'tagList'
         ,'careerList'
         ,'company'

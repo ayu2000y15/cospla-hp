@@ -12,7 +12,7 @@ class CreateViewFlagsTable extends Migration
         Schema::create('view_flags', function (Blueprint $table) {
             $table->char('VIEW_FLG', 4)->primary()->comment('表示フラグID');
             $table->string('COMMENT', 300)->nullable()->comment('表示先');
-            $table->integer('MAX_COUNT')->nullable()->comment('最大枚数');
+            $table->integer('MAX_COUNT')->default(0)->comment('最大枚数');
             $table->string('SPARE1', 300)->nullable()->comment('予備１');
             $table->string('SPARE2', 300)->nullable()->comment('予備２');
             $table->timestamp('INS_DATE')->useCurrent()->comment('登録日');
@@ -28,10 +28,10 @@ class CreateViewFlagsTable extends Migration
 
         // データの挿入
         $data = [
-            ['00', '非公開', null, null, null, '0'],
+            ['00', '非公開', 0, null, null, '0'],
             ['01', 'TALENTページに表示', 1, null, null, '0'],
             ['02', 'TALENTページに表示(切り替えのほう)', 1, null, null, '0'],
-            ['03', 'TALENT個人ページに表示', null, null, null, '0'],
+            ['03', 'TALENT個人ページに表示', 0, null, null, '0'],
             ['S001', 'TOPページのバックグラウンド画像', 1, null, null, '0'],
             ['S002', 'ABOUTページのバックグラウンド画像', 1, null, null, '0'],
             ['S003', 'TALENTページのバックグラウンド画像', 1, null, null, '0'],
@@ -43,12 +43,12 @@ class CreateViewFlagsTable extends Migration
             ['S104', 'COSPLAYページのトップ画像', 1, null, null, '0'],
             ['S105', 'CONTACTページのトップ画像', 1, null, null, '0'],
             ['S106', 'NEWSページのトップ画像', 1, null, null, '0'],
-            ['S201', 'TOPページのスライドショー', null, null, null, '0'],
+            ['S201', 'TOPページのスライドショー', 0, null, null, '0'],
             ['S203', 'TOPページのCOSPLAYに表示', 1, null, null, '0'],
             ['S204', 'TOPページの画像', 1, null, null, '0'],
             ['S301', 'ABOUTページの画像', 1, null, null, '0'],
-            ['S401', 'COSPLAYページの上に表示', null, null, null, '0'],
-            ['S402', 'COSPLAYページの下に表示', null, null, null, '0'],
+            ['S401', 'COSPLAYページの上に表示', 0, null, null, '0'],
+            ['S402', 'COSPLAYページの下に表示', 0, null, null, '0'],
             ['S999', 'ロゴ', 1, null, null, '0']
         ];
 

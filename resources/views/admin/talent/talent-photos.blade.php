@@ -8,13 +8,15 @@
         <div class="photo-upload-section">
             <h3 class="subsection-title">◆写真新規登録</h3>
             <p>※最大5Mまで。それ以上大きいファイルはアップロードできません。</p>
-            <form onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.photos.upload') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+            <form onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.photos.upload') }}" method="POST"
+                enctype="multipart/form-data" class="upload-form">
                 @csrf
                 <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
                 <input type="hidden" name="LAYER_NAME" value="{{ $talent->LAYER_NAME }}">
 
                 <div class="file-upload-wrapper">
-                    <input type="file" name="photos[]" id="photo-upload" class="file-upload-input" multiple onchange="updateFileNames(this)">
+                    <input type="file" name="photos[]" id="photo-upload" class="file-upload-input" multiple
+                        onchange="updateFileNames(this)">
                     <label for="photo-upload" class="file-upload-label">写真を選択</label>
                 </div>
                 <div id="selected-files" class="selected-files"></div>
@@ -37,50 +39,56 @@
                     </div>
                     <div class="bulk-actions">
                         <select name="BULK_VIEW_FLG" class="bulk-view-select">
-                            @foreach ($viewFlags as $flag)
+                            @foreach ($viewFlagsBulk as $flag)
                             <option value="{{ $flag->VIEW_FLG }}">{{ $flag->COMMENT }}</option>
                             @endforeach
                         </select>
                         <button type="submit" class="bulk-update-button">一括変更</button>
                     </div>
                 </div>
-                <div class="photo-grid">
-                    @foreach ($talentImgList as $img)
-                    <div class="photo-item">
-                        <div class="photo-checkbox-wrapper">
-                            <input type="checkbox" name="SELECTED_PHOTOS[]" value="{{ $img->FILE_NAME }}" class="photo-checkbox" id="photo-{{ $img->FILE_NAME }}">
-                            <label for="photo-{{ $img->FILE_NAME }}" class="photo-checkbox-label"></label>
-                        </div>
-                        <img class="photo-thumbnail" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="{{ $img->COMMENT }}" onclick="openImagePreview(this.src)">
-                        <div class="photo-actions">
-                            <form onsubmit="return checkSubmit('変更');" action="{{ route('admin.talent.photos.update') }}" method="POST" class="change-form">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                                <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                                <div class="select-wrapper">
-                                    <select name="VIEW_FLG" class="view-select">
-                                        @foreach ($viewFlags as $select)
-                                        <option value="{{ $select->VIEW_FLG }}" {{ $select->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
-                                            {{ $select->COMMENT }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="change-button">変更</button>
-                                </div>
-                            </form>
-                            <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.photos.delete') }}" method="POST" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                                <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                                <button type="submit" class="delete-button">削除</button>
-                            </form>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
             </form>
+            <div class="photo-grid">
+                @foreach ($talentImgList as $img)
+                <div class="photo-item">
+                    <div class="photo-checkbox-wrapper">
+                        <input type="checkbox" name="SELECTED_PHOTOS[]" value="{{ $img->FILE_NAME }}"
+                            class="photo-checkbox" form="bulkUpdateForm" id="photo-{{ $img->FILE_NAME }}">
+                        <label for="photo-{{ $img->FILE_NAME }}" class="photo-checkbox-label"></label>
+                    </div>
+                    <img class="photo-thumbnail" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}"
+                        alt="{{ $img->COMMENT }}" onclick="openImagePreview(this.src)">
+                    <div class="photo-actions">
+                        <form onsubmit="return checkSubmit('変更');" action="{{ route('admin.talent.photos.update') }}"
+                            method="POST" class="change-form">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                            <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
+                            <div class="select-wrapper">
+                                <select name="VIEW_FLG" class="view-select">
+                                    @foreach ($viewFlags as $select)
+                                    <option value="{{ $select->VIEW_FLG }}"
+                                        {{ $select->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
+                                        {{ $select->COMMENT }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="change-button">変更</button>
+                            </div>
+                        </form>
+                        <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.photos.delete') }}"
+                            method="POST" class="delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                            <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
         </div>
     </div>
 
@@ -119,25 +127,23 @@ function openImagePreview(imgSrc) {
     modalImg.src = imgSrc;
 }
 
-const modal = document.getElementById('imagePreviewModal');
-const span = document.getElementsByClassName('close')[0];
-
-span.onclick = function() {
-    modal.style.display = 'none';
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// 一括変更機能
 document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('imagePreviewModal');
+    const span = document.getElementsByClassName('close')[0];
     const bulkUpdateForm = document.getElementById('bulkUpdateForm');
     const bulkUpdateButton = document.querySelector('.bulk-update-button');
     const selectAllCheckbox = document.getElementById('selectAll');
     const photoCheckboxes = document.querySelectorAll('.photo-checkbox');
+
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
 
     bulkUpdateButton.addEventListener('click', function(e) {
         e.preventDefault();
@@ -153,8 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 全選択/全解除機能
     selectAllCheckbox.addEventListener('change', function() {
+        const isChecked = this.checked;
         photoCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
+            checkbox.checked = isChecked;
         });
     });
 
@@ -164,7 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updateSelectAllCheckbox() {
-        selectAllCheckbox.checked = Array.from(photoCheckboxes).every(checkbox => checkbox.checked);
+        const allChecked = Array.from(photoCheckboxes).every(checkbox => checkbox.checked);
+        selectAllCheckbox.checked = allChecked;
     }
 });
 </script>
