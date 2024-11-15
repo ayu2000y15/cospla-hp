@@ -134,7 +134,7 @@
             </div>
             <div class="form-group">
                 <div class="check-area">
-                    <label for="BIRTHDAY">誕生日<span class="required">※年を非公開にする場合は2099年を指定してください</span></label>
+                    <label for="BIRTHDAY">誕生日<span class="required">※※年を非公開にする場合は年を入力しても表示されません。</span></label>
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="BIRTHDAY_FLG" value="0"

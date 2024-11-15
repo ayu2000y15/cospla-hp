@@ -30,44 +30,68 @@
             <div class="photo-list-section">
                 <h3 class="subsection-title">◆登録済みの写真一覧</h3>
                 <p>TOPページのCOSPLAYは6枚まで設定可</p>
-                <div class="photo-grid">
-                    @foreach ($imgList as $img)
-                    <div class="photo-item">
-                        <img class="photo-thumbnail" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}"
-                            alt="{{ $img->COMMENT }}" onclick="openImagePreview(this.src)">
-                        <div class="photo-actions">
-                            <form action="{{ route('admin.photos.update') }}" onsubmit="return checkSubmit('変更');" method="POST" class="change-form">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                                <input type="hidden" name="VIEW_FLG_BEF" value="{{ $img->VIEW_FLG }}">
-
-                                <div class="select-wrapper">
-                                    <label>優先度(数字が若いほど優先度高)
-                                        <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}">
-                                    </label>
-                                    <select name="VIEW_FLG_AFT" class="view-select">
-                                        @foreach ($viewFlags as $flag)
-                                        <option value="{{ $flag->VIEW_FLG }}"
-                                            {{ $flag->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
-                                            {{ $flag->COMMENT }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="change-button">変更</button>
-                                </div>
-                            </form>
-                            <form action="{{ route('admin.photos.delete') }}" onsubmit="return checkSubmit('削除');" method="POST" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                                <input type="hidden" name="VIEW_FLG" value="{{ $img->VIEW_FLG }}">
-                                <button type="submit" class="delete-button">削除</button>
-                            </form>
+                <!-- 一括変更フォームの改善 -->
+                <form action="{{ route('admin.photos.bulkUpdate') }}" method="POST" id="bulkUpdateForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="bulk-update-controls">
+                        <div class="select-all-wrapper">
+                            <input type="checkbox" id="selectAll" class="select-all-checkbox">
+                            <label for="selectAll">全選択/全解除</label>
+                        </div>
+                        <div class="bulk-actions">
+                            <select name="BULK_VIEW_FLG" class="bulk-view-select">
+                                @foreach ($viewFlags as $flag)
+                                <option value="{{ $flag->VIEW_FLG }}">{{ $flag->COMMENT }}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="bulk-update-button">一括変更</button>
                         </div>
                     </div>
-                    @endforeach
-                </div>
+                    <div class="photo-grid">
+                        @foreach ($imgList as $img)
+                        <div class="photo-item">
+                            <div class="photo-checkbox-wrapper">
+                                <input type="checkbox" name="SELECTED_PHOTOS[]" value="{{ $img->FILE_NAME }}" class="photo-checkbox" id="photo-{{ $img->FILE_NAME }}">
+                                <label for="photo-{{ $img->FILE_NAME }}" class="photo-checkbox-label"></label>
+                            </div>
+                            <img class="photo-thumbnail" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}"
+                                alt="{{ $img->COMMENT }}" onclick="openImagePreview(this.src)">
+                            <div class="photo-actions">
+                                <form action="{{ route('admin.photos.update') }}" onsubmit="return checkSubmit('変更');" method="POST" class="change-form">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
+                                    <input type="hidden" name="VIEW_FLG_BEF" value="{{ $img->VIEW_FLG }}">
+
+                                    <div class="select-wrapper">
+                                        <label class="priority-label">
+                                            優先度
+                                            <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" class="priority-input">
+                                        </label>
+                                        <select name="VIEW_FLG_AFT" class="view-select">
+                                            @foreach ($viewFlags as $flag)
+                                            <option value="{{ $flag->VIEW_FLG }}"
+                                                {{ $flag->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
+                                                {{ $flag->COMMENT }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="change-button">変更</button>
+                                    </div>
+                                </form>
+                                <form action="{{ route('admin.photos.delete') }}" onsubmit="return checkSubmit('削除');" method="POST" class="delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
+                                    <input type="hidden" name="VIEW_FLG" value="{{ $img->VIEW_FLG }}">
+                                    <button type="submit" class="delete-button">削除</button>
+                                </form>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -89,8 +113,8 @@
 
                             <div class="select-wrapper">
                                 <label>{{ $img->LAYER_NAME }}</label>
-                                <label>優先度(数字が若いほど優先度高 1~4までのみ)<br>
-                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}">
+                                <label class="priority-label">優先度(1~4)
+                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" min="1" max="4" class="priority-input">
                                 </label>
                                 <button type="submit" class="change-button">変更</button>
                             </div>
@@ -138,12 +162,45 @@ document.addEventListener('DOMContentLoaded', function() {
         hideAllSections();
         photosInfo.style.display = 'block';
         photosButton.classList.add('active');
-        updateSliderLayout();
     });
 
     hideAllSections();
     photosInfo.style.display = 'block';
     photosButton.classList.add('active');
+
+    // 一括変更機能の改善
+    const bulkUpdateForm = document.getElementById('bulkUpdateForm');
+    const bulkUpdateButton = document.querySelector('.bulk-update-button');
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const photoCheckboxes = document.querySelectorAll('.photo-checkbox');
+
+    bulkUpdateButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedPhotos = document.querySelectorAll('input[name="SELECTED_PHOTOS[]"]:checked');
+        if (selectedPhotos.length === 0) {
+            alert('変更する写真を選択してください。');
+            return;
+        }
+        if (confirm('選択した写真を一括で変更しますか？')) {
+            bulkUpdateForm.submit();
+        }
+    });
+
+    // 全選択/全解除機能
+    selectAllCheckbox.addEventListener('change', function() {
+        photoCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // 個別のチェックボックスの状態が変更されたときに全選択チェックボックスの状態を更新
+    photoCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectAllCheckbox);
+    });
+
+    function updateSelectAllCheckbox() {
+        selectAllCheckbox.checked = Array.from(photoCheckboxes).every(checkbox => checkbox.checked);
+    }
 });
 </script>
 @endpush

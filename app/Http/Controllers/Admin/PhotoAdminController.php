@@ -72,4 +72,18 @@ class PhotoAdminController extends Controller
         ->with('error', '写真の削除に失敗しました。')
         ->with('activeTab', 'photos-entry');
     }
+
+    public function bulkUpdate(Request $request)
+    {
+        foreach($request->SELECTED_PHOTOS as $photo){
+            $img = Image::where('FILE_NAME', $photo);
+            $img->update([
+                'VIEW_FLG' => $request->BULK_VIEW_FLG,
+                'PRIORITY' => $request->PRIORITY
+            ]);
+        }
+        return redirect()->route('admin')
+        ->with('message', '写真の表示設定が変更されました。')
+        ->with('activeTab', 'photos-entry');
+    }
 }

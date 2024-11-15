@@ -313,6 +313,21 @@ class TalentAdminController extends Controller
         ->with('message', '写真の削除に失敗しました。');
     }
 
+    //タレント写真を一括変更
+    public function bulkUpdate(Request $request)
+    {
+        foreach($request->SELECTED_PHOTOS as $photo){
+            $img = Image::where('FILE_NAME', $photo);
+            $img->update([
+                'VIEW_FLG' => $request->BULK_VIEW_FLG,
+                'PRIORITY' => $request->PRIORITY
+            ]);
+        }
+        return redirect()->route('admin.talent.admin')
+        ->with('message', '写真の表示設定が変更されました。')
+        ->with('activeTabT', 'talent-photos');
+    }
+
     // タレント経歴を追加
     public function storeCareer(Request $request)
     {
