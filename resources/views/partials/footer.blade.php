@@ -38,7 +38,7 @@
         </div>
         <p class="copyright">&copy; {{ date('Y') }} COSPLATFORM. All rights reserved.</p>
         <div class="admin">
-            <a href="{{ route('admin') }}">管理者ページ</a>
+            <a href="{{ route('login') }}">管理者ページ</a>
         </div>
     </div>
 </footer>

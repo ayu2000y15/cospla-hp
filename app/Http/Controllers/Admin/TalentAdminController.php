@@ -90,7 +90,7 @@ class TalentAdminController extends Controller
         }
 
         return redirect()->route('admin')
-        ->with('message', 'タレントが登録されました。タレント詳細ページで各種登録を行ってください。');
+        ->with('message', 'タレントが登録されました');
     }
 
     public function talentAdmin(){

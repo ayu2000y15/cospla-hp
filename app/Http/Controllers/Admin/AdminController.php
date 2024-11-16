@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\AccessControl;
+
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Models\Talent;
@@ -22,8 +25,32 @@ class AdminController extends Controller
         $this->fileUploadService = $fileUploadService;
     }
 
+    public function login(){
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        return view('admin.login', compact('logoImg'));
+    }
+
+    public function loginAccess(Request $request){
+        $user = User::where('name', '=' , $request->name)
+        ->where('password', '=', $request->password);
+
+        if($user->count() == 0){
+            return redirect()->route('login')
+            ->with('error', 'ログインに失敗しました。IDかパスワードが間違っています。');
+        }
+        $user = $user->first();
+        $root = AccessControl::select('access_view', 'access_root')->where('access_id', $user['access_id'])->first();
+        Session::put('access_view', $root->access_view);
+        return redirect()->route($root->access_root);
+    }
+
     public function index()
     {
+        if (!Session::has('access_view')) {
+            return redirect()->route('login')
+            ->with('error', 'セッションがありません。ログインしなおしてください。');
+        }
+        $access_view = Session::get('access_view');
         //タレント一覧
         $talentList = Talent::all()->sortByDesc('TALENT_ID');
         //タグ登録・削除
@@ -55,7 +82,7 @@ class AdminController extends Controller
             session()->flash('activeTab', 'talent-list');
         }
         
-        return view('admin.index', compact('talentList'
+        return view($access_view, compact('talentList'
         ,'newsList'
         ,'imgList'
         ,'talentImgList'
@@ -65,6 +92,17 @@ class AdminController extends Controller
         ,'careerList'
         ,'company'
         ,'logoImg'
+        ));
+    }
+
+    public function indexGuest()
+    {
+        //ロゴ
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+
+        session()->flash('activeTab', 'talent-entry');
+        return view('admin.index-guest', compact(
+        'logoImg'
         ));
     }
 }

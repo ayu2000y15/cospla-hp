@@ -50,8 +50,13 @@ Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.
 // Newsページ
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
+// 管理者ページログイン
+Route::get('/login', [AdminController::class, 'login'])->name('login');
+Route::post('/login/access', [AdminController::class, 'loginAccess'])->name('login.access');
 // 管理者ページ
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::get('/admin/guest', [AdminController::class, 'indexGuest'])->name('admin.guest');
+
 // タレント管理
 Route::get('/admin/talent/list', [TalentAdminController::class, 'list'])->name('admin.talent.list');
 Route::delete('/admin/talent/delete', [TalentAdminController::class, 'delete'])->name('admin.talent.delete');
