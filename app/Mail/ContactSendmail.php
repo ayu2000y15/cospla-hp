@@ -12,8 +12,9 @@ class ContactSendmail extends Mailable
     use Queueable, SerializesModels;
 
     public $referenceNumber;
-    public $category;
+    public $contactCategoryName;
     public $name;
+    public $age;
     public $mail;
     public $tel;
     public $subject;
@@ -44,9 +45,11 @@ class ContactSendmail extends Mailable
                 }
             }
         }
+
         $this->referenceNumber = $contact['REFERENCE_NUMBER'];
-        $this->category = $contact['CATEGORY'];
+        $this->contactCategoryName = $contact['CONTACT_CATEGORY_NAME'];
         $this->name = $contact['NAME'];
+        $this->age = $contact['AGE'];
         $this->tel = $contact['TEL'];
         $this->subject2 = $contact['SUBJECT'];
         $this->content = $contact['CONTENT'];
@@ -67,8 +70,9 @@ class ContactSendmail extends Mailable
             ->subject( $this->subject)
             ->text($this->root)
             ->with([
-                'questionCategory' => $this->category,
+                'contactCategoryName' => $this->contactCategoryName,
                 'name' => $this->name,
+                'age' => $this->age,
                 'email' => $this->mail,
                 'tel' => $this->tel,
                 'subject' => '【' . $this->subject2 . '】',
@@ -80,8 +84,9 @@ class ContactSendmail extends Mailable
         ->subject( $this->subject)
         ->text($this->root)
         ->with([
-            'questionCategory' => $this->category,
+            'contactCategoryName' => $this->contactCategoryName,
             'name' => $this->name,
+            'age' => $this->age,
             'email' => $this->mail,
             'tel' => $this->tel,
             'subject' => '【' . $this->subject2 . '】',

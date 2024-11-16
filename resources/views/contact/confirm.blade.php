@@ -17,17 +17,24 @@
             <form class="contact-form" action="{{ route('contact.send') }}" method="POST"
                 onsubmit="return checkSubmit();">
                 @csrf
-                @foreach(['CATEGORY', 'NAME', 'MAIL', 'TEL', 'SUBJECT', 'CONTENT'] as $field)
+                <input type="hidden" name="CONTACT_CATEGORY_ID" value="{{ $contactCategory['CONTACT_CATEGORY_ID'] }}">
+                <input type="hidden" name="CONTACT_CATEGORY_NAME" value="{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}">
+
+                @foreach(['NAME', 'MAIL', 'TEL', 'AGE','SUBJECT', 'CONTENT'] as $field)
                 <input type="hidden" name="{{ $field }}" value="{{ $contact[$field] }}">
                 @endforeach
 
                 <div class="confirm-group">
                     <label>問い合わせ項目</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['CATEGORY'] }}</p>
+                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}</p>
                 </div>
                 <div class="confirm-group">
                     <label>氏名</label>
                     <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['NAME'] }}</p>
+                </div>
+                <div class="confirm-group">
+                    <label>年齢</label>
+                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['AGE'] ?: '未入力' }}</p>
                 </div>
                 <div class="confirm-group">
                     <label>メールアドレス</label>

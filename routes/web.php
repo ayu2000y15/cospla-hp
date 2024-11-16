@@ -110,3 +110,5 @@ Route::delete('/admin/tag/{id}', [TagAdminController::class, 'delete'])->name('a
 Route::post('/admin/company/mail', [CompanyAdminController::class, 'mail'])->name('admin.company.mail');
 Route::post('/admin/company/update', [CompanyAdminController::class, 'update'])->name('admin.company.update');
 
+//aメーラー開く
+Route::get('/admin/acmail', [AdminController::class, 'acmail'])->name('admin.acmail');

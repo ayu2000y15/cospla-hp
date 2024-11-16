@@ -6,11 +6,12 @@
 
 ━━━━━━□■□　お問い合わせ内容　□■□━━━━━━
 お名前：{!! $name !!} 様
+年齢：{!! $age !!}
 E-Mail：{!! $mail !!}
 電話番号：{!! $tel !!}
 
 お問い合わせ番号：{!! $referenceNumber !!}
-カテゴリー：{!! $category !!}
+カテゴリー：{!! $contactCategoryName !!}
 件名：{!! $subject2 !!}
 本文：
 {!! $content !!}

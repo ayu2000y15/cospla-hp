@@ -14,11 +14,15 @@ class Contact extends Model
 
 
     protected $fillable = [
-        'REFERENCE_NUMBER', 'CATEGORY', 'NAME',
+        'REFERENCE_NUMBER', 'CONTACT_CATEGORY_ID', 'NAME',
         'AGE', 'MAIL', 'TEL',
         'SUBJECT', 'CONTENT', 'MEMO'
     ];
 
     protected $dates = ['INS_DATE', 'UPD_DATE'];
 
+    public function category()
+    {
+        return $this->belongsTo(ContactCategory::class, 'CONTACT_CATEGORY_ID', 'CONTACT_CATEGORY_ID');
+    }
 }

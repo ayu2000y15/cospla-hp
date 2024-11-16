@@ -16,21 +16,22 @@
                 @endif
                 @csrf
                 <div class="form-group">
-                    <label for="question-title">問い合わせ項目<span class="required"></span></label>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="question" value="問い合わせ" name="CATEGORY" checked />
-                            <label for="question">問い合わせ</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="apply" value="タレント応募" name="CATEGORY" />
-                            <label for="apply">タレント応募</label>
-                        </div>
-                    </div>
+                    <label for="CONTACT_CATEGORY_ID">問い合わせ項目</label>
+                    <select name="CONTACT_CATEGORY_ID" id="CONTACT_CATEGORY_ID" required>
+                        @foreach ($contactCategories as $select)
+                        <option value="{{ $select['CONTACT_CATEGORY_ID'] }}">
+                            {{ $select['CONTACT_CATEGORY_NAME'] }}
+                        </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="name">氏名<span class="required">必須</span></label>
                     <input type="text" id="name" name="NAME" placeholder="山田太郎" required />
+                </div>
+                <div class="form-group">
+                    <label for="age">年齢<span class="required"></span></label>
+                    <input type="text" id="age" name="AGE" placeholder="25" />
                 </div>
                 <div class="form-group">
                     <label for="email">メールアドレス<span class="required">必須</span></label>

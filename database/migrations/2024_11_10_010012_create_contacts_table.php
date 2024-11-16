@@ -11,7 +11,7 @@ class CreateContactsTable extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->integer('CONTACT_ID')->primary()->autoIncrement()->comment('問い合わせID');
             $table->char('REFERENCE_NUMBER', 8)->nullable()->unique()->comment('問い合わせ番号（ユーザー用）');
-            $table->string('CATEGORY', 100)->nullable()->comment('問い合わせカテゴリー');
+            $table->integer('CONTACT_CATEGORY_ID')->comment('問い合わせカテゴリーID(外部キー)');
             $table->string('NAME', 200)->nullable()->comment('氏名');
             $table->integer('AGE')->nullable()->comment('年齢');
             $table->string('MAIL', 200)->nullable()->comment('メールアドレス');
@@ -22,6 +22,8 @@ class CreateContactsTable extends Migration
             $table->timestamp('INS_DATE')->useCurrent()->comment('登録日');
             $table->timestamp('UPD_DATE')->useCurrent()->comment('更新日');
             $table->char('REPLY_FLG', 2)->default('0')->comment('返信フラグ');
+
+            $table->foreign('CONTACT_CATEGORY_ID')->references('CONTACT_CATEGORY_ID')->on('contact_categories')->onUpdate('cascade');
 
             $table->engine = 'InnoDB';
             $table->charset = 'utf8';
