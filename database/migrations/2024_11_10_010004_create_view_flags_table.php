@@ -43,7 +43,7 @@ class CreateViewFlagsTable extends Migration
             ['S104', 'COSPLAYページのトップ画像', 1, null, null, '0'],
             ['S105', 'CONTACTページのトップ画像', 1, null, null, '0'],
             ['S106', 'NEWSページのトップ画像', 1, null, null, '0'],
-            ['S201', 'TOPページのスライドショー', 0, null, null, '0'],
+            ['S201', 'TOPページのスライドバナー', 0, null, null, '0'],
             ['S203', 'TOPページのCOSPLAYに表示', 1, null, null, '0'],
             ['S204', 'TOPページの画像', 1, null, null, '0'],
             ['S301', 'ABOUTページの画像', 1, null, null, '0'],

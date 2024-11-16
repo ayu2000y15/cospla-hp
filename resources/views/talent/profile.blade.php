@@ -162,7 +162,6 @@
                             <ul>
                                 @foreach($talentCareer as $career)
                                 @php
-                                \Debugbar::addMessage($career);
                                 @endphp
                                     @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
                                     <li>

@@ -139,11 +139,13 @@
     z-index: 1;
 }
 
-.photo-checkbox {
+.photo-checkbox,
+.talent-checkbox {
     display: none;
 }
 
-.photo-checkbox-label {
+.photo-checkbox-label,
+.talent-checkbox-label {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -153,7 +155,8 @@
     cursor: pointer;
 }
 
-.photo-checkbox:checked + .photo-checkbox-label {
+.photo-checkbox:checked + .photo-checkbox-label,
+.talent-checkbox:checked + .talent-checkbox-label {
     background-color: #3498db;
 }
 
@@ -171,7 +174,8 @@
 }
 
 
-.photo-checkbox:checked + .photo-checkbox-label::after {
+.photo-checkbox:checked + .photo-checkbox-label::after,
+.talent-checkbox:checked + .talent-checkbox-label::after {
     content: '\2714';
     display: block;
     text-align: center;

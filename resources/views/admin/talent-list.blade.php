@@ -9,8 +9,8 @@
             @method('PUT')
             <div class="bulk-update-controls">
                 <div class="select-all-wrapper">
-                    <input type="checkbox" id="selectAll" class="select-all-checkbox">
-                    <label for="selectAll">全選択/全解除</label>
+                    <input type="checkbox" id="selectAllt" class="select-all-checkbox">
+                    <label for="selectAllt">全選択/全解除</label>
                 </div>
                 <div class="bulk-actions">
                     <select name="PUBLIC_FLG" class="bulk-view-select">
@@ -37,8 +37,8 @@
             <tr data-talent-id="{{ $talent->TALENT_ID }}" class="clickable-row">
                 <td>
                     <input type="checkbox" name="TALENT_PUBLIC[]" value="{{ $talent->TALENT_ID }}"
-                        class="photo-checkbox" form="bulkUpdateTalentForm" id="photo-{{ $talent->TALENT_ID }}">
-                    <label for="photo-{{ $talent->TALENT_ID }}" class="photo-checkbox-label"></label>
+                        class="talent-checkbox" form="bulkUpdateTalentForm" id="talent-{{ $talent->TALENT_ID }}">
+                    <label for="talent-{{ $talent->TALENT_ID }}" class="talent-checkbox-label"></label>
                 </td>
                 @if($talent->SPARE1 == '1')
                 <td>公開</td>
@@ -84,8 +84,8 @@
 // 一括変更機能の改善
 const bulkUpdateForm = document.getElementById('bulkUpdateTalentForm');
 const bulkUpdateButton = document.querySelector('.bulk-update-button-talent');
-const selectAllCheckbox = document.getElementById('selectAll');
-const photoCheckboxes = document.querySelectorAll('.photo-checkbox');
+const selectAllCheckbox = document.getElementById('selectAllt');
+const photoCheckboxes = document.querySelectorAll('.talent-checkbox');
 
 bulkUpdateButton.addEventListener('click', function(e) {
     e.preventDefault();
@@ -119,7 +119,7 @@ function updateSelectAllCheckbox() {
 document.querySelectorAll('.clickable-row').forEach(row => {
     row.addEventListener('click', function(e) {
         // チェックボックス、ラベル、ボタンをクリックした場合は遷移しない
-        if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL' || e.target.type === 'submit' || e.target.closest('.photo-checkbox-label')) {
+        if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL' || e.target.type === 'submit' || e.target.closest('.talent-checkbox-label')) {
             return;
         }
         const talentId = this.dataset.talentId;

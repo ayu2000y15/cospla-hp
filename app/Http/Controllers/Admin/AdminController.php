@@ -77,10 +77,13 @@ class AdminController extends Controller
 
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        \Debugbar::addMessage(Session::get('activeTab'));
 
         if (!Session::has('activeTab')) {
             session()->flash('activeTab', 'talent-list');
         }
+        \Debugbar::addMessage(Session::get('activeTab'));
+
         
         return view($access_view, compact('talentList'
         ,'newsList'
