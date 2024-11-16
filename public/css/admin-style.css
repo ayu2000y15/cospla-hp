@@ -622,10 +622,7 @@ body {
     }
     
     /* タレントIDと削除フラグの列を非表示にする */
-    .table-container.talent th:first-child,
-    .table-container.talent td:first-child,
-    .table-container.talent th:last-child,
-    .table-container.talent td:last-child {
+    .none {
         display: none;
     }
 
@@ -663,11 +660,5 @@ body {
       padding: 0.4rem; /* パディングをさらに小さくする */
     }
 
-    /* 所属日・退職日の列も非表示にする */
-    .table-container.talent th:nth-child(3), 
-    .table-container.talent td:nth-child(3),
-    .table-container.talent th:nth-child(4), 
-    .table-container.talent td:nth-child(4) {
-    display: none;
-    }
+
 }

@@ -16,7 +16,7 @@
             <a href="{{ route('home') }}">TOP</a>
             <a href="{{ route('about') }}">ABOUT</a>
             <a href="{{ route('talent') }}">TALENT</a>
-            <a href="{{ route('cosplay') }}">COSPLAY</a>
+            <!-- <a href="{{ route('cosplay') }}">COSPLAY</a> -->
             <a href="{{ route('contact') }}">CONTACT</a>
         </nav>
         <div class="social-icons">

@@ -47,6 +47,6 @@ class Talent extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('DEL_FLG', '0')->where('RETIREMENT_DATE', '>', now());
+        return $query->where('DEL_FLG', '0')->where('RETIREMENT_DATE', '>', now())->where('SPARE1', '1');
     }
 }

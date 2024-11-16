@@ -185,6 +185,20 @@ class TalentAdminController extends Controller
         return redirect()->route('admin.talent.admin');
     }
 
+    //タレントの公開、非公開を一括変更
+    public function bulkUpdateTalent(Request $request)
+    {
+        foreach($request->TALENT_PUBLIC as $talentId){
+            $talent = TALENT::where('TALENT_ID', $talentId);
+            $talent->update([
+                'SPARE1' => $request->PUBLIC_FLG
+            ]);
+        }
+        return redirect()->route('admin')
+        ->with('message', 'タレントの公開設定が変更されました。')
+        ->with('activeTabT', 'talent-list');
+    }
+
     // タレント情報編集画面を表示
     public function edit(Request $request)
     {
@@ -320,7 +334,7 @@ class TalentAdminController extends Controller
     }
 
     //タレント写真を一括変更
-    public function bulkUpdate(Request $request)
+    public function bulkUpdatePhoto(Request $request)
     {
         foreach($request->SELECTED_PHOTOS as $photo){
             $img = Image::where('FILE_NAME', $photo);

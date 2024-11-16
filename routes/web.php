@@ -61,6 +61,7 @@ Route::get('/admin/guest', [AdminController::class, 'indexGuest'])->name('admin.
 Route::get('/admin/talent/list', [TalentAdminController::class, 'list'])->name('admin.talent.list');
 Route::delete('/admin/talent/delete', [TalentAdminController::class, 'delete'])->name('admin.talent.delete');
 Route::post('/admin/talent/store', [TalentAdminController::class, 'store'])->name('admin.talent.store');
+Route::put('/admin/bulkUpdate', [TalentAdminController::class, 'bulkUpdateTalent'])->name('admin.talent.bulkUpdate');
 Route::get('/admin/talent-admin', [TalentAdminController::class, 'talentAdmin'])->name('admin.talent.admin');
 
 //タレント詳細ページ
@@ -71,7 +72,7 @@ Route::put('/admin/talent-admin/edit', [TalentAdminController::class, 'edit'])->
 Route::post('/admin/talent-admin/photos/upload', [TalentAdminController::class, 'uploadPhotos'])->name('admin.talent.photos.upload');
 Route::put('/admin/talent-admin/photos/update', [TalentAdminController::class, 'updatePhoto'])->name('admin.talent.photos.update');
 Route::delete('/admin/talent-admin/photos/delete', [TalentAdminController::class, 'deletePhoto'])->name('admin.talent.photos.delete');
-Route::put('/admin/talent-admin/photos/bulkUpdate', [TalentAdminController::class, 'bulkUpdate'])->name('admin.talent.photos.bulkUpdate');
+Route::put('/admin/talent-admin/photos/bulkUpdate', [TalentAdminController::class, 'bulkUpdatePhoto'])->name('admin.talent.photos.bulkUpdate');
 
 //タレント経歴
 Route::post('/admin/talent-admin/career/store', [TalentAdminController::class, 'storeCareer'])->name('admin.talent.career.store');

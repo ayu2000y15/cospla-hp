@@ -31,6 +31,7 @@ class TalentController extends Controller
         ->where('img2.VIEW_FLG', '02')
         ->where('t.DEL_FLG', '0')
         ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
+        ->where('t.SPARE1', '1')
         ->orderBy('img1.PRIORITY')
         ->orderBy('t.LAYER_NAME')
         ->get();

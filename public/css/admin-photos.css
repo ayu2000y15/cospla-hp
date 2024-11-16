@@ -103,7 +103,8 @@
     border: 1px solid #ccc;
 }
 
-.bulk-update-button {
+.bulk-update-button,
+.bulk-update-button-talent {
     padding: 8px 16px;
     background-color: #3498db;
     color: white;
@@ -113,7 +114,8 @@
     transition: background-color 0.3s;
 }
 
-.bulk-update-button:hover {
+.bulk-update-button:hover,
+.bulk-update-button-talent:hover {
     background-color: #2980b9;
 }
 
@@ -303,7 +305,8 @@
     }
 
     .bulk-view-select,
-    .bulk-update-button {
+    .bulk-update-button,
+    .bulk-update-buttn-talent {
         width: 100%;
     }
 

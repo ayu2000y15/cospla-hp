@@ -55,7 +55,7 @@
         </section>
     </div>
     <div id="top" class="container">
-        <h2>COSPLAY</h2>
+        <!-- <h2>COSPLAY</h2>
         <section id="cosplay" class="container-box cosplay">
             <div class="section-content">
                 <div class="cosplay-list">
@@ -75,7 +75,7 @@
                     </a>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <h2>NEWS</h2>
         <section id="news" class="container-box news">
