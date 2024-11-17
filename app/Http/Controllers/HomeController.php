@@ -29,7 +29,7 @@ class HomeController extends Controller
         ->take(4)->get();
 
         $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()->orderBy('PRIORITY')->take(6)->get();
-        $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()->get();
+        $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()->orderBy('PRIORITY')->get();
         $slidesCnt = $slides->count();
         $newsTitle = News::active()->orderBy('POST_DATE', 'desc')->take(5)->get();
 
