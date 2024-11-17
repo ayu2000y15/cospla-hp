@@ -21,7 +21,9 @@ class ContactSendmail extends Mailable
     public $subject2;
     public $content;
     public $root;
-    public $mailCC = null;
+    public $mailTo;
+
+    public $mailCc = null;
 
     /**
      * Create a new message instance.
@@ -33,21 +35,22 @@ class ContactSendmail extends Mailable
         $this->root = $root;
         if($root == 'contact.mail'){
             $this->subject = '送信が完了しました 【' . $contact['SUBJECT'] . '】';
-            $this->mail = $contact['MAIL'];
+            $this->mailTo = $contact['MAIL'];
         }else{
             $this->subject = 'HPから問い合わせを受け付けました 【問い合わせ番号：' . $contact['REFERENCE_NUMBER'] . '】';
-            if(isset($sendMail)){
+            if(!is_null($sendMail)){
                 if(!is_null($sendMail['SPARE1']) || !empty($sendMail['SPARE1'])){
-                    $this->mail = $sendMail['SPARE1'];
+                    $this->mailTo = $sendMail['SPARE1'];
                 }
                 if(!is_null($sendMail['SPARE2']) || !empty($sendMail['SPARE2'])){
-                    $this->mailCC = $sendMail['SPARE2'];
+                    $this->mailCc = $sendMail['SPARE2'];
                 }
             }
         }
 
         $this->referenceNumber = $contact['REFERENCE_NUMBER'];
         $this->contactCategoryName = $contact['CONTACT_CATEGORY_NAME'];
+        $this->mail = $contact['MAIL'];
         $this->name = $contact['NAME'];
         $this->age = $contact['AGE'];
         $this->tel = $contact['TEL'];
@@ -63,10 +66,10 @@ class ContactSendmail extends Mailable
     public function build()
     {
         //ccがある場合はこっち
-        if($this->mailCC == null){
+        if($this->mailCc <> null){
             return $this
-            ->to($this->mail)
-            ->cc($this->mailCC)
+            ->to($this->mailTo)
+            ->cc($this->mailCc)
             ->subject( $this->subject)
             ->text($this->root)
             ->with([
@@ -80,7 +83,7 @@ class ContactSendmail extends Mailable
             ]);
         }
         return $this
-        ->to($this->mail)
+        ->to($this->mailTo)
         ->subject( $this->subject)
         ->text($this->root)
         ->with([

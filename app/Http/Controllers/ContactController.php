@@ -52,6 +52,7 @@ class ContactController extends Controller
 
         //管理者に通知メールを知らせる(CompanyのSPARE1とSPARE2に入っているメールアドレスに送信)
         $sendMail = Company::select('SPARE1', 'SPARE2')->first();
+
         \Mail::send(new ContactSendmail($contact,'contact.mail_kanri', $sendMail));
         //入力されたメールに返信する
         \Mail::send(new ContactSendmail($contact,'contact.mail', null));

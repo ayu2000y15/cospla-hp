@@ -11,7 +11,7 @@
                 <input type="hidden" name="CAREER_ID" id="CAREER_ID">
 
                 <div class="form-group">
-                    <label for="CAREER_CATEGORY_ID">経歴カテゴリ</label>
+                    <label for="CAREER_CATEGORY_ID">経歴カテゴリ<span class="required">※必須</span></label>
                     <select name="CAREER_CATEGORY_ID" id="CAREER_CATEGORY_ID" required>
                         @foreach ($careerCategories as $select)
                         <option value="{{ $select['CAREER_CATEGORY_ID'] }}">
@@ -21,12 +21,12 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="CONTENT">経歴内容</label>
+                    <label for="CONTENT">経歴内容<span class="required">※必須</span></label>
                     <input type="text" id="CONTENT" name="CONTENT" required>
                 </div>
                 <div class="form-group">
                     <label for="ACTIVE_DATE">活動日</label>
-                    <input type="date" id="ACTIVE_DATE" name="ACTIVE_DATE" required>
+                    <input type="date" id="ACTIVE_DATE" name="ACTIVE_DATE" >
                 </div>
                 <div class="form-group">
                     <label for="DETAIL">経歴詳細</label>
