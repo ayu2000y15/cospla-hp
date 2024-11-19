@@ -60,7 +60,7 @@ class AdminController extends Controller
         //ニュース登録・変更
         $newsList = News::all()->sortByDesc('POST_DATE');
         //HP画像登録・変更
-        $imgList = Image::where('TALENT_ID', null)->get()->sortBy('VIEW_FLG')->sortBy('PRIORITY');
+        $imgList = Image::where('TALENT_ID', null)->sortBy('VIEW_FLG')->sortBy('PRIORITY')->get();
         $talentImgList = Image::whereNotNull('TALENT_ID')
         ->where('VIEW_FLG', '=', '01')
         ->get()->sortBy('PRIORITY')->sortBy('TALENT_ID');
@@ -71,18 +71,16 @@ class AdminController extends Controller
         ->where('MAX_COUNT', '<>', 1)
         ->where('VIEW_FLG', 'like', 'S%')
         ->orWhere('VIEW_FLG', '=', '00')
-        ->distinct()->get()->sortBy('VIEW_FLG');
+        ->distinct()->sortBy('VIEW_FLG')->get();
         //会社情報
         $company = Company::all()->first();
 
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
-        \Debugbar::addMessage(Session::get('activeTab'));
 
         if (!Session::has('activeTab')) {
             session()->flash('activeTab', 'talent-list');
         }
-        \Debugbar::addMessage(Session::get('activeTab'));
 
         
         return view($access_view, compact('talentList'
