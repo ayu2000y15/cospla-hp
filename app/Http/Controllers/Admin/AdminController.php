@@ -60,10 +60,11 @@ class AdminController extends Controller
         //ニュース登録・変更
         $newsList = News::all()->sortByDesc('POST_DATE');
         //HP画像登録・変更
-        $imgList = Image::where('TALENT_ID', null)->get()->sortBy('VIEW_FLG')->sortBy('PRIORITY');
+        $imgList = Image::where('TALENT_ID', null)->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
         $talentImgList = Image::whereNotNull('TALENT_ID')
         ->where('VIEW_FLG', '=', '01')
-        ->get()->sortBy('PRIORITY')->sortBy('TALENT_ID');
+        ->orderBy('PRIORITY')->orderBy('TALENT_ID')
+        ->get();
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', 'S%')
         ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
@@ -71,7 +72,7 @@ class AdminController extends Controller
         ->where('MAX_COUNT', '<>', 1)
         ->where('VIEW_FLG', 'like', 'S%')
         ->orWhere('VIEW_FLG', '=', '00')
-        ->distinct()->get()->sortBy('VIEW_FLG');
+        ->distinct()->orderBy('VIEW_FLG')->get();
         //会社情報
         $company = Company::all()->first();
 
