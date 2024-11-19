@@ -17,16 +17,20 @@ class PhotoAdminController extends Controller
         $this->fileUploadService = $fileUploadService;
     }
 
-    public function entry()
+    public function entry(Request $request)
     {
-        $imgList = Image::where('TALENT_ID', null)->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
-        $talentImgList = Image::whereNotNull('TALENT_ID')
-        ->where('VIEW_FLG', '=', '01')
-        ->orderBy('PRIORITY')->orderBy('TALENT_ID')->get();
-        $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
-        ->where('VIEW_FLG', 'like', 'S%')
-        ->orWhere('VIEW_FLG', '=', '00')->distinct()->orderBy('VIEW_FLG')->get();
-        return view('admin', compact('imgList', 'talentImgList', 'viewFlags'));
+        if($request->FILTER<>"ALL"){
+            $imgList = Image::where('TALENT_ID', null)
+            ->where('VIEW_FLG', $request->FILTER)
+            ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
+        }else{
+            $imgList = Image::where('TALENT_ID', null)
+            ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
+        }
+        return redirect()->route('admin')
+        ->with('imgList', $imgList)
+        ->with('filter', $request->FILTER)
+        ->with('activeTab', 'photos-entry');
     }
 
     public function upload(Request $request)

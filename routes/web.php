@@ -101,7 +101,7 @@ Route::post('/admin/news/{id}', [NewsAdminController::class, 'update'])->name('a
 Route::delete('/admin/news/{id}', [NewsAdminController::class, 'delete'])->name('admin.news.delete');
 
 // 写真管理
-Route::get('/admin/photos', [PhotoAdminController::class, 'entry'])->name('admin.photos.entry');
+Route::post('/admin/photos/entry', [PhotoAdminController::class, 'entry'])->name('admin.photos.entry');
 Route::post('/admin/photos/upload', [PhotoAdminController::class, 'upload'])->name('admin.photos.upload');
 Route::put('/admin/photos', [PhotoAdminController::class, 'update'])->name('admin.photos.update');
 Route::delete('/admin/photos', [PhotoAdminController::class, 'delete'])->name('admin.photos.delete');

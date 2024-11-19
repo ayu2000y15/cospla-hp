@@ -30,7 +30,49 @@
             <div class="photo-list-section">
                 <h3 class="subsection-title">◆登録済みの写真一覧</h3>
                 <p>TOPページのCOSPLAYは6枚まで設定可</p>
-                <!-- 一括変更フォームの改善 -->
+                <br>
+                <form action="{{ route('admin.photos.entry') }}" method="POST">
+                    @csrf
+                    <div class="check-box">
+                        <label class="checkbox-label">
+                            @if(session('filter') === 'ALL' || session('filter') == null )
+                            <input type="radio" name="FILTER" value="ALL" checked />
+                            @else
+                            <input type="radio" name="FILTER" value="ALL" />
+                            @endif
+                            全て
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="FILTER" value="00"
+                                {{ session('filter') === '00' ? 'checked' : '' }} />
+                            非公開
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="FILTER" value="S201"
+                                {{ session('filter') === 'S201' ? 'checked' : '' }} />
+                            スライドバナー
+                        </label>
+                    </div>
+                    <div class="check-box">
+                        <label class="checkbox-label">
+                            <input type="radio" name="FILTER" value="S203"
+                                {{ session('filter') === 'S203' ? 'checked' : '' }} />
+                            TOPページのCOSPLAY
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="FILTER" value="S401"
+                                {{ session('filter') === 'S401' ? 'checked' : '' }} />
+                            COSPLAY上
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="FILTER" value="S402"
+                                {{ session('filter') === 'S402' ? 'checked' : '' }} />
+                            COSPLAY下
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-button">フィルター</button>
+                </form>
+                <br>
                 <form action="{{ route('admin.photos.bulkUpdate') }}" method="POST" id="bulkUpdateForm">
                     @csrf
                     @method('PUT')
