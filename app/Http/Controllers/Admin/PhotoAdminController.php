@@ -19,13 +19,13 @@ class PhotoAdminController extends Controller
 
     public function entry()
     {
-        $imgList = Image::where('TALENT_ID', null)->get();
+        $imgList = Image::where('TALENT_ID', null)->get()->sortBy('VIEW_FLG')->sortBy('PRIORITY');
         $talentImgList = Image::whereNotNull('TALENT_ID')
         ->where('VIEW_FLG', '=', '01')
         ->get()->sortBy('PRIORITY')->sortBy('TALENT_ID');
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', 'S%')
-        ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
+        ->orWhere('VIEW_FLG', '=', '00')->distinct()->get()->sortBy('VIEW_FLG');
         return view('admin', compact('imgList', 'talentImgList', 'viewFlags'));
     }
 
