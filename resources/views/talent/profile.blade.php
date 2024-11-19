@@ -18,7 +18,7 @@
                     <div class="profile-info">
                         <div class="social-icons profile">
                             @if($talentProfile->SNS_1_FLG === '1')
-                            <a href="{{ $talent->SNS_1 }}" aria-label="X (Twitter)">
+                            <a href="{{ $talent->SNS_1 }}" aria-label="X (Twitter)" target="_blank" rel="noopener">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
@@ -28,7 +28,7 @@
                             </a>
                             @endif
                             @if($talentProfile->SNS_2_FLG === '1')
-                            <a href="{{ $talent->SNS_2 }}" aria-label="Instagram">
+                            <a href="{{ $talent->SNS_2 }}" aria-label="Instagram" target="_blank" rel="noopener">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
@@ -39,7 +39,7 @@
                             </a>
                             @endif
                             @if($talentProfile->SNS_3_FLG === '1')
-                            <a href="{{ $talent->SNS_3 }}" aria-label="TikTok">
+                            <a href="{{ $talent->SNS_3 }}" aria-label="TikTok" target="_blank" rel="noopener">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
