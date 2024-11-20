@@ -100,7 +100,12 @@ class TalentAdminController extends Controller
         $talentInfo = TalentInfoControl::findOrFail($talentId);
 
         //タレント写真情報
-        $talentImgList = Image::where('TALENT_ID',$talentId)->get()->sortBy('VIEW_FLG');
+        $talentImgList = Image::where('TALENT_ID',$talentId)
+        ->orderBy('VIEW_FLG')
+        ->orderByRaw('PRIORITY is null')
+        ->orderByRaw('PRIORITY = 0')
+        ->orderBy('PRIORITY')
+        ->get();
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', '__')
         ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
@@ -121,14 +126,18 @@ class TalentAdminController extends Controller
             'tc.TALENT_ID as TALENT_ID',
             'tc.CONTENT as CONTENT',
             'tc.DETAIL as DETAIL',
+            'tc.SPARE1 as SPARE1',
             'tc.ACTIVE_DATE as ACTIVE_DATE',
             'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
             'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
         )
         ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
         ->where('tc.TALENT_ID', $talentId)
-        ->orderBy('ACTIVE_DATE')
-        ->orderBy('CAREER_ID')
+        ->orderByRaw('tc.SPARE1 is null')
+        ->orderByRaw('tc.SPARE1 = 0')
+        ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+        ->orderBy('tc.ACTIVE_DATE')
+        ->orderBy('tc.CAREER_ID')
         ->get();
 
         //タレントタグ情報
@@ -307,7 +316,8 @@ class TalentAdminController extends Controller
         ->where('FILE_NAME', $request->FILE_NAME);
 
         $photo->update([
-            'VIEW_FLG' => $request->VIEW_FLG
+            'VIEW_FLG' => $request->VIEW_FLG,
+            'PRIORITY' => $request->PRIORITY
         ]);
 
         session()->flash('activeTabT', 'talent-photos');
@@ -355,6 +365,7 @@ class TalentAdminController extends Controller
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
             'CONTENT' => 'required|string',
             'ACTIVE_DATE' => 'nullable|date',
+            'SPARE1' => 'nullable|integer',
             'DETAIL' => 'nullable|string',
         ]);
 
@@ -373,6 +384,7 @@ class TalentAdminController extends Controller
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
             'CONTENT' => 'required|string',
             'ACTIVE_DATE' => 'nullable|date',
+            'SPARE1' => 'nullable|integer',
             'DETAIL' => 'nullable|string',
         ]);
 

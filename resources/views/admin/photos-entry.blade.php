@@ -29,7 +29,8 @@
             <!-- 写真一覧 -->
             <div class="photo-list-section">
                 <h3 class="subsection-title">◆登録済みの写真一覧</h3>
-                <p>TOPページのCOSPLAYは6枚まで設定可</p>
+                <p>※優先度の数字は小さいほど先に表示される。設定しなかった場合（空欄）は最後に表示。</p>
+                <p>※TOPページのCOSPLAYは6枚まで設定可</p>
                 <br>
                 <form action="{{ route('admin.photos.entry') }}" method="POST">
                     @csrf

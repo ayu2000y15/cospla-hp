@@ -61,13 +61,21 @@ class AdminController extends Controller
         $newsList = News::all()->sortByDesc('POST_DATE');
         //HP画像登録・変更
         if (!Session::has('imgList')) {
-            $imgList = Image::where('TALENT_ID', null)->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
+            $imgList = Image::where('TALENT_ID', null)
+            ->orderBy('VIEW_FLG')
+            ->orderByRaw('PRIORITY is null')
+            ->orderByRaw('PRIORITY = 0')
+            ->orderBy('PRIORITY')->get();
         }else{
             $imgList = Session::get('imgList');
         }
         $talentImgList = Image::whereNotNull('TALENT_ID')
         ->where('VIEW_FLG', '=', '01')
-        ->orderBy('PRIORITY')->orderBy('TALENT_ID')
+        ->orderBy('VIEW_FLG')
+        ->orderByRaw('PRIORITY is null')
+        ->orderByRaw('PRIORITY = 0')
+        ->orderBy('PRIORITY')
+        ->orderBy('TALENT_ID')
         ->get();
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
         ->where('VIEW_FLG', 'like', 'S%')

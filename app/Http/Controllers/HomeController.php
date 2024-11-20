@@ -28,8 +28,14 @@ class HomeController extends Controller
         ->orderBy('img.PRIORITY')
         ->take(4)->get();
 
-        $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()->orderBy('PRIORITY')->take(6)->get();
-        $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()->orderBy('PRIORITY')->get();
+        $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()
+        ->orderByRaw('PRIORITY is null')
+        ->orderByRaw('PRIORITY = 0')
+        ->orderBy('PRIORITY')->take(6)->get();
+        $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()
+        ->orderByRaw('PRIORITY is null')
+        ->orderByRaw('PRIORITY = 0')
+        ->orderBy('PRIORITY')->get();
         $slidesCnt = $slides->count();
         $newsTitle = News::active()->orderBy('POST_DATE', 'desc')->take(5)->get();
 

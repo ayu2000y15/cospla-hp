@@ -634,6 +634,11 @@ body {
     .table-container.edit td:first-child {
         display: inline;
     }
+
+    .table-container th:last-child,
+    .table-container td:last-child {
+        display: none;
+    }
     
 
 }

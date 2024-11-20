@@ -4,6 +4,7 @@
     <div class="form-area">
         <div class="form-area-common">
             <h2>タレント経歴登録・編集</h2>
+            <p>※優先度の数字は小さいほど先に表示される。設定しなかった場合（空欄）は最後に表示。</p>
             <form id="adminForm" onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.career.store') }}"
                 method="POST">
                 @csrf
@@ -29,6 +30,10 @@
                     <input type="date" id="ACTIVE_DATE" name="ACTIVE_DATE" >
                 </div>
                 <div class="form-group">
+                    <label for="SPARE1">優先度<span class="required"></span></label>
+                    <input type="number" id="SPARE1" name="SPARE1" >
+                </div>
+                <div class="form-group">
                     <label for="DETAIL">経歴詳細</label>
                     <textarea id="DETAIL" name="DETAIL" rows="5"></textarea>
                 </div>
@@ -43,6 +48,7 @@
             <table class="table-container">
                 <thead>
                     <tr>
+                        <th>優先度</th>
                         <th>活動日</th>
                         <th>経歴カテゴリ</th>
                         <th>経歴内容</th>
@@ -52,6 +58,7 @@
                 <tbody>
                     @foreach ($talentCareer as $career)
                     <tr>
+                        <td>{{ $career->SPARE1 }}</td>
                         <td>{{ $career->ACTIVE_DATE }}</td>
                         <td>{{ $career->CAREER_CATEGORY_NAME }}</td>
                         <td>{{ $career->CONTENT }}</td>
@@ -85,6 +92,7 @@ function editItem(item) {
     document.getElementById('CAREER_CATEGORY_ID').value = item.CAREER_CATEGORY_ID;
     document.getElementById('CONTENT').value = item.CONTENT;
     document.getElementById('ACTIVE_DATE').value = item.ACTIVE_DATE;
+    document.getElementById('SPARE1').value = item.SPARE1;
     document.getElementById('DETAIL').value = item.DETAIL;
     document.getElementById('adminForm').method = "POST";
     document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}";

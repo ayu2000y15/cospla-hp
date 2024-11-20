@@ -65,6 +65,13 @@
                             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
                             <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
                             <div class="select-wrapper">
+                                @if($img->VIEW_FLG == '03')
+                                <p>※優先度の数字は小さいほど先に表示される</p>
+                                <label class="priority-label">優先度
+                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" min="1" max="4"
+                                        class="priority-input">
+                                </label>
+                                @endif
                                 <select name="VIEW_FLG" class="view-select">
                                     @foreach ($viewFlags as $select)
                                     <option value="{{ $select->VIEW_FLG }}"

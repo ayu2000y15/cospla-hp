@@ -50,7 +50,11 @@ class TalentController extends Controller
         $talent = Talent::active()->findOrFail($request['id']);
         $talentProfile = TalentInfoControl::where('TALENT_ID', $request['id'])->get()->first();
         $talentImgTop = Image::where('VIEW_FLG', '01')->where('TALENT_ID', $request['id'])->active()->get()->first();
-        $talentImg = Image::where('VIEW_FLG', '03')->where('TALENT_ID', $request['id'])->active()->get();
+        $talentImg = Image::where('VIEW_FLG', '03')->where('TALENT_ID', $request['id'])
+        ->orderByRaw('PRIORITY is null')
+        ->orderByRaw('PRIORITY = 0')
+        ->orderBy('PRIORITY')
+        ->active()->get();
         $talentTag = DB::table('talent_tags as t')
         ->select(
             'tag.TAG_NAME as TAG_NAME',
@@ -71,7 +75,13 @@ class TalentController extends Controller
         ->groupBy('c.CAREER_CATEGORY_NAME')
         ->orderBy('c.CAREER_CATEGORY_ID')
         ->get();
-        $talentCareer = TalentCareer::where('TALENT_ID', $request['id'])->get();
+        $talentCareer = TalentCareer::where('TALENT_ID', $request['id'])
+        ->orderByRaw('SPARE1 is null')
+        ->orderByRaw('SPARE1 = 0')
+        ->orderByRaw('LENGTH(SPARE1), SPARE1')
+        ->orderBy('ACTIVE_DATE')
+        ->orderBy('CAREER_ID')
+        ->get();
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG','S003')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
