@@ -87,7 +87,7 @@ function editItem(item) {
     document.getElementById('ACTIVE_DATE').value = item.ACTIVE_DATE;
     document.getElementById('DETAIL').value = item.DETAIL;
     document.getElementById('adminForm').method = "POST";
-    document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}/";
+    document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}";
     document.getElementById('submitBtn').textContent = '更新';
 
     window.scrollTo({
