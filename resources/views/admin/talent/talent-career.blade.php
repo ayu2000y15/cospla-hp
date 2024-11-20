@@ -86,7 +86,7 @@ function editItem(item) {
     document.getElementById('CONTENT').value = item.CONTENT;
     document.getElementById('ACTIVE_DATE').value = item.ACTIVE_DATE;
     document.getElementById('DETAIL').value = item.DETAIL;
-    document.getElementById('adminForm').method = "post";
+    document.getElementById('adminForm').method = "POST";
     document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}/";
     document.getElementById('submitBtn').textContent = '更新';
 
