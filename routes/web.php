@@ -50,6 +50,9 @@ Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.
 // Newsページ
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
+// プライバシーポリシー
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+
 // 管理者ページログイン
 Route::get('/login', [AdminController::class, 'login'])->name('login');
 Route::post('/login/access', [AdminController::class, 'loginAccess'])->name('login.access');

@@ -47,4 +47,13 @@ class HomeController extends Controller
 
         return view('home', compact('talent', 'cosplay', 'slides', 'slidesCnt', 'newsTitle', 'topImg', 'backImg', 'logoImg','sns'));
     }
+
+    public function privacyPolicy(){
+        $topImg = Image::where('VIEW_FLG', 'S102')->active()->visible()->first();
+        $backImg = Image::where('VIEW_FLG', 'S002')->active()->visible()->first();
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $sns = Company::first();
+
+        return view('privacy-policy', compact('topImg', 'backImg', 'logoImg','sns'));
+    }
 }

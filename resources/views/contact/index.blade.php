@@ -51,10 +51,6 @@
                     <textarea id="content" name="CONTENT" rows="5" placeholder="問い合わせ内容をここに記載してください"
                         required></textarea>
                 </div>
-                <!-- <div class="form-group checkbox-group">
-                        <input type="checkbox" id="privacy-policy" name="privacy-policy" required />
-                        <label for="privacy-policy">プライバシーポリシーに同意する</label>
-                    </div> -->
                 <button type="submit" class="submit-button">お問い合わせ内容の確認へ</button>
             </form>
         </div>

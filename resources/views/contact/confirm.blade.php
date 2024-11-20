@@ -18,7 +18,8 @@
                 onsubmit="return checkSubmit();">
                 @csrf
                 <input type="hidden" name="CONTACT_CATEGORY_ID" value="{{ $contactCategory['CONTACT_CATEGORY_ID'] }}">
-                <input type="hidden" name="CONTACT_CATEGORY_NAME" value="{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}">
+                <input type="hidden" name="CONTACT_CATEGORY_NAME"
+                    value="{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}">
 
                 @foreach(['NAME', 'MAIL', 'TEL', 'AGE','SUBJECT', 'CONTENT'] as $field)
                 <input type="hidden" name="{{ $field }}" value="{{ $contact[$field] }}">
@@ -50,9 +51,15 @@
                 </div>
                 <div class="confirm-group">
                     <label>質問内容 または 自己PR等</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem; text-align: left; ">{!! nl2br(e($contact['CONTENT'])) !!}</p>
+                    <p style="font-size:1.3rem; margin-left: 3rem; text-align: left; ">{!! nl2br(e($contact['CONTENT']))
+                        !!}</p>
                 </div>
-
+                <div class="confirm-group privacy-policy">
+                    <label>
+                        <input type="checkbox" name="privacy_policy" required>
+                        <a href="{{ route('privacy-policy') }}" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する
+                    </label>
+                </div>
                 <div class="button-group">
                     <button type="button" class="submit-button" onclick="history.back();">修正する</button>
                     <button type="submit" class="submit-button">送信する</button>
@@ -87,7 +94,7 @@ body {
 }
 
 .confirm-group p {
-    color:black;
+    color: black;
     margin: 0;
     line-height: 1;
     display: inline-block;
@@ -97,6 +104,25 @@ body {
     text-align: center;
 }
 
+.privacy-policy {
+    margin-top: 20px;
+    border-bottom: none;
+}
+
+.privacy-policy label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.privacy-policy input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.privacy-policy a {
+    color: #007bff;
+    text-decoration: underline;
+}
 </style>
 @endpush
 

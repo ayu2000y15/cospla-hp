@@ -437,7 +437,9 @@ h2 {
     font-size:2rem;
 }
 
-.container-box.about {
+.container-box.about,
+.container-box.privacy {
+    padding-top: 0;
     margin-left: 8rem;
     margin-right: 8rem;
 }
@@ -1003,6 +1005,21 @@ h2 {
 
 .footer-social a {
     color: white;
+}
+
+.footer-links {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
 }
 
 .copyright {
