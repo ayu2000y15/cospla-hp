@@ -372,11 +372,11 @@ class TalentAdminController extends Controller
         $validatedData = $request->validate([
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
             'CONTENT' => 'required|string',
-            'ACTIVE_DATE' => 'required|date',
+            'ACTIVE_DATE' => 'nullable|date',
             'DETAIL' => 'nullable|string',
         ]);
 
-        $career = TalentCareer::where('TALENT_ID', $request->TALENT_ID);
+        $career = TalentCareer::where('CAREER_ID', $request->CAREER_ID);
         $career->update($validatedData);
 
         session()->flash('activeTabT', 'talent-career');
