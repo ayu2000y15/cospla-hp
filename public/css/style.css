@@ -744,7 +744,7 @@ h2 {
     font-size: 1.5rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    
+
 }
 
 .submit-button {
@@ -756,7 +756,7 @@ h2 {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    
+
 }
 
 .button:hover, .button.active,
@@ -1326,14 +1326,15 @@ h2 {
     }
 
     .container-box.contact,
-    .container-box.about {
+    .container-box.about,
+    .container-box.privacy {
         padding-bottom: 4rem;
         margin-top: 10rem;
         margin-left: 0;
         margin-right: 0;
     }
 
-    
+
     .profile-content {
         flex-direction: column;
     }
@@ -1421,7 +1422,7 @@ h2 {
     .photos-slider-container {
         padding: 0 1rem;
     }
-    
+
     .slider-arrow {
         top: 50%;
         transform: translateY(-50%);
