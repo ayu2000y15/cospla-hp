@@ -166,11 +166,11 @@
                                     @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
                                     <li class="career-item">
                                         <span class="career-date">
-                                            @if($career->SPARE2 === '0')
+                                            @if($career->SPARE2 === '1')
                                                 {{ date('Y/n/j', strtotime($career->ACTIVE_DATE)) }}
-                                            @elseif($career->SPARE2 === '1')
-                                                {{ date('Y/n', strtotime($career->ACTIVE_DATE)) }}
                                             @elseif($career->SPARE2 === '2')
+                                                {{ date('Y/n', strtotime($career->ACTIVE_DATE)) }}
+                                            @elseif($career->SPARE2 === '3')
                                                 {{ date('Y', strtotime($career->ACTIVE_DATE)) }}
                                             @else
                                                 某日

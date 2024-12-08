@@ -78,6 +78,7 @@ Route::delete('/admin/talent-admin/photos/delete', [TalentAdminController::class
 Route::put('/admin/talent-admin/photos/bulkUpdate', [TalentAdminController::class, 'bulkUpdatePhoto'])->name('admin.talent.photos.bulkUpdate');
 
 //タレント経歴
+Route::post('/admin/talent-admin/career/entry', [TalentAdminController::class, 'entryCareer'])->name('admin.talent.career.entry');
 Route::post('/admin/talent-admin/career/store', [TalentAdminController::class, 'storeCareer'])->name('admin.talent.career.store');
 Route::post('/admin/talent-admin/career/update', [TalentAdminController::class, 'updateCareer'])->name('admin.talent.career.update');
 Route::delete('/admin/talent-admin/career/delete', [TalentAdminController::class, 'deleteCareer'])->name('admin.talent.career.delete');

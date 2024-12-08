@@ -118,29 +118,53 @@ class TalentAdminController extends Controller
         //タレント経歴
         //タレントが持っている経歴ジャンル
         $careerCategories = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
-
         //タレント経歴
-        $talentCareer = DB::table('talent_careers as tc')
-        ->select(
-            'tc.CAREER_ID as CAREER_ID',
-            'tc.TALENT_ID as TALENT_ID',
-            'tc.CONTENT as CONTENT',
-            'tc.DETAIL as DETAIL',
-            'tc.SPARE1 as SPARE1',
-            'tc.SPARE2 as SPARE2',
-            'tc.ACTIVE_DATE as ACTIVE_DATE',
-            'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
-            'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
-        )
-        ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
-        ->where('tc.TALENT_ID', $talentId)
-        ->orderByRaw('tc.SPARE1 is null')
-        ->orderByRaw('tc.SPARE1 = 0')
-        ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
-        ->orderBy('tc.ACTIVE_DATE')
-        ->orderBy('tc.CAREER_ID')
-        ->get();
-
+        \Debugbar::addMessage(Session::has('careerFilter') );
+        if (!Session::has('careerFilter') || Session::get('careerFilter')=='ALL') {
+            $talentCareer = DB::table('talent_careers as tc')
+            ->select(
+                'tc.CAREER_ID as CAREER_ID',
+                'tc.TALENT_ID as TALENT_ID',
+                'tc.CONTENT as CONTENT',
+                'tc.DETAIL as DETAIL',
+                'tc.SPARE1 as SPARE1',
+                'tc.SPARE2 as SPARE2',
+                'tc.ACTIVE_DATE as ACTIVE_DATE',
+                'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
+                'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
+            )
+            ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
+            ->where('tc.TALENT_ID', $talentId)
+            ->orderByRaw('tc.SPARE1 is null')
+            ->orderByRaw('tc.SPARE1 = 0')
+            ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+            ->orderBy('tc.ACTIVE_DATE')
+            ->orderBy('tc.CAREER_ID')
+            ->get();
+        }else{
+            $filter = Session::get('careerFilter');
+            $talentCareer = DB::table('talent_careers as tc')
+            ->select(
+                'tc.CAREER_ID as CAREER_ID',
+                'tc.TALENT_ID as TALENT_ID',
+                'tc.CONTENT as CONTENT',
+                'tc.DETAIL as DETAIL',
+                'tc.SPARE1 as SPARE1',
+                'tc.SPARE2 as SPARE2',
+                'tc.ACTIVE_DATE as ACTIVE_DATE',
+                'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
+                'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
+            )
+            ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
+            ->where('tc.TALENT_ID', $talentId)
+            ->where('cc.CAREER_CATEGORY_ID', $filter)
+            ->orderByRaw('tc.SPARE1 is null')
+            ->orderByRaw('tc.SPARE1 = 0')
+            ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+            ->orderBy('tc.ACTIVE_DATE')
+            ->orderBy('tc.CAREER_ID')
+            ->get();
+        }
         //タレントタグ情報
         //タレントが持っているタグリスト
         $tagList =DB::table('talent_tags as tt')
@@ -357,6 +381,14 @@ class TalentAdminController extends Controller
         return redirect()->route('admin.talent.admin')
         ->with('message', '写真の表示設定が変更されました。')
         ->with('activeTabT', 'talent-photos');
+    }
+
+    //タレント経歴のフィルター
+    public function entryCareer(Request $request)
+    {
+        session()->flash('activeTabT', 'talent-career');
+        return redirect()->route('admin.talent.admin')
+        ->with('careerFilter', $request->FILTER);
     }
 
     // タレント経歴を追加

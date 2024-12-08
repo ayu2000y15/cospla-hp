@@ -30,19 +30,19 @@
                     <div class="check-box">
                         <label class="checkbox-label">
                             <input type="radio" name="SPARE2" value="0" required/>
-                            年月日を表示
+                            日付指定なし
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="SPARE2" value="1" required/>
-                            年月を表示
+                            年月日を表示
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="SPARE2" value="2" required/>
-                            年を表示
+                            年月を表示
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="SPARE2" value="3" required/>
-                            日付指定なし
+                            年を表示
                         </label>
                     </div>
                     <input type="date" id="ACTIVE_DATE" name="ACTIVE_DATE" >
@@ -63,6 +63,26 @@
         </div>
         <div class="list-area">
             <h2>経歴一覧</h2>
+            <form action="{{ route('admin.talent.career.entry') }}" method="POST">
+                @csrf
+                <div class="check-box">
+                    <div class="form-group">
+                        <label for="CAREER_CATEGORY_ID">経歴カテゴリを選択<span class="required"></span></label>
+                        <select name="FILTER" id="FILTER" >
+                            <option value="ALL">
+                                全て
+                            </option>
+                            @foreach ($careerCategories as $select)
+                            <option value="{{ $select['CAREER_CATEGORY_ID'] }}" {{ session('careerFilter') == $select['CAREER_CATEGORY_ID'] ? 'selected' : '' }}>
+                                {{ $select['CAREER_CATEGORY_NAME'] }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">フィルター</button>
+            </form>
+            <br>
             <table class="table-container">
                 <thead>
                     <tr>
