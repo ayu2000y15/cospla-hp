@@ -27,6 +27,24 @@
                 </div>
                 <div class="form-group">
                     <label for="ACTIVE_DATE">活動日</label>
+                    <div class="check-box">
+                        <label class="checkbox-label">
+                            <input type="radio" name="SPARE2" value="0" required/>
+                            年月日を表示
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="SPARE2" value="1" required/>
+                            年月を表示
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="SPARE2" value="2" required/>
+                            年を表示
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="SPARE2" value="3" required/>
+                            日付指定なし
+                        </label>
+                    </div>
                     <input type="date" id="ACTIVE_DATE" name="ACTIVE_DATE" >
                 </div>
                 <div class="form-group">
@@ -93,6 +111,12 @@ function editItem(item) {
     document.getElementById('CONTENT').value = item.CONTENT;
     document.getElementById('ACTIVE_DATE').value = item.ACTIVE_DATE;
     document.getElementById('SPARE1').value = item.SPARE1;
+    let spare2 = document.querySelectorAll("input[name=SPARE2]");
+    for(let element of spare2) {
+        if( element.value == item.SPARE2 ) {
+            element.checked = true;
+        }
+    }
     document.getElementById('DETAIL').value = item.DETAIL;
     document.getElementById('adminForm').method = "POST";
     document.getElementById('adminForm').action = "{{ route('admin.talent.career.update') }}";

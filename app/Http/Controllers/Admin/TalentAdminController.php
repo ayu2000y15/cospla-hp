@@ -127,6 +127,7 @@ class TalentAdminController extends Controller
             'tc.CONTENT as CONTENT',
             'tc.DETAIL as DETAIL',
             'tc.SPARE1 as SPARE1',
+            'tc.SPARE2 as SPARE2',
             'tc.ACTIVE_DATE as ACTIVE_DATE',
             'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
             'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
@@ -175,7 +176,7 @@ class TalentAdminController extends Controller
         if (!Session::has('activeTabT')) {
             session()->flash('activeTabT', 'talent-edit');
         }
-        return view('admin.talent.talent-admin', 
+        return view('admin.talent.talent-admin',
         compact('talent'
         ,'talentInfo'
         , 'talentImgList'
@@ -366,6 +367,7 @@ class TalentAdminController extends Controller
             'CONTENT' => 'required|string',
             'ACTIVE_DATE' => 'nullable|date',
             'SPARE1' => 'nullable|integer',
+            'SPARE2' => 'required|integer',
             'DETAIL' => 'nullable|string',
         ]);
 
@@ -385,6 +387,7 @@ class TalentAdminController extends Controller
             'CONTENT' => 'required|string',
             'ACTIVE_DATE' => 'nullable|date',
             'SPARE1' => 'nullable|integer',
+            'SPARE2' => 'required|integer',
             'DETAIL' => 'nullable|string',
         ]);
 

@@ -819,15 +819,20 @@ h2 {
     margin-bottom: 1rem;
 }
 
+.career-item {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
 .career-date {
-    display: block;
+    flex: 0 0 30%;
     font-weight: bold;
     color: #666;
-    margin-bottom: 0.25rem;
+    margin-right: 1rem;
 }
 
 .career-content {
-    display: block;
+    flex: 1;
 }
 
 .photos-slider-container {
@@ -1347,6 +1352,14 @@ h2 {
 
     .career-categories {
         grid-template-columns: 1fr;
+    }
+
+    .career-item {
+        flex-direction: column;
+    }
+
+    .career-date {
+        margin-bottom: 0.25rem;
     }
 
     .button {
