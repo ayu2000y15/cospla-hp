@@ -173,12 +173,14 @@
                                             @elseif($career->SPARE2 === '3')
                                                 {{ date('Y', strtotime($career->ACTIVE_DATE)) }}
                                             @else
-                                                某日
+
                                             @endif
                                         </span>
-                                        <span class="career-content">{{ $career->CONTENT }}</span>
+                                        <span class="career-content">{!! nl2br(e($career->CONTENT)) !!}</span>
                                     </li>
+                                    <hr class="hr-career">
                                     @endif
+
                                 @endforeach
                             </ul>
                         </div>

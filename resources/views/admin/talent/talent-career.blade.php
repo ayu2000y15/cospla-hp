@@ -23,7 +23,7 @@
                 </div>
                 <div class="form-group">
                     <label for="CONTENT">経歴内容<span class="required">※必須</span></label>
-                    <input type="text" id="CONTENT" name="CONTENT" required>
+                    <textarea id="CONTENT" name="CONTENT" rows="3" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="ACTIVE_DATE">活動日</label>
@@ -99,7 +99,7 @@
                         <td>{{ $career->SPARE1 }}</td>
                         <td>{{ $career->ACTIVE_DATE }}</td>
                         <td>{{ $career->CAREER_CATEGORY_NAME }}</td>
-                        <td>{{ $career->CONTENT }}</td>
+                        <td>{!! nl2br(e($career->CONTENT)) !!}</td>
                         <td>
                             <button class="btn btn-edit" onclick='editItem({!! json_encode($career) !!})'>編集</button>
                             <form onsubmit="return checkSubmit('削除');"

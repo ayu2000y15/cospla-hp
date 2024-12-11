@@ -1119,6 +1119,11 @@ h2 {
     margin: 1rem 0;
 }
 
+.hr-career {
+    border-top: 1px dashed #b9b2ca;
+    margin: 1rem 0;
+}
+
 .success-message {
     background-color: #d4edda;
     color: #155724;
