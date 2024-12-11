@@ -140,7 +140,7 @@ class TalentAdminController extends Controller
             ->orderByRaw('tc.SPARE1 is null')
             ->orderByRaw('tc.SPARE1 = 0')
             ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
-            ->orderBy('tc.ACTIVE_DATE')
+            ->orderByDesc('tc.ACTIVE_DATE')
             ->orderBy('tc.CAREER_ID')
             ->get();
         }else{
@@ -165,7 +165,7 @@ class TalentAdminController extends Controller
             ->orderByRaw('tc.SPARE1 is null')
             ->orderByRaw('tc.SPARE1 = 0')
             ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
-            ->orderBy('tc.ACTIVE_DATE')
+            ->orderByDesc('tc.ACTIVE_DATE')
             ->orderBy('tc.CAREER_ID')
             ->get();
         }

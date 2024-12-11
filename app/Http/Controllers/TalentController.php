@@ -80,7 +80,7 @@ class TalentController extends Controller
         ->orderByRaw('SPARE1 is null')
         ->orderByRaw('SPARE1 = 0')
         ->orderByRaw('LENGTH(SPARE1), SPARE1')
-        ->orderBy('ACTIVE_DATE')
+        ->orderByDesc('ACTIVE_DATE')
         ->orderBy('CAREER_ID')
         ->get();
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
