@@ -127,6 +127,15 @@ class AcmailAdminController extends Controller
 
         return redirect()->route('admin')
         ->with('message', '情報が更新されました。')
-        ->with('activeTabAc', 'ac-entry');
+        ->with('activeTabAc', 'ac-list');
     }
+
+    public function delete(Request $request)
+    {
+        Acmail::where('AC_ID',$request->AC_ID)->delete();
+        return redirect()->route('admin')
+        ->with('message', '削除されました。')
+        ->with('activeTabAc', 'ac-list');
+    }
+
 }

@@ -131,3 +131,4 @@ Route::put('/admin/ac/csvout', [AcmailAdminController::class, 'csvOutput'])->nam
 Route::post('/admin/ac/edit', [AcmailAdminController::class, 'edit'])->name('admin.ac.edit');
 Route::put('/admin/ac/update', [AcmailAdminController::class, 'update'])->name('admin.ac.update');
 Route::get('/admin/ac/editEntry', [AdminController::class, 'editEntry'])->name('admin.ac.editEntry');
+Route::post('/admin/ac/delete', [AcmailAdminController::class, 'delete'])->name('admin.ac.delete');

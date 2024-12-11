@@ -32,6 +32,7 @@
                         <th>項目９</th>
                         <th>項目１０</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody class="ac-list">
@@ -57,6 +58,9 @@
                         <td>
                             <button type="button" class="btn btn-edit" data-ac-id="{{ $list->AC_ID }}">編集</button>
                         </td>
+                        <td>
+                            <button type="button" class="btn btn-delete" data-ac-id-del="{{ $list->AC_ID }}">削除</button>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -74,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkboxes = document.querySelectorAll('.photo-checkbox');
     const tableRows = document.querySelectorAll('.ac-list tr');
     const editButtons = document.querySelectorAll('.btn-edit');
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+
 
     // 全選択/全解除の処理（変更なし）
     selectAllCheckbox.addEventListener('change', function() {
@@ -111,10 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(e) {
             e.stopPropagation();
             const acId = this.getAttribute('data-ac-id');
-            // 編集処理をここに追加（例：フォーム送信やモーダル表示など）
-            console.log('Edit button clicked for AC_ID:', acId);
 
-            // フォーム送信の例
+            // フォーム送信
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route('admin.ac.edit') }}';
@@ -135,6 +139,36 @@ document.addEventListener('DOMContentLoaded', function() {
             form.submit();
         });
     });
+
+    // 削除ボタンのクリックイベントを追加
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const acId = this.getAttribute('data-ac-id-del');
+            if (confirm('削除しますか？')) {
+                // フォーム送信
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('admin.ac.delete') }}';
+
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+
+                const acIdInput = document.createElement('input');
+                acIdInput.type = 'hidden';
+                acIdInput.name = 'AC_ID';
+                acIdInput.value = acId;
+
+                form.appendChild(csrfToken);
+                form.appendChild(acIdInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    });
+
 });
 </script>
 @endpush
