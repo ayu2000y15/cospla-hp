@@ -157,12 +157,22 @@
                     <div class="career-categories">
                         @foreach($careerCategory as $category)
                         <div class="career-category">
+                            @if($category->CAREER_CATEGORY_ID == '0')
+                            <ul>
+                                @foreach($talentCareer as $career)
+                                    @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
+                                    <li class="career-item">
+                                        <span class="career-content">{!! nl2br(e($career->CONTENT)) !!}</span>
+                                    </li>
+                                    <hr class="hr-career">
+                                    @endif
+                                @endforeach
+                            </ul>
+                            @else
                             <h3>{{ $category->CAREER_CATEGORY_NAME }}</h3>
                             <hr class="hr-line">
                             <ul>
                                 @foreach($talentCareer as $career)
-                                @php
-                                @endphp
                                     @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
                                     <li class="career-item">
                                         <span class="career-date">
@@ -183,6 +193,7 @@
 
                                 @endforeach
                             </ul>
+                            @endif
                         </div>
                         @endforeach
                     </div>

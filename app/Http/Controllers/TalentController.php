@@ -73,6 +73,7 @@ class TalentController extends Controller
         ->where('tc.TALENT_ID', $request['id'])
         ->groupBy('c.CAREER_CATEGORY_ID')
         ->groupBy('c.CAREER_CATEGORY_NAME')
+        ->orderByRaw("c.CAREER_CATEGORY_ID = '0' ")
         ->orderBy('c.CAREER_CATEGORY_ID')
         ->get();
         $talentCareer = TalentCareer::where('TALENT_ID', $request['id'])
