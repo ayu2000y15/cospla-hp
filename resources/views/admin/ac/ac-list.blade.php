@@ -169,6 +169,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // フォーム送信時のチェックを追加
+    const csvForm = document.getElementById('csvForm');
+    csvForm.addEventListener('submit', function(e) {
+        const selectedItems = document.querySelectorAll('input[name="SELECTED_ITEM[]"]:checked');
+        if (selectedItems.length === 0) {
+            e.preventDefault(); // フォーム送信を防止
+            alert('少なくとも1つの項目を選択してください。');
+        }
+    });
+
 });
 </script>
 @endpush
