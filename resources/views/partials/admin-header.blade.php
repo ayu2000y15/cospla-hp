@@ -15,6 +15,7 @@
         <nav class="main-nav">
             <a href="{{ route('admin') }}">管理画面TOP</a>
             <a href="{{ route('home') }}">hpのTOPに戻る</a>
+            <a href="{{ route('logout') }}">ログアウト</a>
         </nav>
         <div class="social-icons">
 

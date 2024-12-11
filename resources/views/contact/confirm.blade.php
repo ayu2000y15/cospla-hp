@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'お問い合わせ内容確認 - COSPLATFORM')
+@section('title', 'お問い合わせ内容確認 - コスプラットフォーム株式会社')
 
 @section('content')
 <main>

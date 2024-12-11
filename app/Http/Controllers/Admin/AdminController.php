@@ -14,6 +14,8 @@ use App\Models\Image;
 use App\Models\Tag;
 use App\Models\ViewFlag;
 use App\Models\CareerCategory;
+use App\Models\Acmail;
+
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Session;
 class AdminController extends Controller
@@ -43,6 +45,12 @@ class AdminController extends Controller
         Session::put('access_view', $root->access_view);
         return redirect()->route($root->access_root);
     }
+
+    public function logout(){
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        Session::flush();
+        return redirect()->route('login')
+        ->with('error', 'ログアウトしました。再度ログインしてください');    }
 
     public function index()
     {
@@ -95,7 +103,12 @@ class AdminController extends Controller
             session()->flash('activeTab', 'talent-list');
         }
 
-        
+        if (!Session::has('activeTabAc')) {
+            session()->flash('activeTabAc', 'ac-entry');
+        }
+
+        $acmail = Acmail::all()->sortByDesc('AC_ID');
+
         return view($access_view, compact('talentList'
         ,'newsList'
         ,'imgList'
@@ -106,6 +119,7 @@ class AdminController extends Controller
         ,'careerList'
         ,'company'
         ,'logoImg'
+        ,'acmail'
         ));
     }
 
@@ -113,10 +127,29 @@ class AdminController extends Controller
     {
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
-
-        session()->flash('activeTab', 'talent-entry');
-        return view('admin.index-guest', compact(
+        $access_view = Session::get('access_view');
+        if (!Session::has('activeTab')) {
+            session()->flash('activeTab', 'talent-entry');
+        }
+        return view($access_view, compact(
         'logoImg'
+        ));
+    }
+
+    public function indexAcMail()
+    {
+        //ロゴ
+        $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $access_view = Session::get('access_view');
+
+        //Acmail一覧取得
+        $acmail = Acmail::all()->sortByDesc('AC_ID');
+        if (!Session::has('activeTabAc')) {
+            session()->flash('activeTabAc', 'ac-entry');
+        }
+
+        return view($access_view, compact(
+        'logoImg',  'acmail'
         ));
     }
 }

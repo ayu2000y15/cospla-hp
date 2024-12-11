@@ -213,7 +213,10 @@ body {
     flex-direction: column;
     max-width: 700px;
     margin: 1rem auto;
+    overflow-x: auto;
 }
+
+
 
 .form-area h2 {
     margin-bottom: 0.8rem;
@@ -331,7 +334,7 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    
+
 }
 
 .button {
@@ -344,7 +347,7 @@ body {
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     white-space: nowrap;
-    
+
 }
 
 .button:hover, .button.active,
@@ -397,7 +400,7 @@ body {
     margin-top: 1rem;
 }
 
-.table-container th, 
+.table-container th,
 .table-container td {
     padding: 0.75rem;
 }
@@ -576,7 +579,7 @@ body {
         margin-right: 0;
     }
 
-    
+
     h1 {
         font-size: 2rem;
     }
@@ -616,11 +619,11 @@ body {
     table {
         font-size: 0.9rem; /* フォントサイズを少し小さくする */
     }
-    
+
     th, td {
         padding: 0.5rem; /* パディングを少し小さくする */
     }
-    
+
     /* タレントIDと削除フラグの列を非表示にする */
     .none {
         display: none;
@@ -639,7 +642,7 @@ body {
     .table-container td:last-child {
         display: none;
     }
-    
+
 
 }
 

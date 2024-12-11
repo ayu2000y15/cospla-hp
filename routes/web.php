@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\TagAdminController;
 use App\Http\Controllers\Admin\CompanyAdminController;
 use App\Http\Controllers\Admin\CareerAdminController;
 use App\Http\Controllers\Admin\TalentAdminController;
-
+use App\Http\Controllers\Admin\AcmailAdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,9 +56,14 @@ Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('p
 // 管理者ページログイン
 Route::get('/login', [AdminController::class, 'login'])->name('login');
 Route::post('/login/access', [AdminController::class, 'loginAccess'])->name('login.access');
+// 管理者ページログアウト
+Route::get('/logout', [AdminController::class, 'logout'])->name('logout');
+
 // 管理者ページ
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 Route::get('/admin/guest', [AdminController::class, 'indexGuest'])->name('admin.guest');
+//acメーラー管理画面ログイン
+Route::get('/admin/acmail', [AdminController::class, 'indexAcMail'])->name('admin.acmail');
 
 // タレント管理
 Route::get('/admin/talent/list', [TalentAdminController::class, 'list'])->name('admin.talent.list');
@@ -120,5 +125,9 @@ Route::delete('/admin/tag/{id}', [TagAdminController::class, 'delete'])->name('a
 Route::post('/admin/company/mail', [CompanyAdminController::class, 'mail'])->name('admin.company.mail');
 Route::post('/admin/company/update', [CompanyAdminController::class, 'update'])->name('admin.company.update');
 
-//aメーラー開く
-Route::get('/admin/acmail', [AdminController::class, 'acmail'])->name('admin.acmail');
+//ACメーラーリスト登録
+Route::post('/admin/ac/entry', [AcmailAdminController::class, 'entry'])->name('admin.ac.entry');
+Route::put('/admin/ac/csvout', [AcmailAdminController::class, 'csvOutput'])->name('admin.ac.csvout');
+Route::post('/admin/ac/edit', [AcmailAdminController::class, 'edit'])->name('admin.ac.edit');
+Route::put('/admin/ac/update', [AcmailAdminController::class, 'update'])->name('admin.ac.update');
+Route::get('/admin/ac/editEntry', [AdminController::class, 'editEntry'])->name('admin.ac.editEntry');
