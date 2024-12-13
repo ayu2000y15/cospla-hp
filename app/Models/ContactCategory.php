@@ -13,7 +13,7 @@ class ContactCategory extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'CONTACT_CATEGORY_NAME', 'SPARE1', 'SPARE2', 'DEL_FLG'
+        'CONTACT_CATEGORY_NAME', 'REFERENCE_CODE', 'SPARE1', 'SPARE2', 'DEL_FLG'
     ];
 
     protected $dates = ['INS_DATE', 'UPD_DATE'];

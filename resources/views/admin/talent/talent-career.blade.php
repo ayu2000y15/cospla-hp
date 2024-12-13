@@ -67,7 +67,7 @@
                 @csrf
                 <div class="check-box">
                     <div class="form-group">
-                        <label for="CAREER_CATEGORY_ID">経歴カテゴリを選択<span class="required"></span></label>
+                        <label for="FILTER">経歴カテゴリを選択<span class="required"></span></label>
                         <select name="FILTER" id="FILTER" >
                             <option value="ALL">
                                 全て

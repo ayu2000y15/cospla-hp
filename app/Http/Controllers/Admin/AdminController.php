@@ -14,6 +14,7 @@ use App\Models\Image;
 use App\Models\Tag;
 use App\Models\ViewFlag;
 use App\Models\CareerCategory;
+use App\Models\ContactCategory;
 use App\Models\Acmail;
 
 use App\Services\FileUploadService;
@@ -65,6 +66,8 @@ class AdminController extends Controller
         $tagList = Tag::all()->sortBy('TAG_ID');
         //経歴カテゴリ登録・削除
         $careerList = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
+        //問い合わせカテゴリ登録・削除
+        $contactList = ContactCategory::all()->sortBy('CONTACT_CATEGORY_ID');
         //ニュース登録・変更
         $newsList = News::all()->sortByDesc('POST_DATE');
         //HP画像登録・変更
@@ -117,6 +120,7 @@ class AdminController extends Controller
         ,'viewFlagsBulk'
         ,'tagList'
         ,'careerList'
+        ,'contactList'
         ,'company'
         ,'logoImg'
         ,'acmail'

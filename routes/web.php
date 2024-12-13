@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PhotoAdminController;
 use App\Http\Controllers\Admin\TagAdminController;
 use App\Http\Controllers\Admin\CompanyAdminController;
 use App\Http\Controllers\Admin\CareerAdminController;
+use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\TalentAdminController;
 use App\Http\Controllers\Admin\AcmailAdminController;
 /*
@@ -102,6 +103,10 @@ Route::post('/admin/career/entry', [CareerAdminController::class, 'entry'])->nam
 Route::put('/admin/career/update', [CareerAdminController::class, 'update'])->name('admin.career.update');
 Route::delete('/admin/career/delete', [CareerAdminController::class, 'delete'])->name('admin.career.delete');
 
+//問い合わせカテゴリ管理
+Route::post('/admin/contact/entry', [ContactAdminController::class, 'entry'])->name('admin.contact.entry');
+Route::put('/admin/contact/update', [ContactAdminController::class, 'update'])->name('admin.contact.update');
+Route::delete('/admin/contact/delete', [ContactAdminController::class, 'delete'])->name('admin.contact.delete');
 
 // ニュース管理
 Route::get('/admin/news', [NewsAdminController::class, 'entry'])->name('admin.news.entry');

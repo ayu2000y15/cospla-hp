@@ -22,6 +22,7 @@
                         <button class="tab-button {{ session('activeTab') === 'talent-list' ? 'active' : '' }}" data-tab="talent-list">タレント一覧</button>
                         <button class="tab-button {{ session('activeTab') === 'talent-entry' ? 'active' : '' }}" data-tab="talent-entry">タレント登録</button>
                         <button class="tab-button {{ session('activeTab') === 'career-entry' ? 'active' : '' }}" data-tab="career-entry">経歴カテゴリ登録・削除</button>
+                        <button class="tab-button {{ session('activeTab') === 'contact-entry' ? 'active' : '' }}" data-tab="contact-entry">問い合わせカテゴリ<br>登録・削除</button>
                         <button class="tab-button {{ session('activeTab') === 'tag-entry' ? 'active' : '' }}" data-tab="tag-entry">ハッシュタグ登録・削除</button>
                         <button class="tab-button {{ session('activeTab') === 'news-entry' ? 'active' : '' }}" data-tab="news-entry">ニュース登録・変更</button>
                         <button class="tab-button {{ session('activeTab') === 'photos-entry' ? 'active' : '' }}" data-tab="photos-entry">HP画像登録・変更</button>
@@ -38,6 +39,10 @@
 
                     <div class="tab-content {{ session('activeTab') === 'career-entry' ? 'active' : '' }}" id="career-entry">
                         @include('admin.career-entry')
+                    </div>
+
+                    <div class="tab-content {{ session('activeTab') === 'contact-entry' ? 'active' : '' }}" id="contact-entry">
+                        @include('admin.contact-entry')
                     </div>
 
                     <div class="tab-content {{ session('activeTab') === 'tag-entry' ? 'active' : '' }}" id="tag-entry">
