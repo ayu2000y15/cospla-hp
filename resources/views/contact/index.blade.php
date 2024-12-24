@@ -48,6 +48,7 @@
                 </div>
                 <div class="form-group">
                     <label for="content">質問内容 または 自己PR等<span class="required">必須</span></label>
+                    ※タレント応募の場合、SNSアカウントがあればこちらに記載してください
                     <textarea id="content" name="CONTENT" rows="5" placeholder="問い合わせ内容をここに記載してください"
                         required></textarea>
                 </div>
