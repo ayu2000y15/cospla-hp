@@ -15,7 +15,7 @@ class Image extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'FILE_NAME', 'TALENT_ID', 'FILE_PATH', 'VIEW_FLG', 'PRIORITY',
+        'FILE_NAME', 'TALENT_ID', 'NEWS_ID', 'FILE_PATH', 'VIEW_FLG', 'PRIORITY',
         'COMMENT', 'SPARE1', 'SPARE2', 'DEL_FLG'
     ];
 

@@ -114,6 +114,9 @@ Route::post('/admin/news', [NewsAdminController::class, 'store'])->name('admin.n
 Route::post('/admin/news/{id}', [NewsAdminController::class, 'update'])->name('admin.news.update');
 Route::delete('/admin/news/{id}', [NewsAdminController::class, 'delete'])->name('admin.news.delete');
 
+// Route::post('/admin/news/priority', [NewsAdminController::class, 'priority'])->name('admin.news.priority');
+Route::get('/admin/news/images/{id}', 'App\Http\Controllers\Admin\NewsAdminController@getImages')->name('admin.news.images');
+Route::delete('/admin/news/delete-image/{id}', 'App\Http\Controllers\Admin\NewsAdminController@deleteImage')->name('admin.news.deleteImage');
 // 写真管理
 Route::post('/admin/photos/entry', [PhotoAdminController::class, 'entry'])->name('admin.photos.entry');
 Route::post('/admin/photos/upload', [PhotoAdminController::class, 'upload'])->name('admin.photos.upload');

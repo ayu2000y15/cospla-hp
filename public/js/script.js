@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function checkSubmit(){
-    if(confirm('送信しますか？')){ 
-        return true; 
+    if(confirm('送信しますか？')){
+        return true;
     }else{
-        alert('キャンセルされました'); 
-        return false; 
+        alert('キャンセルされました');
+        return false;
     }
 }

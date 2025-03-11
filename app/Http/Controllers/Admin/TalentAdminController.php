@@ -119,7 +119,6 @@ class TalentAdminController extends Controller
         //タレントが持っている経歴ジャンル
         $careerCategories = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
         //タレント経歴
-        \Debugbar::addMessage(Session::has('careerFilter') );
         if (!Session::has('careerFilter') || Session::get('careerFilter')=='ALL') {
             $talentCareer = DB::table('talent_careers as tc')
             ->select(
@@ -327,7 +326,7 @@ class TalentAdminController extends Controller
         $uploadedFiles = $request->file('photos');
         $filePath = 'img/' . $request->TALENT_ID . '_' . $request->LAYER_NAME;
 
-        $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, $request->TALENT_ID);
+        $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, $request->TALENT_ID, null, null);
         session()->flash('activeTabT', 'talent-photos');
         if ($result['success']) {
             return redirect()->route('admin.talent.admin')

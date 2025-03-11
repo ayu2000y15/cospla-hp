@@ -19,6 +19,8 @@
                 <thead>
                     <tr>
                         <th>出力対象</th>
+                        <th></th>
+                        <th></th>
                         <th>配信フラグ</th>
                         <th>メールアドレス</th>
                         <th>項目１</th>
@@ -31,8 +33,6 @@
                         <th>項目８</th>
                         <th>項目９</th>
                         <th>項目１０</th>
-                        <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody class="ac-list">
@@ -42,6 +42,12 @@
                             <input type="checkbox" name="SELECTED_ITEM[]" value="{{ $list->AC_ID }}"
                                 class="photo-checkbox" form="csvForm" id="item-{{ $list->AC_ID }}">
                             <label for="item-{{ $list->AC_ID }}" class="photo-checkbox-label"></label>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-edit" data-ac-id="{{ $list->AC_ID }}">編集</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-delete" data-ac-id-del="{{ $list->AC_ID }}">削除</button>
                         </td>
                         <td>{{ $list->DELIVERY_FLG }}</td>
                         <td>{{ $list->MAIL }}</td>
@@ -55,12 +61,6 @@
                         <td>{{ $list->COL8 }}</td>
                         <td>{{ $list->COL9 }}</td>
                         <td>{{ $list->COL10 }}</td>
-                        <td>
-                            <button type="button" class="btn btn-edit" data-ac-id="{{ $list->AC_ID }}">編集</button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-delete" data-ac-id-del="{{ $list->AC_ID }}">削除</button>
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -17,7 +17,9 @@ class NewsController extends Controller
         $sns = Company::first();
 
         $newsItems = News::orderBy('post_date', 'desc')->get();
-        return view('news.index', compact('newsItems','sns'));
+        $newsImgList = Image::where('VIEW_FLG',  'S501')->orderBy('NEWS_ID')->get();
+
+        return view('news.index', compact('newsItems','sns', 'newsImgList'));
     }
 
     public function show($id)
@@ -28,6 +30,8 @@ class NewsController extends Controller
         $sns = Company::first();
 
         $newsItem = News::findOrFail($id);
-        return view('news.show', compact('newsItem', 'topImg', 'backImg', 'logoImg','sns'));
+        $newsImgList = Image::where('VIEW_FLG',  'S501')->orderBy('NEWS_ID')->get();
+
+        return view('news.show', compact('newsItem', 'topImg', 'backImg', 'logoImg','sns', 'newsImgList'));
     }
 }

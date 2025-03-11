@@ -16,6 +16,8 @@ use App\Models\ViewFlag;
 use App\Models\CareerCategory;
 use App\Models\ContactCategory;
 use App\Models\Acmail;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Session;
@@ -70,6 +72,25 @@ class AdminController extends Controller
         $contactList = ContactCategory::all()->sortBy('CONTACT_CATEGORY_ID');
         //ニュース登録・変更
         $newsList = News::all()->sortByDesc('POST_DATE');
+        $newsImgList = Image::whereRaw('NEWS_ID is not null')->orderBy('NEWS_ID')->orderBy('PRIORITY')->get();
+
+        // $newsList = DB::table('news as n')
+        // ->select(
+        //     'n.NEWS_ID as NEWS_ID',
+        //     't.TITLE as TITLE',
+        //     't.CONTENT as CONTENT',
+        //     't.POST_DATE as POST_DATE',
+        //     'img.FILE_NAME as FILE_NAME',
+        //     'img.FILE_PATH as FILE_PATH',
+        //     'img.PRIORITY as PRIORITY',
+        //     'img.COMMENT as COMMENT'
+        // )
+        // ->join('images as img','n.NEWS_ID','=','img.NEWS_ID')
+        // ->orderBy('img.PRIORITY')
+        // ->orderBy('n.POST_DATE')
+        // ->orderBy('n.NEWS_ID')
+        // ->get();
+
         //HP画像登録・変更
         if (!Session::has('imgList')) {
             $imgList = Image::where('TALENT_ID', null)
@@ -114,6 +135,7 @@ class AdminController extends Controller
 
         return view($access_view, compact('talentList'
         ,'newsList'
+        ,'newsImgList'
         ,'imgList'
         ,'talentImgList'
         ,'viewFlags'

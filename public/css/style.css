@@ -502,6 +502,42 @@ h2 {
     margin-left: 1rem;
 }
 
+/* ニュース画像のグリッドレイアウト */
+.news-img {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.news-photo {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    aspect-ratio: 4 / 3;
+}
+
+.news-photo:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 画像が1枚の場合は大きく表示 */
+.news-img.single-image {
+    display: block;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.news-img.single-image .news-photo {
+    aspect-ratio: auto;
+    max-height: 500px;
+    object-fit: contain;
+}
+
 .section-content {
     display: flex;
     align-items: stretch;
@@ -934,6 +970,16 @@ h2 {
     max-width: 90%;
     max-height: 90%;
     object-fit: contain;
+}
+
+/* 画像プレビュー機能のスタイル改善 */
+.preview-overlay {
+    backdrop-filter: blur(5px);
+}
+
+.preview-image {
+    border-radius: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .close-preview {
@@ -1403,6 +1449,11 @@ h2 {
     .footer-nav {
         margin-bottom: 1rem;
     }
+
+    .news-img {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1413,6 +1464,13 @@ h2 {
     .footer-nav {
         flex-direction: column;
         gap: 0.5rem;
+    }
+    .news-img {
+        grid-template-columns: 1fr;
+    }
+
+    .news-img.single-image .news-photo {
+        max-height: 350px;
     }
 }
 

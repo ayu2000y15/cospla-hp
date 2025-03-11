@@ -38,7 +38,7 @@ class PhotoAdminController extends Controller
         $uploadedFiles = $request->file('upfile');
 
         $filePath = 'img/hp';
-        $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null);
+        $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, null, null);
         if ($result['success']) {
             return redirect()->route('admin')
             ->with('message', 'ファイルが正常にアップロードされました。')

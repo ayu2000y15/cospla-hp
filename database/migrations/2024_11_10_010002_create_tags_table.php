@@ -9,7 +9,7 @@ class CreateTagsTable extends Migration
     public function up()
     {
         Schema::create('tags', function (Blueprint $table) {
-            $table->integer('TAG_ID')->primary()->autoIncrement()->comment('経歴カテゴリID');
+            $table->integer('TAG_ID')->primary()->autoIncrement()->comment('タグID');
             $table->string('TAG_NAME', 100)->unique()->comment('タグ名');
             $table->string('TAG_COLOR', 50)->default('#999999')->comment('タグの色（HP表示）');
             $table->string('SPARE1', 300)->nullable()->comment('予備１');

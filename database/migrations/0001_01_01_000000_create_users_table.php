@@ -82,7 +82,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('access_ctl');
+        Schema::dropIfExists('access_controls');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
