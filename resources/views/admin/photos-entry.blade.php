@@ -4,8 +4,8 @@
     <div class="form-area">
         <h2>HP画像登録・変更</h2>
         <div class="action-buttons">
-            <button class="button photos-button active">タレント以外</button>
-            <button class="button talent-button">TOPページのタレント</button>
+            <button class="button photos-button active" >タレント以外</button>
+            <button class="button talent-button ">タレント</button>
         </div>
         <div class="photos-info">
             <!-- 写真登録 -->
@@ -144,8 +144,8 @@
         </div>
 
         <div class="talent-info" style="display: none;">
-            <h3>TOPページのタレント選択</h3>
-            <p>※1~4の数字を入れて登録ボタンを押下してください。</p>
+            <h3>タレント優先度</h3>
+            <p>※1以上の数字を入れて登録ボタンを押下してください。</p>
             <div class="photo-grid">
                 @foreach ($talentImgList as $img)
                 <div class="photo-item">
@@ -162,8 +162,8 @@
 
                             <div class="select-wrapper">
                                 <label>{{ $img->LAYER_NAME }}</label>
-                                <label class="priority-label">優先度(1~4)
-                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" min="1" max="4"
+                                <label class="priority-label">優先度(1~4はTOPページに表示されます）
+                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" min="1"
                                         class="priority-input">
                                 </label>
                                 <button type="submit" class="change-button">変更</button>
