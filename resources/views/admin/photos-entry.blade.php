@@ -4,8 +4,8 @@
     <div class="form-area">
         <h2>HP画像登録・変更</h2>
         <div class="action-buttons">
-            <button class="button photos-button active" >タレント以外</button>
-            <button class="button talent-button ">タレント</button>
+            <button class="button photos-button {{ session('activeBtn') === 'photo' ? 'active' : '' }}" >タレント以外</button>
+            <button class="button talent-button {{ session('activeBtn') === 'talent' ? 'active' : '' }}">タレント</button>
         </div>
         <div class="photos-info">
             <!-- 写真登録 -->
@@ -159,6 +159,7 @@
                             <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
                             <input type="hidden" name="VIEW_FLG_BEF" value="{{ $img->VIEW_FLG }}">
                             <input type="hidden" name="VIEW_FLG_AFT" value="{{ $img->VIEW_FLG }}">
+                            <input type="hidden" name="TALENT" value="true">
 
                             <div class="select-wrapper">
                                 <label>{{ $img->LAYER_NAME }}</label>
@@ -214,9 +215,22 @@ document.addEventListener('DOMContentLoaded', function() {
         photosButton.classList.add('active');
     });
 
-    hideAllSections();
-    photosInfo.style.display = 'block';
-    photosButton.classList.add('active');
+    @php
+        $btn = 'photo';
+        if(Session('activeBtn') === 'talent'){
+            $btn = 'talent';
+        }
+    @endphp
+
+    if(@json($btn) == 'photo'){
+        hideAllSections();
+        photosInfo.style.display = 'block';
+        photosButton.classList.add('active');
+    }else{
+        hideAllSections();
+        talentInfo.style.display = 'block';
+        talentButton.classList.add('active');
+    }
 
     // 一括変更機能の改善
     const bulkUpdateForm = document.getElementById('bulkUpdateForm');

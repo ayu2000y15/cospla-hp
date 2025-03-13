@@ -101,6 +101,11 @@ class AdminController extends Controller
         }else{
             $imgList = Session::get('imgList');
         }
+
+        if(!Session::has('activeBtn')){
+            Session::put('activeBtn', 'photo');
+        }
+
         $talentImgList = Image::whereNotNull('TALENT_ID')
         ->where('VIEW_FLG', '=', '01')
         ->orderBy('VIEW_FLG')

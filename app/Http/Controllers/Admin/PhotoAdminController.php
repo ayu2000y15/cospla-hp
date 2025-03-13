@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Image;
 use App\Models\ViewFlag;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Session;
+
 
 class PhotoAdminController extends Controller
 {
@@ -57,6 +59,13 @@ class PhotoAdminController extends Controller
             'VIEW_FLG' => $request->VIEW_FLG_AFT,
             'PRIORITY' => $request->PRIORITY
         ]);
+
+        if(isset($request->TALENT)){
+            Session::put('activeBtn', 'talent');
+        }else{
+            Session::put('activeBtn', 'photo');
+        }
+
         return redirect()->route('admin')
         ->with('message', '写真の表示設定が変更されました。')
         ->with('activeTab', 'photos-entry');
