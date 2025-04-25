@@ -10,8 +10,8 @@ class CreateContactsTable extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->integer('CONTACT_ID')->primary()->autoIncrement()->comment('問い合わせID');
-            $table->char('REFERENCE_NUMBER', 8)->nullable()->unique()->comment('問い合わせ番号（ユーザー用）');
-            $table->integer('CONTACT_CATEGORY_ID')->comment('問い合わせカテゴリーID(外部キー)');
+            $table->char('reference_number', 8)->nullable()->unique()->comment('問い合わせ番号（ユーザー用）');
+            $table->integer('contact_category_id')->comment('問い合わせカテゴリーID(外部キー)');
             $table->string('NAME', 200)->nullable()->comment('氏名');
             $table->integer('AGE')->nullable()->comment('年齢');
             $table->string('MAIL', 200)->nullable()->comment('メールアドレス');

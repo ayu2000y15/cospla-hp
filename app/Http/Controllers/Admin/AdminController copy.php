@@ -5,7 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\AccessControl;
+use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Services\HpHeaderService;
+use App\Services\HpMasterService;
+use App\Services\HpDataService;
+
+
 use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller

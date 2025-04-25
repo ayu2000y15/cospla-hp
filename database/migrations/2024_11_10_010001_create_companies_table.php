@@ -11,11 +11,11 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->string('COMPANY_NAME', 100)->comment('会社名');
-            $table->date('ESTABLISHMENT_DATE')->nullable()->comment('設立');
-            $table->string('DIRECTOR', 100)->nullable()->comment('代表');
+            $table->date('establishment_date')->nullable()->comment('設立');
+            $table->string('director', 100)->nullable()->comment('代表');
             $table->string('POST_CODE', 10)->nullable()->comment('郵便番号');
-            $table->string('LOCATION', 300)->nullable()->comment('所在地');
-            $table->string('CONTENT', 300)->nullable()->comment('事業内容');
+            $table->string('location', 300)->nullable()->comment('所在地');
+            $table->string('content', 300)->nullable()->comment('事業内容');
             $table->string('SNS_1', 200)->nullable()->comment('SNS１');
             $table->string('SNS_2', 200)->nullable()->comment('SNS２');
             $table->string('SNS_3', 200)->nullable()->comment('SNS３');

@@ -11,7 +11,7 @@ class User extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name', 'email', 'email_verified_at', 'password', 'access_id','remember_token'
+        'name', 'email', 'email_verified_at', 'password', 'access_id', 'last_access', 'remember_token'
     ];
 
     protected $dates = ['create_at', 'update_at'];

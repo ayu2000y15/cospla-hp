@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -19,8 +20,8 @@ return new class extends Migration
         });
 
         $data = [
-            ['0', '開発者', 'admin.index', 'admin'],
-            ['1', 'サイト管理者', 'admin.index-dev', 'admin.dev'],
+            ['0', '開発者', 'admin.dashboards', 'admin'],
+            ['1', 'サイト管理者', 'admin.dashboards', 'admin'],
             ['2', '一般ユーザー', 'admin.index-guest', 'admin.guest']
         ];
 
@@ -40,6 +41,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->char('access_id');
+            $table->dateTime('last_access')->nullable()->default(now());;
             $table->rememberToken();
             $table->timestamps();
 
