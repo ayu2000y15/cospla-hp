@@ -1,0 +1,23 @@
+/* admin-common.css */
+.form-area-common, .list-area {
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: none;
+}
+
+.back-to-top:hover {
+    background-color: #0056b3;
+}

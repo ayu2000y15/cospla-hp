@@ -13,8 +13,8 @@ class CreateTalentCareersTable extends Migration
             $table->integer('CAREER_ID')->primary()->autoIncrement()->comment('経歴ID');
             $table->integer('TALENT_ID')->comment('タレントID（外部キー）');
             $table->integer('CAREER_CATEGORY_ID')->comment('経歴カテゴリID（外部キー）');
-            $table->string('CONTENT', 100000)->nullable()->comment('経歴内容');
-            $table->string('DETAIL', 100000)->nullable()->comment('経歴詳細');
+            $table->string('CONTENT')->nullable()->comment('経歴内容');
+            $table->string('DETAIL')->nullable()->comment('経歴詳細');
             $table->date('ACTIVE_DATE')->nullable()->comment('活動日（表示では月まで）');
             $table->string('SPARE1', 300)->nullable()->comment('予備１');
             $table->string('SPARE2', 300)->nullable()->comment('予備２');
