@@ -56,7 +56,7 @@ class FileUploadService
                     $storedPath = $file->storeAs($uploadDir, $newFileName, 'public');
                     $viewFlg = '00';
                     $pr = 0;
-                    if($newsId <> null){
+                    if ($newsId <> null) {
                         $viewFlg = 'S501';
                         $pr = 0;
                     }
@@ -84,7 +84,7 @@ class FileUploadService
     public function deleteFile($filePath)
     {
 
-        if (Storage::disk('public')->delete(str_replace('storage/','',$filePath))) {
+        if (Storage::disk('public')->delete(str_replace('storage/', '', $filePath))) {
             return true;
         }
         return false;

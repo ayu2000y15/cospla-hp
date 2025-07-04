@@ -3,133 +3,79 @@
 @section('title', 'お問い合わせ内容確認 - コスプラットフォーム株式会社')
 
 @section('content')
-<main>
-    <section class="subpage-hero">
-        <h1>お問い合わせ内容確認</h1>
-    </section>
-    <div class="container">
-        <div class="container-box contact">
-            <h2>入力内容をご確認ください</h2>
-            @if (session('message'))
-            <div class="success-message">{{ session('message') }}</div>
-            @endif
+    <main>
+        <section class="relative h-[300px] bg-cover bg-center pt-16"
+            style="background-image: url('{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}')">
+        </section>
+        <h1 class="mt-12 mb-4 text-5xl font-extrabold text-center text-white drop-shadow-md">
+            お問い合わせ内容確認
+        </h1>
+        <div class="container px-4 mx-auto max-w-6xl">
+            <div class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
 
-            <form class="contact-form" action="{{ route('contact.send') }}" method="POST"
-                onsubmit="return checkSubmit();">
-                @csrf
-                <input type="hidden" name="CONTACT_CATEGORY_ID" value="{{ $contactCategory['CONTACT_CATEGORY_ID'] }}">
-                <input type="hidden" name="CONTACT_CATEGORY_NAME"
-                    value="{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}">
+                <h2 class="text-center text-2xl font-bold mb-6">入力内容をご確認ください</h2>
+                @if (session('message'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
+                        role="alert">
+                        {{ session('message') }}
+                    </div>
+                @endif
 
-                @foreach(['NAME', 'MAIL', 'TEL', 'AGE','SUBJECT', 'CONTENT'] as $field)
-                <input type="hidden" name="{{ $field }}" value="{{ $contact[$field] }}">
-                @endforeach
+                <form class="max-w-2xl mx-auto" action="{{ route('contact.send') }}" method="POST"
+                    onsubmit="return checkSubmit();">
+                    @csrf
+                    <input type="hidden" name="CONTACT_CATEGORY_ID" value="{{ $contactCategory['CONTACT_CATEGORY_ID'] }}">
+                    <input type="hidden" name="CONTACT_CATEGORY_NAME"
+                        value="{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}">
 
-                <div class="confirm-group">
-                    <label>問い合わせ項目</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>氏名</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['NAME'] }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>年齢</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['AGE'] ?: '未入力' }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>メールアドレス</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['MAIL'] }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>電話番号</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['TEL'] ?: '未入力' }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>件名</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem;">{{ $contact['SUBJECT'] }}</p>
-                </div>
-                <div class="confirm-group">
-                    <label>質問内容 または 自己PR等</label>
-                    <p style="font-size:1.3rem; margin-left: 3rem; text-align: left; ">{!! nl2br(e($contact['CONTENT']))
-                        !!}</p>
-                </div>
-                <div class="confirm-group privacy-policy">
-                    <label>
-                        <input type="checkbox" name="privacy_policy" required>
-                        <a href="{{ route('privacy-policy') }}" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する
-                    </label>
-                </div>
-                <div class="button-group">
-                    <button type="button" class="submit-button" onclick="history.back();">修正する</button>
-                    <button type="submit" class="submit-button">送信する</button>
-                </div>
-            </form>
+                    @foreach(['NAME', 'MAIL', 'TEL', 'AGE', 'SUBJECT', 'CONTENT'] as $field)
+                        <input type="hidden" name="{{ $field }}" value="{{ $contact[$field] }}">
+                    @endforeach
+
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">問い合わせ項目</label>
+                        <p class="ml-12 text-xl text-black">{{ $contactCategory['CONTACT_CATEGORY_NAME'] }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">氏名</label>
+                        <p class="ml-12 text-xl text-black">{{ $contact['NAME'] }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">年齢</label>
+                        <p class="ml-12 text-xl text-black">{{ $contact['AGE'] ?: '未入力' }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">メールアドレス</label>
+                        <p class="ml-12 text-xl text-black">{{ $contact['MAIL'] }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">電話番号</label>
+                        <p class="ml-12 text-xl text-black">{{ $contact['TEL'] ?: '未入力' }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">件名</label>
+                        <p class="ml-12 text-xl text-black">{{ $contact['SUBJECT'] }}</p>
+                    </div>
+                    <div class="pb-2 mb-4 border-b border-gray-300">
+                        <label class="block mb-2 text-sm font-bold">質問内容 または 自己PR等</label>
+                        <p class="ml-12 text-xl text-left text-black">{!! nl2br(e($contact['CONTENT'])) !!}</p>
+                    </div>
+                    <div class="flex items-center mt-5">
+                        <label class="flex items-center text-base">
+                            <input type="checkbox" name="privacy_policy" required class="mr-2.5">
+                            <a href="{{ route('privacy-policy') }}" target="_blank" rel="noopener"
+                                class="text-blue-500 underline">プライバシーポリシー</a>に同意する
+                        </label>
+                    </div>
+                    <div class="flex justify-center gap-4 mt-6">
+                        <button type="button"
+                            class="px-8 py-2 text-base bg-white border-2 border-purple-700 rounded-full cursor-pointer text-purple-700 transition-colors hover:bg-purple-700 hover:text-white"
+                            onclick="history.back();">修正する</button>
+                        <button type="submit"
+                            class="px-8 py-2 text-base bg-white border-2 border-purple-700 rounded-full cursor-pointer text-purple-700 transition-colors hover:bg-purple-700 hover:text-white">送信する</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 @endsection
-
-@push('styles')
-<style>
-body {
-    background-image: url("{{ asset($backImg->FILE_PATH . $backImg->FILE_NAME) }}");
-}
-
-.subpage-hero {
-    background-image: url("{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}");
-}
-
-.confirm-group {
-    padding-bottom: 0.1rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.confirm-group label {
-    margin-top: -1rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
-    font-size: 0.9rem;
-}
-
-.confirm-group p {
-    color: black;
-    margin: 0;
-    line-height: 1;
-    display: inline-block;
-}
-
-.button-group {
-    text-align: center;
-}
-
-.privacy-policy {
-    margin-top: 20px;
-    border-bottom: none;
-}
-
-.privacy-policy label {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-}
-
-.privacy-policy input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-.privacy-policy a {
-    color: #007bff;
-    text-decoration: underline;
-}
-</style>
-@endpush
-
-@push('scripts')
-<script>
-function checkSubmit() {
-    return confirm('送信してもよろしいですか？');
-}
-</script>
-@endpush

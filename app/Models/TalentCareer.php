@@ -13,11 +13,29 @@ class TalentCareer extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'TALENT_ID', 'CAREER_CATEGORY_ID', 'CONTENT', 'DETAIL',
-        'ACTIVE_DATE', 'SPARE1', 'SPARE2', 'DEL_FLG'
+        'TALENT_ID',
+        'CAREER_CATEGORY_ID',
+        'CONTENT',
+        'DETAIL',
+        'ACTIVE_DATE',
+        'SPARE1',
+        'SPARE2',
+        'DEL_FLG'
     ];
 
-    protected $dates = ['ACTIVE_DATE', 'INS_DATE', 'UPD_DATE'];
+    /**
+     * ★★★ 修正点 ★★★
+     * $dates プロパティの代わりに、$casts プロパティを使用して
+     * 日付として扱うカラムを明示的に定義します。
+     * これにより、NULL値や日付フォーマットが正しく処理されるようになります。
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ACTIVE_DATE' => 'date',
+        'INS_DATE' => 'datetime',
+        'UPD_DATE' => 'datetime',
+    ];
 
     public function talent()
     {

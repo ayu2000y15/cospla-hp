@@ -9,7 +9,7 @@ html {
 }
 
 body {
-    font-family: 'Noto Sans JP', Arial, sans-serif;
+    font-family: "Noto Sans JP", Arial, sans-serif;
     line-height: 1.6;
     color: #333;
     background: white;
@@ -188,7 +188,8 @@ h2 {
     object-fit: cover;
 }
 
-.prev, .next {
+.prev,
+.next {
     cursor: pointer;
     position: absolute;
     top: 50%;
@@ -201,7 +202,7 @@ h2 {
     transition: 0.6s ease;
     border-radius: 0 3px 3px 0;
     user-select: none;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .next {
@@ -209,8 +210,9 @@ h2 {
     border-radius: 3px 0 0 3px;
 }
 
-.prev:hover, .next:hover {
-    background-color: rgba(0,0,0,0.8);
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .dot-container {
@@ -232,7 +234,8 @@ h2 {
     transition: background-color 0.6s ease;
 }
 
-.active, .dot:hover {
+.active,
+.dot:hover {
     background-color: #717171;
 }
 
@@ -266,27 +269,27 @@ h2 {
     font-size: 3rem;
     padding: 10rem 0 0;
     margin: 0;
-    text-shadow: 2px 2px 4px rgb(0,0,0,0.5);
+    text-shadow: 2px 2px 4px rgb(0, 0, 0, 0.5);
 }
 
-#back{
+#back {
     background-color: white;
 }
 
-#talent{
-    color: rgb(102,179,255);
+#talent {
+    color: rgb(102, 179, 255);
     text-align: center;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem 2rem 3rem;
 }
 
-#top h2{
-    color:white;
+#top h2 {
+    color: white;
     text-align: center;
     margin-top: 1rem;
     margin-bottom: -3rem;
-    text-shadow: 2px 2px 4px rgb(0,0,0,0.5)
+    text-shadow: 2px 2px 4px rgb(0, 0, 0, 0.5);
 }
 
 .company-profile {
@@ -296,7 +299,8 @@ h2 {
     margin-bottom: 2rem;
 }
 
-.company-info, .company-map {
+.company-info,
+.company-map {
     flex: 1;
     min-width: 300px;
 }
@@ -306,7 +310,8 @@ h2 {
     border-collapse: collapse;
 }
 
-.company-info th, .company-info td {
+.company-info th,
+.company-info td {
     padding: 0.5rem;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -327,7 +332,8 @@ h2 {
     height: 100%;
 }
 
-.talent-grid, .cosplay-grid {
+.talent-grid,
+.cosplay-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
@@ -395,7 +401,6 @@ h2 {
     margin-bottom: 1rem;
     border-radius: 20px;
     display: block;
-
 }
 
 .talent-page .talent-item h2 {
@@ -410,11 +415,11 @@ h2 {
 }
 
 .container-box {
-    color:#583F99;
+    color: #583f99;
     background-color: rgba(255, 255, 255, 0.6);
     padding: 2rem 2rem 1rem 2rem;
     margin: 10rem 0rem 4rem;
-    border-radius:40px;
+    border-radius: 40px;
 }
 
 .container-box.profile {
@@ -428,13 +433,13 @@ h2 {
     margin-right: 8rem;
 }
 
-.container-box.contact h2{
+.container-box.contact h2 {
     text-align: center;
 }
 
-.container-box.contact p{
+.container-box.contact p {
     text-align: center;
-    font-size:2rem;
+    font-size: 2rem;
 }
 
 .container-box.about,
@@ -444,13 +449,13 @@ h2 {
     margin-right: 8rem;
 }
 
-.container-box.about h2{
+.container-box.about h2 {
     text-align: center;
 }
 
-.container-box.about p{
+.container-box.about p {
     text-align: center;
-    font-size:1.5rem;
+    font-size: 1.5rem;
 }
 
 .container-box.news-page {
@@ -458,8 +463,8 @@ h2 {
     margin-right: 8rem;
 }
 
-.container-box.news-page p{
-    font-size:1rem;
+.container-box.news-page p {
+    font-size: 1rem;
 }
 
 .container-box.news {
@@ -479,7 +484,7 @@ h2 {
     width: 100%;
     height: 300px;
     object-fit: cover;
-    margin-top:1rem;
+    margin-top: 1rem;
 }
 
 .news-page-header {
@@ -494,7 +499,7 @@ h2 {
     flex-grow: 1;
 }
 
-.news-page-date{
+.news-page-date {
     text-align: right;
     color: #666;
     font-size: 0.9rem;
@@ -594,7 +599,12 @@ h2 {
 }
 
 .news-item:hover {
-    background-color: rgba(255, 105, 180, 0.1); /* ホバー時の背景色（薄いピンク） */
+    background-color: rgba(
+        255,
+        105,
+        180,
+        0.1
+    ); /* ホバー時の背景色（薄いピンク） */
 }
 
 .news-content {
@@ -652,13 +662,13 @@ h2 {
     position: relative;
 }
 
-.cosplay-content h2{
+.cosplay-content h2 {
     color: #71c2f5;
     font-size: 24px;
     margin-bottom: 15px;
 }
 
-.cosplay-content2 h2{
+.cosplay-content2 h2 {
     color: #ff98de;
     font-size: 24px;
     margin-bottom: 15px;
@@ -671,7 +681,7 @@ h2 {
 }
 
 .cosplay-content-box::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
@@ -681,7 +691,7 @@ h2 {
 }
 
 .cosplay-content-box2::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
@@ -702,12 +712,12 @@ h2 {
     line-height: 1.5;
 }
 
-.cosplay-content-box a{
+.cosplay-content-box a {
     color: #6bbdf0;
     text-decoration: none;
 }
 
-.cosplay-content-box a:hover{
+.cosplay-content-box a:hover {
     color: #0688d8;
     text-decoration: none;
 }
@@ -723,13 +733,13 @@ h2 {
     min-width: 250px;
 }
 
-.talent-name{
+.talent-name {
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
 
-.talent-name-en{
-    font-style:italic;
+.talent-name-en {
+    font-style: italic;
     font-size: 1.2rem;
     color: #666;
     margin-top: 0;
@@ -753,7 +763,8 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-.talent-details th, .talent-details td {
+.talent-details th,
+.talent-details td {
     padding: 0.5rem;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -762,7 +773,7 @@ h2 {
     text-align: left;
     width: 30%;
     font-weight: bold;
-    color: #583F99;
+    color: #583f99;
 }
 
 .action-buttons {
@@ -780,7 +791,6 @@ h2 {
     font-size: 1.5rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-
 }
 
 .submit-button {
@@ -792,11 +802,12 @@ h2 {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-
 }
 
-.button:hover, .button.active,
-.submit-button:hover, .submit-button.active  {
+.button:hover,
+.button.active,
+.submit-button:hover,
+.submit-button.active {
     background-color: #8e44ad;
     color: white;
 }
@@ -817,7 +828,8 @@ h2 {
     display: inline-block;
 }
 
-.career-info, .photos-info {
+.career-info,
+.photos-info {
     margin-top: 2rem;
     width: 100%;
 }
@@ -837,11 +849,11 @@ h2 {
     background-color: #f8f8f8;
     border-radius: 10px;
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .career-category h3 {
-    color: #583F99;
+    color: #583f99;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
 }
@@ -888,7 +900,7 @@ h2 {
 }
 
 .photo-item::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -1084,9 +1096,9 @@ h2 {
     font-size: 0.9rem;
 }
 
-.admin a{
+.admin a {
     color: #999;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .form-description {
@@ -1160,8 +1172,8 @@ h2 {
 }
 
 .hr-line {
-    border-top: 1px solid #583F99;
-    border-bottom: 1px solid #583F99;
+    border-top: 1px solid #583f99;
+    border-bottom: 1px solid #583f99;
     margin: 1rem 0;
 }
 
@@ -1258,7 +1270,6 @@ h2 {
         margin-top: 3rem; /* モバイルではヘッダーが小さくなるため調整 */
     }
 
-
     .slide-content {
         padding: 10px;
     }
@@ -1298,7 +1309,7 @@ h2 {
 
     .see-more {
         justify-content: center;
-        margin-top:1rem;
+        margin-top: 1rem;
         margin-left: 0;
     }
 
@@ -1307,15 +1318,15 @@ h2 {
     }
 
     .talent-list {
-        margin:0;
+        margin: 0;
     }
 
     .cosplay-list {
-        margin:0;
+        margin: 0;
     }
 
     .news-list {
-        margin:0;
+        margin: 0;
     }
 
     .news-content {
@@ -1332,12 +1343,13 @@ h2 {
         flex-direction: column;
     }
 
-    .company-info, .company-map {
+    .company-info,
+    .company-map {
         width: 100%;
     }
 
-    .company-map h2{
-        margin-top:2rem;
+    .company-map h2 {
+        margin-top: 2rem;
     }
 
     .about-diagram {
@@ -1348,7 +1360,9 @@ h2 {
         max-height: none; /* モバイルでは高さ制限を解除 */
     }
 
-    .talent-grid, .cosplay-grid,.talent-grid-main {
+    .talent-grid,
+    .cosplay-grid,
+    .talent-grid-main {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 1rem;
     }
@@ -1370,7 +1384,7 @@ h2 {
 
     .cosplay-grid img {
         height: 300px;
-        margin-top:1rem;
+        margin-top: 1rem;
     }
 
     .container-box.profile,
@@ -1389,7 +1403,6 @@ h2 {
         margin-left: 0;
         margin-right: 0;
     }
-
 
     .profile-content {
         flex-direction: column;

@@ -1,199 +1,181 @@
 @extends('layouts.app')
 
-@section('title', 'TALENT - コスプラットフォーム株式会社')
+@section('title', $talent->LAYER_NAME . ' - コスプラットフォーム株式会社')
 
 @section('content')
-<main>
-    <section class="subpage-hero">
-        <h1>TALENT</h1>
+<main class="pt-16">
+    <section class="relative h-[300px] bg-cover bg-center"
+             style="background-image: url('{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}')">
     </section>
-    <div class="container">
-        <div class="container-box profile">
-            <section class="profile-page center-content">
-                <div class="profile-content">
-                    <div class="profile-image">
-                        <img src="{{ asset($talentImgTop->FILE_PATH . $talentImgTop->FILE_NAME) }}"
-                            alt="{{ $talent->LAYER_NAME }}">
+
+    <h1 class="mt-12 mb-4 text-5xl font-extrabold text-center text-white drop-shadow-md">
+        TALENT
+    </h1>
+
+    <div class="container px-4 mx-auto max-w-6xl">
+        <div class="p-4 my-16 md:p-8 bg-white/60 text-purple-900 rounded-3xl">
+            <section class="flex flex-col items-center">
+
+                {{-- プロフィール全体を囲むコンテナ --}}
+                <div class="flex flex-col w-full gap-8 md:flex-row">
+
+                    {{-- 左側: 画像 --}}
+                    <div class="w-full md:w-1/3">
+                        @if($talentImgTop)
+                            <img src="{{ asset($talentImgTop->FILE_PATH . $talentImgTop->FILE_NAME) }}"
+                                 alt="{{ $talent->LAYER_NAME }}" class="object-cover w-full h-auto rounded-lg shadow-lg">
+                        @endif
                     </div>
-                    <div class="profile-info">
-                        <div class="social-icons profile">
-                            @if($talentProfile->SNS_1_FLG === '1')
-                            <a href="{{ $talent->SNS_1 }}" aria-label="X (Twitter)" target="_blank" rel="noopener">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
+
+                    {{-- 右側: 情報 --}}
+                    <div class="w-full md:w-2/3">
+                        {{-- SNSアイコン --}}
+                        <div class="flex items-center gap-3 mb-2">
+                            @if($talentProfile->SNS_1_FLG === '1' && $talent->SNS_1)
+                            <a href="{{ $talent->SNS_1 }}" aria-label="X (Twitter)" target="_blank" rel="noopener" class="group flex items-center justify-center w-10 h-10 transition-all duration-300 bg-slate-100 rounded-full hover:bg-pink-400 hover:scale-110">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 transition-colors duration-300 group-hover:text-white">
                                     <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
                                     <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
                                 </svg>
                             </a>
                             @endif
-                            @if($talentProfile->SNS_2_FLG === '1')
-                            <a href="{{ $talent->SNS_2 }}" aria-label="Instagram" target="_blank" rel="noopener">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                            @if($talentProfile->SNS_2_FLG === '1' && $talent->SNS_2)
+                            <a href="{{ $talent->SNS_2 }}" aria-label="Instagram" target="_blank" rel="noopener" class="group flex items-center justify-center w-10 h-10 transition-all duration-300 bg-slate-100 rounded-full hover:bg-pink-400 hover:scale-110">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 transition-colors duration-300 group-hover:text-white">
                                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
                                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
                                 </svg>
                             </a>
                             @endif
-                            @if($talentProfile->SNS_3_FLG === '1')
-                            <a href="{{ $talent->SNS_3 }}" aria-label="TikTok" target="_blank" rel="noopener">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                            @if($talentProfile->SNS_3_FLG === '1' && $talent->SNS_3)
+                            <a href="{{ $talent->SNS_3 }}" aria-label="TikTok" target="_blank" rel="noopener" class="group flex items-center justify-center w-10 h-10 transition-all duration-300 bg-slate-100 rounded-full hover:bg-pink-400 hover:scale-110">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-700 transition-colors duration-300 group-hover:text-white">
                                     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
                                 </svg>
                             </a>
                             @endif
                         </div>
-                        <h2 class="talent-name">{{ $talent->LAYER_NAME }}</h2>
-                        <h3 class="talent-name-en">{{ $talent->LAYER_FURIGANA_EN }}</h3>
-                        <hr class="hr-line">
-                        <div class="talent-details">
-                            <table>
-                                @if($talentProfile->BIRTHDAY_FLG === '1' || $talentProfile->BIRTHDAY_FLG === '2')
-                                <tr>
-                                    <th>BIRTHDAY</th>
-                                    <td>
-                                        @if($talentProfile->BIRTHDAY_FLG === '1')
-                                            {{ date('Y/n/j', strtotime($talent->BIRTHDAY)) }}
-                                        @elseif($talentProfile->BIRTHDAY_FLG === '2')
-                                            {{ date('n/j', strtotime($talent->BIRTHDAY)) }}
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endif
-                                @if($talentProfile->AGE_FLG === '1')
-                                <tr>
-                                    <th>AGE</th>
-                                    <td>{{ $talent->AGE }}</td>
-                                </tr>
-                                @endif
-                                @if($talentProfile->FOLLOWERS_FLG === '1')
-                                <tr>
-                                    <th>FOLLOWERS</th>
-                                    <td>{{ $talent->FOLLOWERS }}</td>
-                                </tr>
-                                @endif
-                                @if($talentProfile->HEIGHT_FLG === '1' || $talentProfile->THREE_SIZES_FLG === '1')
-                                <tr>
-                                    <th rowspan="{{ ($talentProfile->HEIGHT_FLG === '1' ? 1 : 0) + ($talentProfile->THREE_SIZES_FLG === '1' ? 1 : 0) + 1 }}">SIZE</th>
-                                    <td style="display: none;"></td>
-                                </tr>
-                                @if($talentProfile->HEIGHT_FLG === '1')
-                                <tr>
-                                    <td colspan="1">Height: {{ $talent->HEIGHT }}</td>
-                                </tr>
-                                @endif
-                                @if($talentProfile->THREE_SIZES_FLG === '1')
-                                <tr>
-                                    <td colspan="1">
-                                        @if($talentProfile->THREE_SIZES_B_FLG === '1')
-                                            B:{{ $talent->THREE_SIZES_B }}
-                                        @endif
-                                        @if($talentProfile->THREE_SIZES_W_FLG === '1')
-                                            W:{{ $talent->THREE_SIZES_W }}
-                                        @endif
-                                        @if($talentProfile->THREE_SIZES_H_FLG === '1')
-                                            H:{{ $talent->THREE_SIZES_H }}
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endif
-                                @endif
-                                @if($talentProfile->HOBBY_SPECIALTY_FLG === '1')
-                                <tr>
-                                    <th>HOBBY / SPECIALTY</th>
-                                    <td>{{ $talent->HOBBY_SPECIALTY }}</td>
-                                </tr>
-                                @endif
-                                @if($talentProfile->COMMENT_FLG === '1')
-                                <tr>
-                                    <th>COMMENT</th>
-                                    <td>{!! nl2br(e($talent->COMMENT)) !!}</td>
-                                </tr>
-                                @endif
+                        <h2 class="text-3xl mb-2">{{ $talent->LAYER_NAME }}</h2>
+                        <h3 class="italic text-lg text-gray-600 mb-4">{{ $talent->LAYER_FURIGANA_EN }}</h3>
+                        <hr class="border-t-2 border-purple-800 my-4">
+                        <div class="w-full mb-6">
+                            <table class="w-full text-left">
+                                <tbody>
+                                    @if($talentProfile->BIRTHDAY_FLG === '1' || $talentProfile->BIRTHDAY_FLG === '2')
+                                    <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900 w-1/3">BIRTHDAY</th>
+                                        <td class="py-2">
+                                            @if($talentProfile->BIRTHDAY_FLG === '1')
+                                                {{ date('Y/n/j', strtotime($talent->BIRTHDAY)) }}
+                                            @elseif($talentProfile->BIRTHDAY_FLG === '2')
+                                                {{ date('n/j', strtotime($talent->BIRTHDAY)) }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @if($talentProfile->AGE_FLG === '1' && $talent->AGE)
+                                    <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900">AGE</th>
+                                        <td class="py-2">{{ $talent->AGE }}</td>
+                                    </tr>
+                                    @endif
+                                    @if($talentProfile->FOLLOWERS_FLG === '1' && $talent->FOLLOWERS)
+                                     <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900">FOLLOWERS</th>
+                                        <td class="py-2">{{ number_format($talent->FOLLOWERS) }}</td>
+                                    </tr>
+                                    @endif
+                                     @if($talentProfile->HEIGHT_FLG === '1' && $talent->HEIGHT)
+                                    <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900">SIZE</th>
+                                        <td class="py-2">Height: {{ $talent->HEIGHT }} cm</td>
+                                    </tr>
+                                    @endif
+                                    @if($talentProfile->THREE_SIZES_FLG === '1')
+                                     <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900"></th>
+                                        <td class="py-2">
+                                            @if($talentProfile->THREE_SIZES_B_FLG === '1')B:{{ $talent->THREE_SIZES_B }} @endif
+                                            @if($talentProfile->THREE_SIZES_W_FLG === '1')W:{{ $talent->THREE_SIZES_W }} @endif
+                                            @if($talentProfile->THREE_SIZES_H_FLG === '1')H:{{ $talent->THREE_SIZES_H }} @endif
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @if($talentProfile->HOBBY_SPECIALTY_FLG === '1' && $talent->HOBBY_SPECIALTY)
+                                    <tr class="border-b border-gray-300">
+                                        <th class="py-2 pr-4 font-bold text-purple-900">HOBBY / SPECIALTY</th>
+                                        <td class="py-2">{{ $talent->HOBBY_SPECIALTY }}</td>
+                                    </tr>
+                                    @endif
+                                    @if($talentProfile->COMMENT_FLG === '1' && $talent->COMMENT)
+                                    <tr class="border-b-0">
+                                        <th class="py-2 pr-4 font-bold text-purple-900">COMMENT</th>
+                                        <td class="py-2">{!! nl2br(e($talent->COMMENT)) !!}</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
                             </table>
                         </div>
-                        <div class="tag-container">
+                        <div class="flex flex-wrap gap-2 mt-4">
                             @foreach($talentTag as $tag)
-                                <span class="tag" style="background-color: {{ $tag->TAG_COLOR }};">#{{ $tag->TAG_NAME }}</span>
+                                <span class="px-3 py-1 text-sm font-medium text-white rounded-full" style="background-color: {{ $tag->TAG_COLOR }};">#{{ $tag->TAG_NAME }}</span>
                             @endforeach
                         </div>
                     </div>
                 </div>
-                <div class="action-buttons">
-                    <button class="button photos-button" active>PHOTOS</button>
-                    <button class="button career-button">CAREER</button>
+
+                {{-- ボタンとコンテンツエリア --}}
+                <div class="flex justify-center w-full gap-4 mt-8">
+                    <button class="px-8 py-3 text-lg border-2 rounded-full cursor-pointer photos-button transition-colors duration-300 bg-purple-700 text-white border-purple-700">PHOTOS</button>
+                    <button class="px-8 py-3 text-lg border-2 rounded-full cursor-pointer career-button transition-colors duration-300 bg-white text-purple-700 border-purple-700 hover:bg-purple-700 hover:text-white">CAREER</button>
                 </div>
-                <div class="photos-info">
-                    <div class="photos-slider-container">
-                        <button class="slider-arrow prev-arrow" aria-label="前の画像へ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M15 18l-6-6 6-6" />
-                            </svg>
-                        </button>
-                        <div class="photos-grid">
-                            @foreach($talentImg as $img)
-                            <div class="photo-item" tabindex="0">
-                                <img src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="{{ $img->ALT }}" loading="lazy">
+
+                {{-- Photos Gallery Area --}}
+                <div class="w-full mt-8 photos-info">
+                    <div class="relative photos-slider-container">
+                        <div class="flex overflow-x-auto scrolling-touch photos-grid snap-x snap-mandatory">
+                            @foreach($talentImg as $index => $img)
+                            <div class="w-1/2 md:w-1/4 flex-shrink-0 snap-center p-2 photo-item" data-index="{{ $index }}">
+                                <img src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="{{ $img->ALT }}" loading="lazy" class="object-cover w-full h-full rounded-lg shadow-md cursor-pointer aspect-square transition-transform duration-300 hover:scale-105">
                             </div>
                             @endforeach
                         </div>
-                        <button class="slider-arrow next-arrow" aria-label="次の画像へ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M9 18l6-6-6-6" />
-                            </svg>
+                        <button class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full slider-arrow prev-arrow top-1/2 left-2" aria-label="前の画像へ">
+                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full slider-arrow next-arrow top-1/2 right-2" aria-label="次の画像へ">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
                     </div>
                 </div>
-                <div class="career-info" style="display: none;">
-                    <div class="career-categories">
+
+                {{-- Career Area --}}
+                <div class="w-full mt-8 career-info" style="display: none;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         @foreach($careerCategory as $category)
-                        <div class="career-category">
-                            @if($category->CAREER_CATEGORY_ID == '0')
+                        <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold text-purple-900">{{ $category->CAREER_CATEGORY_NAME }}</h3>
+                            <hr class="my-2 border-t-2 border-purple-800">
                             <ul>
                                 @foreach($talentCareer as $career)
                                     @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
-                                    <li class="career-item">
-                                        <span class="career-content">{!! nl2br(e($career->CONTENT)) !!}</span>
-                                    </li>
-                                    <hr class="hr-career">
-                                    @endif
-                                @endforeach
-                            </ul>
-                            @else
-                            <h3>{{ $category->CAREER_CATEGORY_NAME }}</h3>
-                            <hr class="hr-line">
-                            <ul>
-                                @foreach($talentCareer as $career)
-                                    @if($category->CAREER_CATEGORY_ID === $career->CAREER_CATEGORY_ID)
-                                    <li class="career-item">
-                                        <span class="career-date">
+                                    <li class="flex flex-col pt-3 pb-3 border-b border-dashed md:flex-row border-purple-300">
+                                        {{-- === 日付表示ロジックをここに追加 === --}}
+                                        <span class="w-full mb-1 font-semibold text-gray-600 md:w-1/3 md:mb-0">
                                             @if($career->SPARE2 === '1')
                                                 {{ date('Y/n/j', strtotime($career->ACTIVE_DATE)) }}
                                             @elseif($career->SPARE2 === '2')
                                                 {{ date('Y/n', strtotime($career->ACTIVE_DATE)) }}
                                             @elseif($career->SPARE2 === '3')
                                                 {{ date('Y', strtotime($career->ACTIVE_DATE)) }}
-                                            @else
-
                                             @endif
                                         </span>
-                                        <span class="career-content">{!! nl2br(e($career->CONTENT)) !!}</span>
+                                        <span class="flex-1">{!! nl2br(e($career->CONTENT)) !!}</span>
                                     </li>
-                                    <hr class="hr-career">
                                     @endif
-
                                 @endforeach
                             </ul>
-                            @endif
                         </div>
                         @endforeach
                     </div>
@@ -201,266 +183,125 @@
             </section>
         </div>
     </div>
-    <div class="preview-overlay">
-        <img src="" alt="" class="preview-image">
-        <span class="close-preview">&times;</span>
+
+    {{-- 画像プレビュー用のモーダル --}}
+    <div id="preview-overlay" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-80 backdrop-blur-sm">
+        <span class="absolute text-4xl text-white cursor-pointer top-4 right-6 close-preview">&times;</span>
+        <button class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full preview-arrow preview-prev top-1/2 left-4 md:left-8" aria-label="前の画像">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <img class="max-w-[90%] max-h-[90%] object-contain rounded-md shadow-lg" id="preview-image" src="" alt="">
+        <button class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full preview-arrow preview-next top-1/2 right-4 md:right-8" aria-label="次の画像">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
     </div>
 </main>
 @endsection
 
-@push('styles')
-<style>
-    body {
-        background-image: url("{{ asset($backImg->FILE_PATH . $backImg->FILE_NAME) }}");
-    }
-
-    .subpage-hero {
-        background-image: url("{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}");
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const careerButton = document.querySelector('.career-button');
-        const photosButton = document.querySelector('.photos-button');
-        const careerInfo = document.querySelector('.career-info');
-        const photosInfo = document.querySelector('.photos-info');
-        const sliderContainer = document.querySelector('.photos-slider-container');
-        const photosGrid = document.querySelector('.photos-grid');
-        const prevArrow = document.querySelector('.prev-arrow');
-        const nextArrow = document.querySelector('.next-arrow');
-        const photoItems = document.querySelectorAll('.photo-item');
-        const previewOverlay = document.querySelector('.preview-overlay');
-        const previewImage = document.querySelector('.preview-image');
-        const closePreview = document.querySelector('.close-preview');
-        const previewPrevArrow = document.createElement('button');
-        const previewNextArrow = document.createElement('button');
+document.addEventListener('DOMContentLoaded', function() {
+    const talentImages = @json($talentImg->map(function($img) {
+        return ['src' => asset($img->FILE_PATH . $img->FILE_NAME), 'alt' => $img->ALT];
+    })->values());
 
-        let currentPosition = 0;
-        let startX = 0;
-        let scrollLeft = 0;
-        let isDragging = false;
-        let currentPreviewIndex = 0;
+    // --- Tab Switching ---
+    const careerButton = document.querySelector('.career-button');
+    const photosButton = document.querySelector('.photos-button');
+    const careerInfo = document.querySelector('.career-info');
+    const photosInfo = document.querySelector('.photos-info');
 
-        // プレビューオーバーレイを初期状態で非表示にする
-        previewOverlay.style.display = 'none';
+    if (careerButton && photosButton && careerInfo && photosInfo) {
+        const setActiveButton = (activeBtn) => {
+            [photosButton, careerButton].forEach(btn => {
+                btn.classList.remove('bg-purple-700', 'text-white');
+                btn.classList.add('bg-white', 'text-purple-700');
+            });
+            activeBtn.classList.add('bg-purple-700', 'text-white');
+            activeBtn.classList.remove('bg-white', 'text-purple-700');
+        };
 
-        function hideAllSections() {
-            careerInfo.style.display = 'none';
-            photosInfo.style.display = 'none';
-            careerButton.classList.remove('active');
-            photosButton.classList.remove('active');
-        }
-
-        careerButton.addEventListener('click', function() {
-            hideAllSections();
+        careerButton.addEventListener('click', () => {
             careerInfo.style.display = 'block';
-            careerButton.classList.add('active');
+            photosInfo.style.display = 'none';
+            setActiveButton(careerButton);
         });
 
-        photosButton.addEventListener('click', function() {
-            hideAllSections();
+        photosButton.addEventListener('click', () => {
             photosInfo.style.display = 'block';
-            photosButton.classList.add('active');
-            updateSliderLayout();
+            careerInfo.style.display = 'none';
+            setActiveButton(photosButton);
         });
+    }
 
-        hideAllSections();
-        photosInfo.style.display = 'block';
-        photosButton.classList.add('active');
+    // --- Photo Gallery Slider ---
+    const sliderContainer = document.querySelector('.photos-slider-container');
+    const photosGrid = document.querySelector('.photos-grid');
+    const prevArrow = document.querySelector('.prev-arrow');
+    const nextArrow = document.querySelector('.next-arrow');
 
-        // プレビュー機能の拡張
-        previewPrevArrow.classList.add('preview-arrow', 'preview-prev-arrow');
-        previewPrevArrow.innerHTML = '&lt;';
-        previewPrevArrow.setAttribute('aria-label', '前の画像');
-        previewNextArrow.classList.add('preview-arrow', 'preview-next-arrow');
-        previewNextArrow.innerHTML = '&gt;';
-        previewNextArrow.setAttribute('aria-label', '次の画像');
-        previewOverlay.appendChild(previewPrevArrow);
-        previewOverlay.appendChild(previewNextArrow);
+    if (sliderContainer && photosGrid && prevArrow && nextArrow) {
+        const scrollAmount = photosGrid.querySelector('.photo-item').offsetWidth;
+        prevArrow.addEventListener('click', () => {
+            photosGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+        nextArrow.addEventListener('click', () => {
+            photosGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+    }
 
-        function showPreview(index) {
-            const img = photoItems[index].querySelector('img');
-            previewImage.src = img.src;
-            previewImage.alt = img.alt;
+    // --- Image Preview Modal ---
+    const photoItems = document.querySelectorAll('.photo-item');
+    const previewOverlay = document.getElementById('preview-overlay');
+    const previewImage = document.getElementById('preview-image');
+    const closePreviewBtn = document.querySelector('.close-preview');
+    const prevPreviewBtn = document.querySelector('.preview-prev');
+    const nextPreviewBtn = document.querySelector('.preview-next');
+    let currentImageIndex = 0;
+
+    if (previewOverlay) {
+        const openPreview = (index) => {
+            currentImageIndex = index;
+            updatePreviewImage();
             previewOverlay.style.display = 'flex';
-            currentPreviewIndex = index;
-            updatePreviewArrows();
-        }
+            document.body.style.overflow = 'hidden';
+        };
 
-        function updatePreviewArrows() {
-            previewPrevArrow.style.display = currentPreviewIndex > 0 ? 'block' : 'none';
-            previewNextArrow.style.display = currentPreviewIndex < photoItems.length - 1 ? 'block' : 'none';
-        }
-
-        photoItems.forEach((item, index) => {
-            item.addEventListener('click', function() {
-                showPreview(index);
-            });
-
-            item.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    showPreview(index);
-                }
-            });
-        });
-
-        previewPrevArrow.addEventListener('click', function() {
-            if (currentPreviewIndex > 0) {
-                showPreview(currentPreviewIndex - 1);
-            }
-        });
-
-        previewNextArrow.addEventListener('click', function() {
-            if (currentPreviewIndex < photoItems.length - 1) {
-                showPreview(currentPreviewIndex + 1);
-            }
-        });
-
-        closePreview.addEventListener('click', function() {
+        const closePreview = () => {
             previewOverlay.style.display = 'none';
-        });
+            document.body.style.overflow = '';
+        };
 
-        previewOverlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-            }
-        });
+        const updatePreviewImage = () => {
+            previewImage.src = talentImages[currentImageIndex].src;
+            previewImage.alt = talentImages[currentImageIndex].alt;
+            prevPreviewBtn.style.display = currentImageIndex > 0 ? 'block' : 'none';
+            nextPreviewBtn.style.display = currentImageIndex < talentImages.length - 1 ? 'block' : 'none';
+        };
 
-        // キーボードナビゲーションの追加
-        document.addEventListener('keydown', function(e) {
-            if (previewOverlay.style.display === 'flex') {
-                if (e.key === 'ArrowLeft' && currentPreviewIndex > 0) {
-                    showPreview(currentPreviewIndex - 1);
-                } else if (e.key === 'ArrowRight' && currentPreviewIndex < photoItems.length - 1) {
-                    showPreview(currentPreviewIndex + 1);
-                } else if (e.key === 'Escape') {
-                    previewOverlay.style.display = 'none';
-                }
-            }
-        });
-
-        function getVisibleSlides() {
-            if (window.innerWidth >= 1024) return 4;
-            if (window.innerWidth >= 768) return 3;
-            if (window.innerWidth >= 640) return 2;
-            return 1;
-        }
-
-        function updateSliderLayout() {
-            const visibleSlides = getVisibleSlides();
-            const slideWidth = 100 / visibleSlides;
-            photoItems.forEach(item => {
-                item.style.flex = `0 0 ${slideWidth}%`;
-                item.style.maxWidth = `${slideWidth}%`;
+        photoItems.forEach(item => {
+            item.addEventListener('click', () => {
+                openPreview(parseInt(item.dataset.index));
             });
-            currentPosition = 0;
-            updateSlidePosition();
-            updateArrowVisibility();
-        }
+        });
 
-        function updateSlidePosition() {
-            photosGrid.style.transition = 'transform 0.5s ease';
-            photosGrid.style.transform = `translateX(-${currentPosition}%)`;
-        }
-
-        function moveSlider(direction) {
-            const slideWidth = 100 / getVisibleSlides();
-            const maxPosition = (photoItems.length - getVisibleSlides()) * slideWidth;
-            currentPosition = Math.max(0, Math.min(currentPosition + direction * slideWidth, maxPosition));
-            updateSlidePosition();
-            updateArrowVisibility();
-        }
-
-        function updateArrowVisibility() {
-            const maxPosition = (photoItems.length - getVisibleSlides()) * (100 / getVisibleSlides());
-            prevArrow.style.display = currentPosition <= 0 ? 'none' : 'flex';
-            nextArrow.style.display = currentPosition >= maxPosition ? 'none' : 'flex';
-        }
-
-        prevArrow.addEventListener('click', () => moveSlider(-1));
-        nextArrow.addEventListener('click', () => moveSlider(1));
-
-        // タッチイベントの処理
-        function handleTouchStart(e) {
-            isDragging = true;
-            startX = e.touches[0].pageX - sliderContainer.offsetLeft;
-            scrollLeft = currentPosition;
-            lastTouchX = e.touches[0].pageX;
-            touchStartTime = Date.now();
-            photosGrid.style.transition = 'none';
-        }
-
-        function handleTouchMove(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-
-            currentTouchX = e.touches[0].pageX;
-            const touchDelta = lastTouchX - currentTouchX;
-            lastTouchX = currentTouchX;
-
-            const containerWidth = sliderContainer.offsetWidth;
-            const movePercent = (touchDelta / containerWidth) * 100;
-
-            currentPosition = Math.max(0, Math.min(currentPosition + movePercent, getMaxPosition()));
-            updateSlidePosition();
-        }
-
-        function handleTouchEnd(e) {
-            if (!isDragging) return;
-            isDragging = false;
-            photosGrid.style.transition = 'transform 0.3s ease';
-
-            const touchEndTime = Date.now();
-            const touchDuration = touchEndTime - touchStartTime;
-            const touchDistance = currentTouchX - startX;
-            const velocity = Math.abs(touchDistance) / touchDuration;
-
-            if (velocity > 0.5) {
-                const direction = touchDistance < 0 ? 1 : -1;
-                moveToNextSlide(direction);
-            } else {
-                snapToNearestSlide();
+        prevPreviewBtn.addEventListener('click', () => {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                updatePreviewImage();
             }
-
-            updateArrowVisibility();
-        }
-
-        function moveToNextSlide(direction) {
-            const slideWidth = 100 / getVisibleSlides();
-            currentPosition += direction * slideWidth;
-            currentPosition = Math.max(0, Math.min(currentPosition, getMaxPosition()));
-            updateSlidePosition();
-        }
-
-        function snapToNearestSlide() {
-            const slideWidth = 100 / getVisibleSlides();
-            const nearestSlide = Math.round(currentPosition / slideWidth);
-            currentPosition = nearestSlide * slideWidth;
-            updateSlidePosition();
-        }
-
-        function getMaxPosition() {
-            return (photoItems.length - getVisibleSlides()) * (100 / getVisibleSlides());
-        }
-
-        sliderContainer.addEventListener('touchstart', handleTouchStart, {
-            passive: false
         });
-        sliderContainer.addEventListener('touchmove', handleTouchMove, {
-            passive: false
-        });
-        sliderContainer.addEventListener('touchend', handleTouchEnd);
-
-        window.addEventListener('resize', () => {
-            currentPosition = 0;
-            updateSliderLayout();
+        nextPreviewBtn.addEventListener('click', () => {
+            if (currentImageIndex < talentImages.length - 1) {
+                currentImageIndex++;
+                updatePreviewImage();
+            }
         });
 
-        updateSliderLayout();
-    });
+        closePreviewBtn.addEventListener('click', closePreview);
+        previewOverlay.addEventListener('click', (e) => (e.target === previewOverlay) && closePreview());
+        document.addEventListener('keydown', (e) => (e.key === 'Escape') && closePreview());
+    }
+});
 </script>
 @endpush

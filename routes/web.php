@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TalentController;
-use App\Http\Controllers\CosplayController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsController;
 
@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\CareerAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\TalentAdminController;
 use App\Http\Controllers\Admin\AcmailAdminController;
+
+use App\Http\Controllers\Admin\OrderAdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,7 +41,7 @@ Route::get('/talent', [TalentController::class, 'index'])->name('talent');
 Route::post('/talent', [TalentController::class, 'show'])->name('talent.show');
 
 // Cosplayページ
-Route::get('/cosplay', [CosplayController::class, 'index'])->name('cosplay');
+Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 // Contactページ
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -49,6 +51,7 @@ Route::post('/contact/confirm', [ContactController::class, 'confirm'])->name('co
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 
 // Newsページ
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 // プライバシーポリシー
@@ -88,6 +91,8 @@ Route::post('/admin/talent-admin/career/entry', [TalentAdminController::class, '
 Route::post('/admin/talent-admin/career/store', [TalentAdminController::class, 'storeCareer'])->name('admin.talent.career.store');
 Route::post('/admin/talent-admin/career/update', [TalentAdminController::class, 'updateCareer'])->name('admin.talent.career.update');
 Route::delete('/admin/talent-admin/career/delete', [TalentAdminController::class, 'deleteCareer'])->name('admin.talent.career.delete');
+Route::post('/admin/talent-admin/career/reorder', [TalentAdminController::class, 'reorderCareers'])->name('admin.talent.career.reorder');
+Route::post('/admin/talent-admin/career/store-multiple', [TalentAdminController::class, 'storeMultipleCareers'])->name('admin.talent.career.store-multiple');
 
 //タレントタグ
 Route::delete('/admin/talent-admin/tag/delete', [TalentAdminController::class, 'deleteTag'])->name('admin.talent.tag.delete');
@@ -113,6 +118,8 @@ Route::get('/admin/news', [NewsAdminController::class, 'entry'])->name('admin.ne
 Route::post('/admin/news', [NewsAdminController::class, 'store'])->name('admin.news.store');
 Route::post('/admin/news/{id}', [NewsAdminController::class, 'update'])->name('admin.news.update');
 Route::delete('/admin/news/{id}', [NewsAdminController::class, 'delete'])->name('admin.news.delete');
+Route::get('/admin/news/images/{id}', [NewsAdminController::class, 'getImages'])->name('admin.news.images');
+Route::delete('/admin/news/delete-image/{id}', [NewsAdminController::class, 'deleteImage'])->name('admin.news.deleteImage');
 
 // Route::post('/admin/news/priority', [NewsAdminController::class, 'priority'])->name('admin.news.priority');
 Route::get('/admin/news/images/{id}', 'App\Http\Controllers\Admin\NewsAdminController@getImages')->name('admin.news.images');
@@ -140,3 +147,13 @@ Route::post('/admin/ac/edit', [AcmailAdminController::class, 'edit'])->name('adm
 Route::put('/admin/ac/update', [AcmailAdminController::class, 'update'])->name('admin.ac.update');
 Route::get('/admin/ac/editEntry', [AdminController::class, 'editEntry'])->name('admin.ac.editEntry');
 Route::post('/admin/ac/delete', [AcmailAdminController::class, 'delete'])->name('admin.ac.delete');
+
+// ORDERページ管理
+Route::prefix('admin/order')->name('admin.order.')->group(function () {
+    Route::get('/', [OrderAdminController::class, 'index'])->name('index');
+    Route::post('/client', [OrderAdminController::class, 'storeClient'])->name('client.store');
+    Route::put('/client/{client}', [OrderAdminController::class, 'updateClient'])->name('client.update'); // 更新
+    Route::delete('/client/{client}', [OrderAdminController::class, 'destroyClient'])->name('client.destroy'); // 削除
+    Route::post('/images', [OrderAdminController::class, 'uploadImages'])->name('images.upload');
+    Route::delete('/image/{image}', [OrderAdminController::class, 'destroyImage'])->name('image.destroy'); // 画像削除
+});

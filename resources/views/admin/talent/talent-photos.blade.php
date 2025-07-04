@@ -1,186 +1,176 @@
-<link rel="stylesheet" href="{{ asset('css/admin-photos.css') }}">
+<div class="space-y-10">
 
-<main>
-    <div class="form-area">
-        <h2 class="section-title">タレント写真登録・変更</h2>
+    {{-- 1. 新規写真登録セクション --}}
+    <div class="p-6 bg-white rounded-lg shadow">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">写真の新規登録</h3>
+        <p class="mt-1 text-sm text-gray-500">このタレントに関連する写真をアップロードします。</p>
 
-        <!-- 写真登録 -->
-        <div class="photo-upload-section">
-            <h3 class="subsection-title">◆写真新規登録</h3>
-            <p>※最大5Mまで。それ以上大きいファイルはアップロードできません。</p>
-            <form onsubmit="return checkSubmit('登録');" action="{{ route('admin.talent.photos.upload') }}" method="POST"
-                enctype="multipart/form-data" class="upload-form">
-                @csrf
-                <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                <input type="hidden" name="LAYER_NAME" value="{{ $talent->LAYER_NAME }}">
+        <form action="{{ route('admin.talent.photos.upload') }}" method="POST" enctype="multipart/form-data"
+            class="mt-6 space-y-6">
+            @csrf
+            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+            <input type="hidden" name="LAYER_NAME" value="{{ $talent->LAYER_NAME }}">
 
-                <div class="file-upload-wrapper">
-                    <input type="file" name="photos[]" id="photo-upload" class="file-upload-input" multiple
-                        onchange="updateFileNames(this)">
-                    <label for="photo-upload" class="file-upload-label">写真を選択</label>
-                </div>
-                <div id="selected-files" class="selected-files"></div>
-                <button type="submit" class="submit-button">アップロード</button>
-            </form>
-        </div>
-
-        <hr class="hr-line">
-        <!-- 写真一覧 -->
-        <div class="photo-list-section">
-            <h3 class="subsection-title">◆登録済みの写真一覧</h3>
-            <form action="{{ route('admin.talent.photos.bulkUpdate') }}" method="POST" id="bulkUpdateForm">
-                @csrf
-                @method('PUT')
-                <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                <div class="bulk-update-controls">
-                    <div class="select-all-wrapper">
-                        <input type="checkbox" id="selectAll" class="select-all-checkbox">
-                        <label for="selectAll">全選択/全解除</label>
-                    </div>
-                    <div class="bulk-actions">
-                        <select name="BULK_VIEW_FLG" class="bulk-view-select">
-                            @foreach ($viewFlagsBulk as $flag)
-                            <option value="{{ $flag->VIEW_FLG }}">{{ $flag->COMMENT }}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="bulk-update-button">一括変更</button>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">画像ファイル (複数選択可)</label>
+                <div id="photos-drop-zone"
+                    class="flex justify-center w-full px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md">
+                    <div class="space-y-1 text-center">
+                        <svg class="w-12 h-12 mx-auto text-gray-400" stroke="currentColor" fill="none"
+                            viewBox="0 0 48 48" aria-hidden="true">
+                            <path
+                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="photos-upload"
+                                class="relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer focus-within:outline-none hover:text-indigo-500">
+                                <span>ファイルを選択</span>
+                                <input id="photos-upload" name="photos[]" type="file" class="sr-only" multiple
+                                    accept="image/*">
+                            </label>
+                            <p class="pl-1">またはドラッグ＆ドロップ</p>
+                        </div>
                     </div>
                 </div>
-            </form>
-            <div class="photo-grid">
-                @foreach ($talentImgList as $img)
-                <div class="photo-item">
-                    <div class="photo-checkbox-wrapper">
-                        <input type="checkbox" name="SELECTED_PHOTOS[]" value="{{ $img->FILE_NAME }}"
-                            class="photo-checkbox" form="bulkUpdateForm" id="photo-{{ $img->FILE_NAME }}">
-                        <label for="photo-{{ $img->FILE_NAME }}" class="photo-checkbox-label"></label>
-                    </div>
-                    <img class="photo-thumbnail" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}"
-                        alt="{{ $img->COMMENT }}" onclick="openImagePreview(this.src)">
-                    <div class="photo-actions">
-                        <form onsubmit="return checkSubmit('変更');" action="{{ route('admin.talent.photos.update') }}"
-                            method="POST" class="change-form">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                            <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                            <div class="select-wrapper">
-                                @if($img->VIEW_FLG == '03')
-                                <p>※優先度の数字は小さいほど先に表示される</p>
-                                <label class="priority-label">優先度
-                                    <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" min="1" max="4"
-                                        class="priority-input">
-                                </label>
-                                @endif
-                                <select name="VIEW_FLG" class="view-select">
-                                    @foreach ($viewFlags as $select)
-                                    <option value="{{ $select->VIEW_FLG }}"
-                                        {{ $select->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
-                                        {{ $select->COMMENT }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="change-button">変更</button>
-                            </div>
-                        </form>
-                        <form onsubmit="return checkSubmit('削除');" action="{{ route('admin.talent.photos.delete') }}"
-                            method="POST" class="delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                            <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
-                            <button type="submit" class="delete-button">削除</button>
-                        </form>
-                    </div>
+                <div id="photos-preview-container" class="grid grid-cols-3 gap-4 mt-4 sm:grid-cols-4 md:grid-cols-6">
                 </div>
-                @endforeach
             </div>
 
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">アップロード</button>
+            </div>
+        </form>
+    </div>
+
+    {{-- 2. 登録済み写真一覧セクション --}}
+    <div class="pt-8 border-t border-gray-200">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み写真一覧</h3>
+        <p class="mt-1 text-sm text-gray-500">各グループをクリックすると、登録済みの画像が表示されます。</p>
+
+        <div class="mt-6 space-y-4">
+            @forelse($talentImgList->groupBy('VIEW_FLG') as $viewFlg => $images)
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="flex items-center justify-between p-4 font-medium list-none cursor-pointer">
+                        <span>{{ $viewFlags->where('VIEW_FLG', $viewFlg)->first()->COMMENT ?? '未分類' }}
+                            ({{ count($images) }}枚)</span>
+                        <svg class="w-5 h-5 transition-transform duration-300 transform group-open:rotate-180" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <div class="p-4 border-t border-gray-200">
+                        <ul role="list"
+                            class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                            @foreach($images as $img)
+                                <li class="relative">
+                                    <div class="block w-full overflow-hidden bg-gray-100 rounded-lg aspect-w-10 aspect-h-7">
+                                        <img src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="{{ $img->COMMENT }}"
+                                            class="object-cover w-full h-48 pointer-events-none">
+                                    </div>
+                                    <form action="{{ route('admin.talent.photos.update') }}" method="POST"
+                                        class="mt-2 space-y-2">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                                        <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600">表示先</label>
+                                            <select name="VIEW_FLG"
+                                                class="block w-full p-2 mt-1 text-sm bg-white border border-gray-300 rounded-md shadow-sm">
+                                                @foreach ($viewFlags as $select)
+                                                    <option value="{{ $select->VIEW_FLG }}" {{ $select->VIEW_FLG == $img->VIEW_FLG ? 'selected' : '' }}>
+                                                        {{ $select->COMMENT }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @if($img->VIEW_FLG == '03')
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-600">優先順位</label>
+                                                <input type="number" name="PRIORITY" value="{{ $img->PRIORITY }}" placeholder="優先度"
+                                                    class="block w-full p-2 mt-1 text-sm bg-white border border-gray-300 rounded-md shadow-sm">
+                                            </div>
+                                        @endif
+                                        <div class="flex items-center justify-between mt-2">
+                                            <button type="submit"
+                                                class="text-sm font-medium text-indigo-600 hover:text-indigo-800">更新</button>
+                                            <button type="button"
+                                                onclick="confirmDeleteIndividualPhoto('{{ $img->FILE_NAME }}')"
+                                                class="text-sm font-medium text-red-600 hover:text-red-800">削除</button>
+                                        </div>
+                                    </form>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </details>
+            @empty
+                <p class="mt-6 text-sm text-gray-500">このタレントの写真はまだ登録されていません。</p>
+            @endforelse
         </div>
     </div>
+</div>
 
-    <!-- Image Preview Modal -->
-    <div id="imagePreviewModal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="previewImage">
-    </div>
-</main>
+<form id="deleteIndividualPhotoForm" action="{{ route('admin.talent.photos.delete') }}" method="POST" class="hidden">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+    <input type="hidden" name="FILE_NAME" id="individualPhotoNameToDelete">
+</form>
 
-@push('scripts')
-<script src="{{ asset('js/admin-script.js') }}"></script>
 <script>
-function updateFileNames(input) {
-    const filesDiv = document.getElementById('selected-files');
-    filesDiv.innerHTML = '';
-    if (input.files && input.files.length > 0) {
-        const fileList = document.createElement('ul');
-        fileList.className = 'file-list';
-        for (let i = 0; i < input.files.length; i++) {
-            const li = document.createElement('li');
-            const file = input.files[i];
-            const fileSize = (file.size / 1024 / 1024).toFixed(2); // サイズをMBに変換
-            li.textContent = `${file.name} (${fileSize} MB)`;
-            fileList.appendChild(li);
-        }
-        filesDiv.appendChild(fileList);
-    }
-}
-
-// Image Preview Modal
-function openImagePreview(imgSrc) {
-    const modal = document.getElementById('imagePreviewModal');
-    const modalImg = document.getElementById('previewImage');
-    modal.style.display = 'block';
-    modalImg.src = imgSrc;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('imagePreviewModal');
-    const span = document.getElementsByClassName('close')[0];
-    const bulkUpdateForm = document.getElementById('bulkUpdateForm');
-    const bulkUpdateButton = document.querySelector('.bulk-update-button');
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const photoCheckboxes = document.querySelectorAll('.photo-checkbox');
-
-    span.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
-
-    bulkUpdateButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        const selectedPhotos = document.querySelectorAll('input[name="SELECTED_PHOTOS[]"]:checked');
-        if (selectedPhotos.length === 0) {
-            alert('変更する写真を選択してください。');
-            return;
-        }
-        if (confirm('選択した写真を一括で変更しますか？')) {
-            bulkUpdateForm.submit();
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+        setupDragAndDrop('photos-drop-zone', 'photos-upload', 'photos-preview-container');
     });
 
-    // 全選択/全解除機能
-    selectAllCheckbox.addEventListener('change', function() {
-        const isChecked = this.checked;
-        photoCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
+    function confirmDeleteIndividualPhoto(fileName) {
+        if (confirm(`画像「${fileName}」を本当に削除しますか？`)) {
+            document.getElementById('individualPhotoNameToDelete').value = fileName;
+            document.getElementById('deleteIndividualPhotoForm').submit();
+        }
+    }
+
+    function setupDragAndDrop(dropZoneId, fileInputId, previewContainerId) {
+        const dropZone = document.getElementById(dropZoneId);
+        const fileInput = document.getElementById(fileInputId);
+        const previewContainer = document.getElementById(previewContainerId);
+
+        if (!dropZone || !fileInput || !previewContainer) return;
+
+        const preventDefaults = e => { e.preventDefault(); e.stopPropagation(); };
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
         });
-    });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('border-indigo-500', 'bg-indigo-50'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-indigo-500', 'bg-indigo-50'), false);
+        });
 
-    // 個別のチェックボックスの状態が変更されたときに全選択チェックボックスの状態を更新
-    photoCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateSelectAllCheckbox);
-    });
+        const handleFiles = (files) => {
+            const dataTransfer = new DataTransfer();
+            for (const file of files) { dataTransfer.items.add(file); }
+            fileInput.files = dataTransfer.files;
 
-    function updateSelectAllCheckbox() {
-        const allChecked = Array.from(photoCheckboxes).every(checkbox => checkbox.checked);
-        selectAllCheckbox.checked = allChecked;
+            previewContainer.innerHTML = '';
+            if (files.length > 0) {
+                for (const file of files) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const div = document.createElement('div');
+                        div.className = 'relative aspect-square';
+                        div.innerHTML = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
+                        previewContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        };
+
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
+        fileInput.addEventListener('change', e => handleFiles(e.target.files), false);
     }
-});
 </script>
-@endpush

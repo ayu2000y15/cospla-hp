@@ -21,18 +21,18 @@ class PhotoAdminController extends Controller
 
     public function entry(Request $request)
     {
-        if($request->FILTER<>"ALL"){
+        if ($request->FILTER <> "ALL") {
             $imgList = Image::where('TALENT_ID', null)
-            ->where('VIEW_FLG', $request->FILTER)
-            ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
-        }else{
+                ->where('VIEW_FLG', $request->FILTER)
+                ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
+        } else {
             $imgList = Image::where('TALENT_ID', null)
-            ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
+                ->orderBy('VIEW_FLG')->orderBy('PRIORITY')->get();
         }
-        return redirect()->route('admin')
-        ->with('imgList', $imgList)
-        ->with('filter', $request->FILTER)
-        ->with('activeTab', 'photos-entry');
+        return redirect()->route('admin', ['tab' => 'photos-entry'])
+            ->with('imgList', $imgList)
+            ->with('filter', $request->FILTER)
+            ->with('activeTab', 'photos-entry');
     }
 
     public function upload(Request $request)
@@ -42,13 +42,13 @@ class PhotoAdminController extends Controller
         $filePath = 'img/hp';
         $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, null, null);
         if ($result['success']) {
-            return redirect()->route('admin')
-            ->with('message', 'ファイルが正常にアップロードされました。')
-            ->with('activeTab', 'photos-entry');
+            return redirect()->route('admin', ['tab' => 'photos-entry'])
+                ->with('message', 'ファイルが正常にアップロードされました。')
+                ->with('activeTab', 'photos-entry');
         } else {
-            return redirect()->route('admin')
-            ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message'])
-            ->with('activeTab', 'photos-entry');
+            return redirect()->route('admin', ['tab' => 'photos-entry'])
+                ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message'])
+                ->with('activeTab', 'photos-entry');
         }
     }
 
@@ -60,15 +60,15 @@ class PhotoAdminController extends Controller
             'PRIORITY' => $request->PRIORITY
         ]);
 
-        if(isset($request->TALENT)){
+        if (isset($request->TALENT)) {
             Session::put('activeBtn', 'talent');
-        }else{
+        } else {
             Session::put('activeBtn', 'photo');
         }
 
-        return redirect()->route('admin')
-        ->with('message', '写真の表示設定が変更されました。')
-        ->with('activeTab', 'photos-entry');
+        return redirect()->route('admin', ['tab' => 'photos-entry'])
+            ->with('message', '写真の表示設定が変更されました。')
+            ->with('activeTab', 'photos-entry');
     }
 
     public function delete(Request $request)
@@ -77,26 +77,26 @@ class PhotoAdminController extends Controller
         if ($img) {
             $this->fileUploadService->deleteFile($img->FILE_PATH . $img->FILE_NAME);
             $img->delete();
-            return redirect()->route('admin')
-            ->with('message', '写真が削除されました。')
-            ->with('activeTab', 'photos-entry');
+            return redirect()->route('admin', ['tab' => 'photos-entry'])
+                ->with('message', '写真が削除されました。')
+                ->with('activeTab', 'photos-entry');
         }
-        return redirect()->route('admin')
-        ->with('error', '写真の削除に失敗しました。')
-        ->with('activeTab', 'photos-entry');
+        return redirect()->route('admin', ['tab' => 'photos-entry'])
+            ->with('error', '写真の削除に失敗しました。')
+            ->with('activeTab', 'photos-entry');
     }
 
     public function bulkUpdate(Request $request)
     {
-        foreach($request->SELECTED_PHOTOS as $photo){
+        foreach ($request->SELECTED_PHOTOS as $photo) {
             $img = Image::where('FILE_NAME', $photo);
             $img->update([
                 'VIEW_FLG' => $request->BULK_VIEW_FLG,
                 'PRIORITY' => $request->PRIORITY
             ]);
         }
-        return redirect()->route('admin')
-        ->with('message', '写真の表示設定が変更されました。')
-        ->with('activeTab', 'photos-entry');
+        return redirect()->route('admin', ['tab' => 'photos-entry'])
+            ->with('message', '写真の表示設定が変更されました。')
+            ->with('activeTab', 'photos-entry');
     }
 }

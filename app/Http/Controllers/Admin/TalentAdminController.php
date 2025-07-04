@@ -36,23 +36,39 @@ class TalentAdminController extends Controller
         Talent::where('TALENT_ID', $request->TALENT_ID)->delete();
         session()->flash('activeTab', 'talent-list');
         return redirect()->route('admin')
-        ->with('message', 'タレントが削除されました。');
-
+            ->with('message', 'タレントが削除されました。');
     }
 
     public function store(Request $request)
     {
 
         $talentInfo = $request->only([
-            'TALENT_NAME', 'TALENT_FURIGANA_JP', 'TALENT_FURIGANA_EN',
-            'LAYER_NAME', 'LAYER_FURIGANA_JP', 'LAYER_FURIGANA_EN',
-            'FOLLOWERS', 'STREAM_FLG', 'COS_FLG', 'HEIGHT', 'AGE',
-            'BIRTHDAY', 'THREE_SIZES_B', 'THREE_SIZES_W', 'THREE_SIZES_H',
-            'HOBBY_SPECIALTY', 'COMMENT', 'AFFILIATION_DATE', 'MAIL',
-            'TEL_NO', 'SNS_1', 'SNS_2', 'SNS_3'
+            'TALENT_NAME',
+            'TALENT_FURIGANA_JP',
+            'TALENT_FURIGANA_EN',
+            'LAYER_NAME',
+            'LAYER_FURIGANA_JP',
+            'LAYER_FURIGANA_EN',
+            'FOLLOWERS',
+            'STREAM_FLG',
+            'COS_FLG',
+            'HEIGHT',
+            'AGE',
+            'BIRTHDAY',
+            'THREE_SIZES_B',
+            'THREE_SIZES_W',
+            'THREE_SIZES_H',
+            'HOBBY_SPECIALTY',
+            'COMMENT',
+            'AFFILIATION_DATE',
+            'MAIL',
+            'TEL_NO',
+            'SNS_1',
+            'SNS_2',
+            'SNS_3'
         ]);
 
-        if($request->BIRTHDAY_FLG == '2'){
+        if ($request->BIRTHDAY_FLG == '2') {
             $talentInfo['AGE'] = null;
             $request->AGE_FLG = '0';
         }
@@ -61,24 +77,24 @@ class TalentAdminController extends Controller
         $talent = Talent::create($talentInfo);
         $talentId = Talent::select('TALENT_ID')->max('TALENT_ID');
         $threeSizeFlg = '0';
-        if($request->THREE_SIZES_B_FLG == '1' || $request->THREE_SIZES_W_FLG == '1' || $request->THREE_SIZES_H_FLG == '1'){
+        if ($request->THREE_SIZES_B_FLG == '1' || $request->THREE_SIZES_W_FLG == '1' || $request->THREE_SIZES_H_FLG == '1') {
             $threeSizeFlg = '1';
         }
         //talent_info_controlsテーブルに登録
         TalentInfoControl::create([
-            'TALENT_ID'          =>  $talentId                      ,
-            'FOLLOWERS_FLG'      =>  $request->FOLLOWERS_FLG        ,
-            'HEIGHT_FLG'         =>  $request->HEIGHT_FLG           ,
-            'AGE_FLG'            =>  $request->AGE_FLG              ,
-            'BIRTHDAY_FLG'       =>  $request->BIRTHDAY_FLG         ,
-            'THREE_SIZES_FLG'    =>  $threeSizeFlg                  ,
-            'THREE_SIZES_B_FLG'  =>  $request->THREE_SIZES_B_FLG    ,
-            'THREE_SIZES_W_FLG'  =>  $request->THREE_SIZES_W_FLG    ,
-            'THREE_SIZES_H_FLG'  =>  $request->THREE_SIZES_H_FLG    ,
-            'HOBBY_SPECIALTY_FLG'=>  $request->HOBBY_SPECIALTY_FLG  ,
-            'COMMENT_FLG'        =>  $request->COMMENT_FLG          ,
-            'SNS_1_FLG'          =>  $request->SNS_1_FLG            ,
-            'SNS_2_FLG'          =>  $request->SNS_2_FLG            ,
+            'TALENT_ID'          =>  $talentId,
+            'FOLLOWERS_FLG'      =>  $request->FOLLOWERS_FLG,
+            'HEIGHT_FLG'         =>  $request->HEIGHT_FLG,
+            'AGE_FLG'            =>  $request->AGE_FLG,
+            'BIRTHDAY_FLG'       =>  $request->BIRTHDAY_FLG,
+            'THREE_SIZES_FLG'    =>  $threeSizeFlg,
+            'THREE_SIZES_B_FLG'  =>  $request->THREE_SIZES_B_FLG,
+            'THREE_SIZES_W_FLG'  =>  $request->THREE_SIZES_W_FLG,
+            'THREE_SIZES_H_FLG'  =>  $request->THREE_SIZES_H_FLG,
+            'HOBBY_SPECIALTY_FLG' =>  $request->HOBBY_SPECIALTY_FLG,
+            'COMMENT_FLG'        =>  $request->COMMENT_FLG,
+            'SNS_1_FLG'          =>  $request->SNS_1_FLG,
+            'SNS_2_FLG'          =>  $request->SNS_2_FLG,
             'SNS_3_FLG'          =>  $request->SNS_3_FLG
         ]);
 
@@ -90,150 +106,156 @@ class TalentAdminController extends Controller
         }
 
         return redirect()->route('admin')
-        ->with('message', 'タレントが登録されました');
+            ->with('message', 'タレントが登録されました');
     }
 
-    public function talentAdmin(){
+    public function talentAdmin()
+    {
         $talentId = Session::get('talentId');
         //タレント情報
         $talent = Talent::findOrFail($talentId);
         $talentInfo = TalentInfoControl::findOrFail($talentId);
 
         //タレント写真情報
-        $talentImgList = Image::where('TALENT_ID',$talentId)
-        ->orderBy('VIEW_FLG')
-        ->orderByRaw('PRIORITY is null')
-        ->orderByRaw('PRIORITY = 0')
-        ->orderBy('PRIORITY')
-        ->get();
+        $talentImgList = Image::where('TALENT_ID', $talentId)
+            ->orderBy('VIEW_FLG')
+            ->orderByRaw('PRIORITY is null')
+            ->orderByRaw('PRIORITY = 0')
+            ->orderBy('PRIORITY')
+            ->get();
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
-        ->where('VIEW_FLG', 'like', '__')
-        ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
+            ->where('VIEW_FLG', 'like', '__')
+            ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
         $viewFlagsBulk = ViewFlag::select('VIEW_FLG', 'COMMENT')
-        ->where('MAX_COUNT', '<>', 1)
-        ->where('VIEW_FLG', 'like', '__')
-        ->orWhere('VIEW_FLG', '=', '00')
-        ->distinct()->get();
+            ->where('MAX_COUNT', '<>', 1)
+            ->where('VIEW_FLG', 'like', '__')
+            ->orWhere('VIEW_FLG', '=', '00')
+            ->distinct()->get();
 
         //タレント経歴
         //タレントが持っている経歴ジャンル
         $careerCategories = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
         //タレント経歴
-        if (!Session::has('careerFilter') || Session::get('careerFilter')=='ALL') {
+        if (!Session::has('careerFilter') || Session::get('careerFilter') == 'ALL') {
             $talentCareer = DB::table('talent_careers as tc')
-            ->select(
-                'tc.CAREER_ID as CAREER_ID',
-                'tc.TALENT_ID as TALENT_ID',
-                'tc.CONTENT as CONTENT',
-                'tc.DETAIL as DETAIL',
-                'tc.SPARE1 as SPARE1',
-                'tc.SPARE2 as SPARE2',
-                'tc.ACTIVE_DATE as ACTIVE_DATE',
-                'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
-                'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
-            )
-            ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
-            ->where('tc.TALENT_ID', $talentId)
-            ->orderByRaw("cc.CAREER_CATEGORY_ID = '0' ")
-            ->orderByRaw("cc.CAREER_CATEGORY_ID")
-            ->orderByRaw('tc.SPARE1 is null')
-            ->orderByRaw('tc.SPARE1 = 0')
-            ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
-            ->orderByDesc('tc.ACTIVE_DATE')
-            ->orderBy('tc.CAREER_ID')
-            ->get();
-        }else{
+                ->select(
+                    'tc.CAREER_ID as CAREER_ID',
+                    'tc.TALENT_ID as TALENT_ID',
+                    'tc.CONTENT as CONTENT',
+                    'tc.DETAIL as DETAIL',
+                    'tc.SPARE1 as SPARE1',
+                    'tc.SPARE2 as SPARE2',
+                    'tc.ACTIVE_DATE as ACTIVE_DATE',
+                    'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
+                    'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
+                )
+                ->join('career_categories as cc', 'tc.CAREER_CATEGORY_ID', '=', 'cc.CAREER_CATEGORY_ID')
+                ->where('tc.TALENT_ID', $talentId)
+                ->orderByRaw("cc.CAREER_CATEGORY_ID = '0' ")
+                ->orderByRaw("cc.CAREER_CATEGORY_ID")
+                ->orderByRaw('tc.SPARE1 is null')
+                ->orderByRaw('tc.SPARE1 = 0')
+                ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+                ->orderByDesc('tc.ACTIVE_DATE')
+                ->orderBy('tc.CAREER_ID')
+                ->get();
+        } else {
             $filter = Session::get('careerFilter');
             $talentCareer = DB::table('talent_careers as tc')
-            ->select(
-                'tc.CAREER_ID as CAREER_ID',
-                'tc.TALENT_ID as TALENT_ID',
-                'tc.CONTENT as CONTENT',
-                'tc.DETAIL as DETAIL',
-                'tc.SPARE1 as SPARE1',
-                'tc.SPARE2 as SPARE2',
-                'tc.ACTIVE_DATE as ACTIVE_DATE',
-                'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
-                'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
-            )
-            ->join('career_categories as cc','tc.CAREER_CATEGORY_ID','=','cc.CAREER_CATEGORY_ID')
-            ->where('tc.TALENT_ID', $talentId)
-            ->where('cc.CAREER_CATEGORY_ID', $filter)
-            ->orderByRaw("cc.CAREER_CATEGORY_ID = '0' ")
-            ->orderByRaw("cc.CAREER_CATEGORY_ID")
-            ->orderByRaw('tc.SPARE1 is null')
-            ->orderByRaw('tc.SPARE1 = 0')
-            ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
-            ->orderByDesc('tc.ACTIVE_DATE')
-            ->orderBy('tc.CAREER_ID')
-            ->get();
+                ->select(
+                    'tc.CAREER_ID as CAREER_ID',
+                    'tc.TALENT_ID as TALENT_ID',
+                    'tc.CONTENT as CONTENT',
+                    'tc.DETAIL as DETAIL',
+                    'tc.SPARE1 as SPARE1',
+                    'tc.SPARE2 as SPARE2',
+                    'tc.ACTIVE_DATE as ACTIVE_DATE',
+                    'cc.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID',
+                    'cc.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME'
+                )
+                ->join('career_categories as cc', 'tc.CAREER_CATEGORY_ID', '=', 'cc.CAREER_CATEGORY_ID')
+                ->where('tc.TALENT_ID', $talentId)
+                ->where('cc.CAREER_CATEGORY_ID', $filter)
+                ->orderByRaw("cc.CAREER_CATEGORY_ID = '0' ")
+                ->orderByRaw("cc.CAREER_CATEGORY_ID")
+                ->orderByRaw('tc.SPARE1 is null')
+                ->orderByRaw('tc.SPARE1 = 0')
+                ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+                ->orderByDesc('tc.ACTIVE_DATE')
+                ->orderBy('tc.CAREER_ID')
+                ->get();
         }
         //タレントタグ情報
         //タレントが持っているタグリスト
-        $tagList =DB::table('talent_tags as tt')
-        ->select(
-            't.TAG_ID as TAG_ID',
-            't.TAG_NAME as TAG_NAME',
-            't.TAG_COLOR as TAG_COLOR'
-        )
-        ->join('tags as t','t.TAG_ID','=','tt.TAG_ID')
-        ->where('tt.TALENT_ID', $talentId)
-        ->orderBy('t.TAG_ID')
-        ->get();
+        $tagList = DB::table('talent_tags as tt')
+            ->select(
+                't.TAG_ID as TAG_ID',
+                't.TAG_NAME as TAG_NAME',
+                't.TAG_COLOR as TAG_COLOR'
+            )
+            ->join('tags as t', 't.TAG_ID', '=', 'tt.TAG_ID')
+            ->where('tt.TALENT_ID', $talentId)
+            ->orderBy('t.TAG_ID')
+            ->get();
 
-        $tagItem = null;
-        $i = 0;
+        $tagItem = []; // ★ nullではなく空の配列で初期化
         foreach ($tagList as $tag) {
             $tagItem[] = $tag->TAG_ID;
-            $i++;
         }
 
         //タレントが持っていないタグリスト（プルダウンで使用）
         $tagNotList = DB::table('tags as t')
-        ->select(
-            't.TAG_ID as TAG_ID',
-            't.TAG_NAME as TAG_NAME'
-        )
-        ->whereNotIn('t.TAG_ID',  $tagItem)
-        ->orderBy('t.TAG_ID')
-        ->get();
+            ->select(
+                't.TAG_ID as TAG_ID',
+                't.TAG_NAME as TAG_NAME'
+            )
+            // ★ $tagItemが空でない場合のみwhereNotInを実行
+            ->when(!empty($tagItem), function ($query) use ($tagItem) {
+                return $query->whereNotIn('t.TAG_ID', $tagItem);
+            })
+            ->orderBy('t.TAG_ID')
+            ->get();
 
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         if (!Session::has('activeTabT')) {
-            session()->flash('activeTabT', 'talent-edit');
+            session()->flash('activeTabT', 'edit');
         }
-        return view('admin.talent.talent-admin',
-        compact('talent'
-        ,'talentInfo'
-        , 'talentImgList'
-        , 'viewFlags'
-        , 'viewFlagsBulk'
-        , 'careerCategories'
-        , 'talentCareer'
-        , 'tagList'
-        , 'tagNotList'
-        , 'logoImg'));
-
+        return view(
+            'admin.talent.talent-admin',
+            compact(
+                'talent',
+                'talentInfo',
+                'talentImgList',
+                'viewFlags',
+                'viewFlagsBulk',
+                'careerCategories',
+                'talentCareer',
+                'tagList',
+                'tagNotList',
+                'logoImg'
+            )
+        );
     }
     public function detail(Request $request)
     {
         Session::put('talentId', $request->TALENT_ID);
+        session()->flash('activeTabT', 'edit');
         return redirect()->route('admin.talent.admin');
     }
 
     //タレントの公開、非公開を一括変更
     public function bulkUpdateTalent(Request $request)
     {
-        foreach($request->TALENT_PUBLIC as $talentId){
+        foreach ($request->TALENT_PUBLIC as $talentId) {
             $talent = TALENT::where('TALENT_ID', $talentId);
             $talent->update([
                 'SPARE1' => $request->PUBLIC_FLG
             ]);
         }
         return redirect()->route('admin')
-        ->with('message', 'タレントの公開設定が変更されました。')
-        ->with('activeTabT', 'talent-list');
+            ->with('message', 'タレントの公開設定が変更されました。')
+            ->with('activeTabT', 'talent-list');
     }
 
     // タレント情報編集画面を表示
@@ -243,11 +265,11 @@ class TalentAdminController extends Controller
         $talentInfoCtl = TalentInfoControl::where('TALENT_ID', $request->TALENT_ID)->first();
         $retirementDate = '2099-01-01';
         $delFlg = '0';
-        if($request->RETIREMENT_DATE <> null){
+        if ($request->RETIREMENT_DATE <> null) {
             $retirementDate = $request->RETIREMENT_DATE;
             $delFlg = '1';
         }
-        if($request->BIRTHDAY_FLG == '2'){
+        if ($request->BIRTHDAY_FLG == '2') {
             $request->AGE = null;
             $request->AGE_FLG = '0';
         }
@@ -281,32 +303,32 @@ class TalentAdminController extends Controller
         ]);
 
         $threeSizeFlg = '0';
-        if($request->THREE_SIZES_B_FLG == '1' || $request->THREE_SIZES_W_FLG == '1' || $request->THREE_SIZES_H_FLG == '1'){
+        if ($request->THREE_SIZES_B_FLG == '1' || $request->THREE_SIZES_W_FLG == '1' || $request->THREE_SIZES_H_FLG == '1') {
             $threeSizeFlg = '1';
         }
         //talent_info_controlsテーブルに登録
         $talentInfoCtl->update([
-            'TALENT_ID'          =>  $request->TALENT_ID            ,
-            'FOLLOWERS_FLG'      =>  $request->FOLLOWERS_FLG        ,
-            'HEIGHT_FLG'         =>  $request->HEIGHT_FLG           ,
-            'AGE_FLG'            =>  $request->AGE_FLG              ,
-            'BIRTHDAY_FLG'       =>  $request->BIRTHDAY_FLG         ,
-            'THREE_SIZES_FLG'    =>  $threeSizeFlg                  ,
-            'THREE_SIZES_B_FLG'  =>  $request->THREE_SIZES_B_FLG    ,
-            'THREE_SIZES_W_FLG'  =>  $request->THREE_SIZES_W_FLG    ,
-            'THREE_SIZES_H_FLG'  =>  $request->THREE_SIZES_H_FLG    ,
-            'HOBBY_SPECIALTY_FLG'=>  $request->HOBBY_SPECIALTY_FLG  ,
-            'COMMENT_FLG'        =>  $request->COMMENT_FLG          ,
-            'SNS_1_FLG'          =>  $request->SNS_1_FLG            ,
-            'SNS_2_FLG'          =>  $request->SNS_2_FLG            ,
+            'TALENT_ID'          =>  $request->TALENT_ID,
+            'FOLLOWERS_FLG'      =>  $request->FOLLOWERS_FLG,
+            'HEIGHT_FLG'         =>  $request->HEIGHT_FLG,
+            'AGE_FLG'            =>  $request->AGE_FLG,
+            'BIRTHDAY_FLG'       =>  $request->BIRTHDAY_FLG,
+            'THREE_SIZES_FLG'    =>  $threeSizeFlg,
+            'THREE_SIZES_B_FLG'  =>  $request->THREE_SIZES_B_FLG,
+            'THREE_SIZES_W_FLG'  =>  $request->THREE_SIZES_W_FLG,
+            'THREE_SIZES_H_FLG'  =>  $request->THREE_SIZES_H_FLG,
+            'HOBBY_SPECIALTY_FLG' =>  $request->HOBBY_SPECIALTY_FLG,
+            'COMMENT_FLG'        =>  $request->COMMENT_FLG,
+            'SNS_1_FLG'          =>  $request->SNS_1_FLG,
+            'SNS_2_FLG'          =>  $request->SNS_2_FLG,
             'SNS_3_FLG'          =>  $request->SNS_3_FLG
         ]);
 
         //TalentTagテーブル更新
         TalentTag::where('TALENT_ID', $request->TALENT_ID)
-        ->where('TAG_ID', '1')->delete();
+            ->where('TAG_ID', '1')->delete();
         TalentTag::where('TALENT_ID', $request->TALENT_ID)
-        ->where('TAG_ID', '2')->delete();
+            ->where('TAG_ID', '2')->delete();
         if ($request->COS_FLG == '1' || $request->COS_FLG == '3') {
             $talent->tags()->attach(1);
         }
@@ -315,9 +337,9 @@ class TalentAdminController extends Controller
         }
 
         Session::put('talentId', $request->TALENT_ID);
-        session()->flash('activeTabT', 'talent-edit');
+        session()->flash('activeTabT', 'edit');
         return redirect()->route('admin.talent.admin')
-        ->with('message', 'タレント情報が更新されました。');
+            ->with('message', 'タレント情報が更新されました。');
     }
 
     // タレント写真をアップロード
@@ -327,13 +349,13 @@ class TalentAdminController extends Controller
         $filePath = 'img/' . $request->TALENT_ID . '_' . $request->LAYER_NAME;
 
         $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, $request->TALENT_ID, null, null);
-        session()->flash('activeTabT', 'talent-photos');
+        session()->flash('activeTabT', 'photos');
         if ($result['success']) {
             return redirect()->route('admin.talent.admin')
-            ->with('message', 'ファイルが正常にアップロードされました。');
+                ->with('message', 'ファイルが正常にアップロードされました。');
         } else {
             return redirect()->route('admin.talent.admin')
-            ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
+                ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
         }
     }
 
@@ -341,77 +363,83 @@ class TalentAdminController extends Controller
     public function updatePhoto(Request $request)
     {
         $photo = Image::where('TALENT_ID', $request->TALENT_ID)
-        ->where('FILE_NAME', $request->FILE_NAME);
+            ->where('FILE_NAME', $request->FILE_NAME);
 
         $photo->update([
             'VIEW_FLG' => $request->VIEW_FLG,
             'PRIORITY' => $request->PRIORITY
         ]);
 
-        session()->flash('activeTabT', 'talent-photos');
-        return redirect()->route('admin.talent.admin' )
-        ->with('message', '写真の表示設定が更新されました。');
+        session()->flash('activeTabT', 'photos');
+        return redirect()->route('admin.talent.admin')
+            ->with('message', '写真の表示設定が更新されました。');
     }
 
     // タレント写真を削除
     public function deletePhoto(Request $request)
     {
         $img = Image::where('TALENT_ID', $request->TALENT_ID)
-        ->where('FILE_NAME', $request->FILE_NAME)->first();
-        session()->flash('activeTabT', 'talent-photos');
+            ->where('FILE_NAME', $request->FILE_NAME)->first();
+        session()->flash('activeTabT', 'photos');
 
         if ($img) {
             $this->fileUploadService->deleteFile($img->FILE_PATH . $img->FILE_NAME);
             $img->delete();
             return redirect()->route('admin.talent.admin')
-            ->with('message', '写真が削除されました。');
+                ->with('message', '写真が削除されました。');
         }
 
         return redirect()->route('admin.talent.admin')
-        ->with('message', '写真の削除に失敗しました。');
+            ->with('message', '写真の削除に失敗しました。');
     }
 
     //タレント写真を一括変更
     public function bulkUpdatePhoto(Request $request)
     {
-        foreach($request->SELECTED_PHOTOS as $photo){
+        foreach ($request->SELECTED_PHOTOS as $photo) {
             $img = Image::where('FILE_NAME', $photo);
             $img->update([
                 'VIEW_FLG' => $request->BULK_VIEW_FLG,
                 'PRIORITY' => $request->PRIORITY
             ]);
         }
+        session()->flash('activeTabT', 'photos');
         return redirect()->route('admin.talent.admin')
-        ->with('message', '写真の表示設定が変更されました。')
-        ->with('activeTabT', 'talent-photos');
+            ->with('message', '写真の表示設定が変更されました。');
     }
 
     //タレント経歴のフィルター
     public function entryCareer(Request $request)
     {
-        session()->flash('activeTabT', 'talent-career');
+        session()->flash('activeTabT', 'career');
         return redirect()->route('admin.talent.admin')
-        ->with('careerFilter', $request->FILTER);
+            ->with('careerFilter', $request->FILTER);
     }
 
     // タレント経歴を追加
+
     public function storeCareer(Request $request)
     {
         $validatedData = $request->validate([
+            'TALENT_ID' => 'required|integer',
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
             'CONTENT' => 'required|string',
             'ACTIVE_DATE' => 'nullable|date',
             'SPARE1' => 'nullable|integer',
-            'SPARE2' => 'required|integer',
+            'SPARE2' => 'required|string',
             'DETAIL' => 'nullable|string',
         ]);
 
-        $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
-        $talent->careers()->create($validatedData);
-        session()->flash('activeTabT', 'talent-career');
+        if (empty($validatedData['ACTIVE_DATE'])) {
+            $validatedData['ACTIVE_DATE'] = null;
+        }
 
-        return redirect()->route('admin.talent.admin', $talent)
-        ->with('message', '経歴が追加されました。');
+        TalentCareer::create($validatedData);
+
+        session()->flash('activeTabT', 'career');
+
+        return redirect()->route('admin.talent.admin', ['id' => $request->TALENT_ID])
+            ->with('message', '経歴を追加しました。');
     }
 
     // タレント経歴を更新
@@ -429,10 +457,10 @@ class TalentAdminController extends Controller
         $career = TalentCareer::where('CAREER_ID', $request->CAREER_ID);
         $career->update($validatedData);
 
-        session()->flash('activeTabT', 'talent-career');
+        session()->flash('activeTabT', 'career');
 
         return redirect()->route('admin.talent.admin')
-        ->with('message', '経歴が更新されました。');
+            ->with('message', '経歴が更新されました。');
     }
 
     // タレント経歴を削除
@@ -441,26 +469,81 @@ class TalentAdminController extends Controller
         $career = TalentCareer::where('CAREER_ID', $request->CAREER_ID);
         $career->delete();
 
-        session()->flash('activeTabT', 'talent-career');
+        session()->flash('activeTabT', 'career');
 
         return redirect()->route('admin.talent.admin')
-        ->with('message', '経歴が削除されました。');
+            ->with('message', '経歴が削除されました。');
+    }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * タレント経歴の並び順を更新する
+     */
+    public function reorderCareers(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'integer', // 配列の各要素が整数であることを確認
+        ]);
+
+        foreach ($request->order as $index => $careerId) {
+            // SPARE1 を優先度として更新
+            TalentCareer::where('CAREER_ID', $careerId)
+                ->update(['SPARE1' => $index]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => '並び順を更新しました。']);
+    }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * タレントの経歴を複数一括で登録する
+     */
+    public function storeMultipleCareers(Request $request)
+    {
+        $request->validate([
+            'TALENT_ID' => 'required|integer|exists:talents,TALENT_ID',
+            'CAREER_CATEGORY_ID' => 'required|integer|exists:career_categories,CAREER_CATEGORY_ID',
+            'careers' => 'required|array|min:1',
+            'careers.*.CONTENT' => 'required|string',
+            'careers.*.ACTIVE_DATE' => 'nullable|date',
+            'careers.*.SPARE2' => 'required|string',
+        ]);
+
+        $talentId = $request->input('TALENT_ID');
+        $categoryId = $request->input('CAREER_CATEGORY_ID');
+
+        foreach ($request->input('careers') as $careerData) {
+            TalentCareer::create([
+                'TALENT_ID' => $talentId,
+                'CAREER_CATEGORY_ID' => $categoryId,
+                'CONTENT' => $careerData['CONTENT'],
+                'ACTIVE_DATE' => empty($careerData['ACTIVE_DATE']) ? null : $careerData['ACTIVE_DATE'],
+                'SPARE2' => $careerData['SPARE2'],
+                // 必要に応じて他のデフォルト値を設定
+            ]);
+        }
+
+        session()->flash('activeTabT', 'career');
+
+        return redirect()->route('admin.talent.admin', ['id' => $talentId])
+            ->with('message', '経歴を一括で登録しました。');
     }
 
     // タレントにタグを追加
     public function addTag(Request $request)
     {
         $count = Tag::where('TAG_NAME', $request->TAG_NAME)->count();
-        if($count > 0){
+        session()->flash('activeTabT', 'tag');
+
+        if ($count > 0) {
             return redirect()->route('admin.talent.admin')
-            ->with('error', 'タグが既に登録されています。タグ名を変更してください。')
-            ->with('activeTabT', 'talent-tag');
+                ->with('error', 'タグが既に登録されています。タグ名を変更してください。');
         }
         $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
         $talent->tags()->attach($request->TAG_ID);
-        session()->flash('activeTabT', 'talent-tag');
         return redirect()->route('admin.talent.admin', $talent)
-        ->with('message', 'タグが追加されました。');
+            ->with('message', 'タグが追加されました。');
     }
 
     // タレントからタグを削除
@@ -468,9 +551,9 @@ class TalentAdminController extends Controller
     {
         $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
         $talent->tags()->detach($request->TAG_ID);
-        session()->flash('activeTabT', 'talent-tag');
+        session()->flash('activeTabT', 'tag');
         return redirect()->route('admin.talent.admin', $talent)
-        ->with('message', 'タグが削除されました。');
+            ->with('message', 'タグが削除されました。');
     }
 
     // タレント退職処理
@@ -484,8 +567,8 @@ class TalentAdminController extends Controller
             'RETIREMENT_DATE' => $validatedData['RETIREMENT_DATE'],
             'DEL_FLG' => '1'
         ]);
-        session()->flash('activeTabT', 'talent-retire');
+        session()->flash('activeTabT', 'retire');
         return redirect()->route('admin.talent.admin', $talent)
-        ->with('message', 'タレントの退職日が設定されました。');
+            ->with('message', 'タレントの退職日が設定されました。');
     }
 }

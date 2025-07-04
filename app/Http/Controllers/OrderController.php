@@ -6,8 +6,7 @@ use App\Models\Image;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
-
-class CosplayController extends Controller
+class OrderController extends Controller
 {
     public function index()
     {
@@ -18,6 +17,7 @@ class CosplayController extends Controller
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        return view('cosplay', compact('topImg', 'cosplayImg1', 'cosplayImg2', 'backImg', 'logoImg','sns'));
+        // 返すビューを 'order' に変更
+        return view('order', compact('topImg', 'cosplayImg1', 'cosplayImg2', 'backImg', 'logoImg', 'sns'));
     }
 }

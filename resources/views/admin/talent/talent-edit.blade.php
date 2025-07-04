@@ -1,327 +1,179 @@
-<main>
-    <div class="form-area">
-        <h2>タレント情報変更</h2>
+<div class="p-6 bg-white rounded-lg shadow">
+    <form action="{{ route('admin.talent.edit') }}" method="POST" class="space-y-8"
+        onsubmit="return confirm('タレント情報を更新しますか？');">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
 
-        <form onsubmit="return checkSubmit('変更');" action="{{ route('admin.talent.edit') }}" method="POST">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+        {{-- 基本情報セクション --}}
+        <div>
+            <h4 class="text-base font-semibold text-gray-800">基本情報 (内部管理用)</h4>
+            <div class="grid grid-cols-1 mt-4 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <label for="edit_TALENT_NAME" class="block text-sm font-medium text-gray-700">タレント名（本名）</label>
+                    <input type="text" name="TALENT_NAME" id="edit_TALENT_NAME"
+                        value="{{ old('TALENT_NAME', $talent->TALENT_NAME) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_TALENT_FURIGANA_JP" class="block text-sm font-medium text-gray-700">ふりがな</label>
+                    <input type="text" name="TALENT_FURIGANA_JP" id="edit_TALENT_FURIGANA_JP"
+                        value="{{ old('TALENT_FURIGANA_JP', $talent->TALENT_FURIGANA_JP) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_AFFILIATION_DATE" class="block text-sm font-medium text-gray-700">所属日</label>
+                    <input type="date" name="AFFILIATION_DATE" id="edit_AFFILIATION_DATE"
+                        value="{{ old('AFFILIATION_DATE', optional($talent->AFFILIATION_DATE)->format('Y-m-d')) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_MAIL" class="block text-sm font-medium text-gray-700">メールアドレス</label>
+                    <input type="email" name="MAIL" id="edit_MAIL" value="{{ old('MAIL', $talent->MAIL) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_TEL_NO" class="block text-sm font-medium text-gray-700">電話番号</label>
+                    <input type="tel" name="TEL_NO" id="edit_TEL_NO" value="{{ old('TEL_NO', $talent->TEL_NO) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+            </div>
+        </div>
 
-            <div class="form-group">
-                <label for="TALENT_NAME">タレント名（本名）<span class="required">※HPには表示されません</span></label>
-                <input type="text" id="TALENT_NAME" name="TALENT_NAME" placeholder="山田太郎"
-                    value="{{ old('TALENT_NAME', $talent->TALENT_NAME) }}" />
-            </div>
-            <div class="form-group">
-                <label for="TALENT_FURIGANA_JP">タレント名　ふりがな（ひらがな）<span class="required">※HPには表示されません</span></label>
-                <input type="text" id="TALENT_FURIGANA_JP" name="TALENT_FURIGANA_JP" placeholder="やまだたろう"
-                    value="{{ old('TALENT_FURIGANA_JP', $talent->TALENT_FURIGANA_JP) }}" />
-            </div>
-            <div class="form-group">
-                <label for="TALENT_FURIGANA_EN">タレント名　ふりがな（ローマ字）<span class="required">※HPには表示されません</span></label>
-                <input type="text" id="TALENT_FURIGANA_EN" name="TALENT_FURIGANA_EN" placeholder="YamadaTaro"
-                    value="{{ old('TALENT_FURIGANA_EN', $talent->TALENT_FURIGANA_EN) }}" />
-            </div>
-            <div class="form-group">
-                <label for="LAYER_NAME">レイヤーネーム（HPに表示する名前）<span class="required">必須</span></label>
-                <input type="text" id="LAYER_NAME" name="LAYER_NAME" placeholder="やまだ"
-                    value="{{ old('LAYER_NAME', $talent->LAYER_NAME) }}" required />
-            </div>
-            <div class="form-group">
-                <label for="LAYER_FURIGANA_JP">レイヤーネーム　ふりがな（ひらがな）<span class="required"></span></label>
-                <input type="text" id="LAYER_FURIGANA_JP" name="LAYER_FURIGANA_JP" placeholder="やまだ"
-                    value="{{ old('LAYER_FURIGANA_JP', $talent->LAYER_FURIGANA_JP) }}" />
-            </div>
-            <div class="form-group">
-                <label for="LAYER_FURIGANA_EN">レイヤーネーム　ふりがな（ローマ字）<span class="required"></span></label>
-                <input type="text" id="LAYER_FURIGANA_EN" name="LAYER_FURIGANA_EN" placeholder="Yamada"
-                    value="{{ old('LAYER_FURIGANA_EN', $talent->LAYER_FURIGANA_EN) }}" />
-            </div>
-            <div class="form-group">
-                <label for="AFFILIATION_DATE">所属日<span class="required"></span></label>
-                <input type="date" id="AFFILIATION_DATE" name="AFFILIATION_DATE"
-                    value="{{ old('AFFILIATION_DATE', $talent->AFFILIATION_DATE) }}" />
-            </div>
-            <div class="form-group">
-                <label for="RETIREMENT_DATE">退職日<span class="required"></span></label>
-                <input type="date" id="RETIREMENT_DATE" name="RETIREMENT_DATE"
-                    value="{{ old('RETIREMENT_DATE', $talent->RETIREMENT_DATE)=== '2099-01-01' ? '' : $talent->RETIREMENT_DATE }}"" />
-            </div>
-            <div class="form-group">
-                <label for="MAIL">メールアドレス<span class="required"></span></label>
-                <input type="email" id="MAIL" name="MAIL" placeholder="example@gmail.com"
-                    value="{{ old('MAIL', $talent->MAIL) }}" />
-            </div>
-            <div class="form-group">
-                <label for="TEL_NO">電話番号<span class="required"></span></label>
-                <input type="tel" id="TEL_NO" name="TEL_NO" pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
-                    value="{{ old('TEL_NO', $talent->TEL_NO) }}" placeholder="080-1234-5678" />
-            </div>
+        {{-- HP公開情報セクション --}}
+        <div class="pt-8 border-t border-gray-200">
+            <h4 class="text-base font-semibold text-gray-800">HP公開情報</h4>
+            <div class="grid grid-cols-1 mt-4 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <label for="edit_LAYER_NAME" class="block text-sm font-medium text-gray-700">レイヤーネーム <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" name="LAYER_NAME" id="edit_LAYER_NAME" required
+                        value="{{ old('LAYER_NAME', $talent->LAYER_NAME) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_LAYER_FURIGANA_EN"
+                        class="block text-sm font-medium text-gray-700">レイヤーネーム（ローマ字）</label>
+                    <input type="text" name="LAYER_FURIGANA_EN" id="edit_LAYER_FURIGANA_EN"
+                        value="{{ old('LAYER_FURIGANA_EN', $talent->LAYER_FURIGANA_EN) }}"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
 
-            <!-- ここから表示情報 -->
-            <div class="form-group">
-                <label for="STREAM_FLG">配信可・不可<span class="required"></span></label>
-                <select id="STREAM_FLG" name="STREAM_FLG">
-                    <option value="0" {{ old('STREAM_FLG', $talent->STREAM_FLG) === '0' ? 'selected' : '' }}>配信不可
-                    </option>
-                    <option value="1" {{ old('STREAM_FLG', $talent->STREAM_FLG) === '1' ? 'selected' : '' }}>配信可
-                    </option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="COS_FLG">コスプレの種類（男装、女装）<span class="required"></span></label>
-                <select id="COS_FLG" name="COS_FLG">
-                    <option value="1" {{ old('COS_FLG', $talent->COS_FLG) == '1' ? 'selected' : '' }}>男装</option>
-                    <option value="2" {{ old('COS_FLG', $talent->COS_FLG) == '2' ? 'selected' : '' }}>女装</option>
-                    <option value="3" {{ old('COS_FLG', $talent->COS_FLG) == '3' ? 'selected' : '' }}>男装・女装</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="FOLLOWERS">フォロワー数（およそ）<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="FOLLOWERS_FLG" value="0"
-                                {{ old('FOLLOWERS_FLG', $talentInfo->FOLLOWERS_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="FOLLOWERS_FLG" value="1"
-                                {{ old('FOLLOWERS_FLG', $talentInfo->FOLLOWERS_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_COS_FLG" class="block text-sm font-medium text-gray-700">コスプレの種類</label>
+                    <select id="edit_COS_FLG" name="COS_FLG"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                        <option value="1" {{ old('COS_FLG', $talent->COS_FLG) == '1' ? 'selected' : '' }}>男装</option>
+                        <option value="2" {{ old('COS_FLG', $talent->COS_FLG) == '2' ? 'selected' : '' }}>女装</option>
+                        <option value="3" {{ old('COS_FLG', $talent->COS_FLG) == '3' ? 'selected' : '' }}>男装・女装</option>
+                    </select>
                 </div>
-                <input type="number" id="FOLLOWERS" name="FOLLOWERS" placeholder="100"
-                    value="{{ old('FOLLOWERS', $talent->FOLLOWERS) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="HEIGHT">身長<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="HEIGHT_FLG" value="0"
-                                {{ old('HEIGHT_FLG', $talentInfo->HEIGHT_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="HEIGHT_FLG" value="1"
-                                {{ old('HEIGHT_FLG', $talentInfo->HEIGHT_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
+                <div class="sm:col-span-3">
+                    <label for="edit_STREAM_FLG" class="block text-sm font-medium text-gray-700">配信</label>
+                    <select id="edit_STREAM_FLG" name="STREAM_FLG"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                        <option value="0" {{ old('STREAM_FLG', $talent->STREAM_FLG) == '0' ? 'selected' : '' }}>不可
+                        </option>
+                        <option value="1" {{ old('STREAM_FLG', $talent->STREAM_FLG) == '1' ? 'selected' : '' }}>可</option>
+                    </select>
                 </div>
-                <input type="number" id="HEIGHT" name="HEIGHT" placeholder="172"
-                    value="{{ old('HEIGHT', $talent->HEIGHT) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="AGE">年齢<span class="required">※誕生日をもとに入力するため入力は不要です。</span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="AGE_FLG" value="0"
-                                {{ old('AGE_FLG', $talentInfo->AGE_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="AGE_FLG" value="1"
-                                {{ old('AGE_FLG', $talentInfo->AGE_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
+
+                @php
+                    $fields = [
+                        ['id' => 'FOLLOWERS', 'label' => 'フォロワー数（およそ）', 'type' => 'number', 'value' => $talent->FOLLOWERS, 'flag' => $talentInfo->FOLLOWERS_FLG],
+                        ['id' => 'HEIGHT', 'label' => '身長 (cm)', 'type' => 'number', 'value' => $talent->HEIGHT, 'flag' => $talentInfo->HEIGHT_FLG],
+                        ['id' => 'BIRTHDAY', 'label' => '誕生日', 'type' => 'date', 'value' => optional($talent->BIRTHDAY)->format('Y-m-d'), 'flag' => $talentInfo->BIRTHDAY_FLG, 'extra_options' => [['value' => '2', 'label' => '日付のみ公開']]],
+                        ['id' => 'AGE', 'label' => '年齢 (誕生日から自動計算)', 'type' => 'number', 'value' => $talent->AGE, 'flag' => $talentInfo->AGE_FLG, 'readonly' => true],
+                        ['id' => 'THREE_SIZES_B', 'label' => 'スリーサイズ (B)', 'type' => 'number', 'value' => $talent->THREE_SIZES_B, 'flag' => $talentInfo->THREE_SIZES_B_FLG],
+                        ['id' => 'THREE_SIZES_W', 'label' => 'スリーサイズ (W)', 'type' => 'number', 'value' => $talent->THREE_SIZES_W, 'flag' => $talentInfo->THREE_SIZES_W_FLG],
+                        ['id' => 'THREE_SIZES_H', 'label' => 'スリーサイズ (H)', 'type' => 'number', 'value' => $talent->THREE_SIZES_H, 'flag' => $talentInfo->THREE_SIZES_H_FLG],
+                        ['id' => 'HOBBY_SPECIALTY', 'label' => '趣味・特技', 'type' => 'text', 'value' => $talent->HOBBY_SPECIALTY, 'flag' => $talentInfo->HOBBY_SPECIALTY_FLG],
+                        ['id' => 'SNS_1', 'label' => 'X (旧Twitter) URL', 'type' => 'url', 'value' => $talent->SNS_1, 'flag' => $talentInfo->SNS_1_FLG],
+                        ['id' => 'SNS_2', 'label' => 'Instagram URL', 'type' => 'url', 'value' => $talent->SNS_2, 'flag' => $talentInfo->SNS_2_FLG],
+                        ['id' => 'SNS_3', 'label' => 'TikTok URL', 'type' => 'url', 'value' => $talent->SNS_3, 'flag' => $talentInfo->SNS_3_FLG],
+                    ];
+                @endphp
+
+                @foreach($fields as $field)
+                    <div class="sm:col-span-6">
+                        <label for="edit_{{ $field['id'] }}"
+                            class="block text-sm font-medium text-gray-700">{{ $field['label'] }}</label>
+                        <input type="{{ $field['type'] }}" name="{{ $field['id'] }}" id="edit_{{ $field['id'] }}"
+                            value="{{ old($field['id'], $field['value']) }}" @if($field['id'] === 'BIRTHDAY')
+                            onchange="calculateAgeEdit()" @endif {{ $field['readonly'] ?? false ? 'readonly' : '' }}
+                            class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm {{ $field['readonly'] ?? false ? 'bg-gray-100 cursor-not-allowed' : '' }}">
+                        <fieldset class="mt-2">
+                            <legend class="sr-only">{{ $field['label'] }}の公開設定</legend>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center"><input id="edit_{{ $field['id'] }}_flg_1"
+                                        name="{{ $field['id'] }}_FLG" type="radio" value="1" {{ old($field['id'] . '_FLG', $field['flag']) == '1' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-indigo-600 border-gray-300"><label
+                                        for="edit_{{ $field['id'] }}_flg_1" class="ml-2 text-sm text-gray-700">公開</label>
+                                </div>
+                                <div class="flex items-center"><input id="edit_{{ $field['id'] }}_flg_0"
+                                        name="{{ $field['id'] }}_FLG" type="radio" value="0" {{ old($field['id'] . '_FLG', $field['flag']) == '0' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-indigo-600 border-gray-300"><label
+                                        for="edit_{{ $field['id'] }}_flg_0" class="ml-2 text-sm text-gray-700">非公開</label>
+                                </div>
+                                @if(isset($field['extra_options']))
+                                    @foreach($field['extra_options'] as $option)
+                                        <div class="flex items-center"><input
+                                                id="edit_{{ $field['id'] }}_flg_{{ $option['value'] }}"
+                                                name="{{ $field['id'] }}_FLG" type="radio" value="{{ $option['value'] }}" {{ old($field['id'] . '_FLG', $field['flag']) == $option['value'] ? 'checked' : '' }}
+                                                class="w-4 h-4 text-indigo-600 border-gray-300"><label
+                                                for="edit_{{ $field['id'] }}_flg_{{ $option['value'] }}"
+                                                class="ml-2 text-sm text-gray-700">{{ $option['label'] }}</label></div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </fieldset>
                     </div>
+                @endforeach
+
+                <div class="sm:col-span-6">
+                    <label for="edit_COMMENT" class="block text-sm font-medium text-gray-700">紹介文・コメント</label>
+                    <textarea id="edit_COMMENT" name="COMMENT" rows="3"
+                        class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">{{ old('COMMENT', $talent->COMMENT) }}</textarea>
+                    <fieldset class="mt-2">
+                        <legend class="sr-only">紹介文・コメントの公開設定</legend>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center"><input id="edit_COMMENT_flg_1" name="COMMENT_FLG"
+                                    type="radio" value="1" {{ old('COMMENT_FLG', $talentInfo->COMMENT_FLG) == '1' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300"><label
+                                    for="edit_COMMENT_flg_1" class="ml-2 text-sm text-gray-700">公開</label></div>
+                            <div class="flex items-center"><input id="edit_COMMENT_flg_0" name="COMMENT_FLG"
+                                    type="radio" value="0" {{ old('COMMENT_FLG', $talentInfo->COMMENT_FLG) == '0' ? 'checked' : '' }} class="w-4 h-4 text-indigo-600 border-gray-300"><label
+                                    for="edit_COMMENT_flg_0" class="ml-2 text-sm text-gray-700">非公開</label></div>
+                        </div>
+                    </fieldset>
                 </div>
-                <input type="number" id="AGE" name="AGE" value="{{ old('AGE', $talent->AGE) }}" readonly/>
             </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="BIRTHDAY">誕生日<span class="required">※※年を非公開にする場合は年を入力しても表示されません。</span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="BIRTHDAY_FLG" value="0"
-                                {{ old('BIRTHDAY_FLG', $talentInfo->BIRTHDAY_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="BIRTHDAY_FLG" value="1"
-                                {{ old('BIRTHDAY_FLG', $talentInfo->BIRTHDAY_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="BIRTHDAY_FLG" value="2"
-                                {{ old('BIRTHDAY_FLG', $talentInfo->BIRTHDAY_FLG) == '2' ? 'checked' : '' }} />
-                            年は非公開で日付だけ公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="date" id="BIRTHDAY" name="BIRTHDAY" value="{{ old('BIRTHDAY', $talent->BIRTHDAY) }}" onchange="calculateAge()"/>
+        </div>
+
+        <div class="pt-5">
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">更新する</button>
             </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="THREE_SIZES_B">スリーサイズ　バスト<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_B_FLG" value="0"
-                                {{ old('THREE_SIZES_B_FLG', $talentInfo->THREE_SIZES_B_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_B_FLG" value="1"
-                                {{ old('THREE_SIZES_B_FLG', $talentInfo->THREE_SIZES_B_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="number" id="THREE_SIZES_B" name="THREE_SIZES_B" placeholder="75"
-                    value="{{ old('THREE_SIZES_B', $talent->THREE_SIZES_B) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="THREE_SIZES_W">スリーサイズ　ウエスト<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_W_FLG" value="0"
-                                {{ old('THREE_SIZES_W_FLG', $talentInfo->THREE_SIZES_W_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_W_FLG" value="1"
-                                {{ old('THREE_SIZES_W_FLG', $talentInfo->THREE_SIZES_W_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="number" id="THREE_SIZES_W" name="THREE_SIZES_W" placeholder="55"
-                    value="{{ old('THREE_SIZES_W', $talent->THREE_SIZES_W) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="THREE_SIZES_W">スリーサイズ　ヒップ<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_H_FLG" value="0"
-                                {{ old('THREE_SIZES_H_FLG', $talentInfo->THREE_SIZES_H_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="THREE_SIZES_H_FLG" value="1"
-                                {{ old('THREE_SIZES_H_FLG', $talentInfo->THREE_SIZES_H_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="number" id="THREE_SIZES_H" name="THREE_SIZES_H" placeholder="75"
-                    value="{{ old('THREE_SIZES_H', $talent->THREE_SIZES_H) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="HOBBY_SPECIALTY">趣味・特技<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="HOBBY_SPECIALTY_FLG" value="0"
-                                {{ old('HOBBY_SPECIALTY_FLG', $talentInfo->HOBBY_SPECIALTY_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="HOBBY_SPECIALTY_FLG" value="1"
-                                {{ old('HOBBY_SPECIALTY_FLG', $talentInfo->HOBBY_SPECIALTY_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="text" id="HOBBY_SPECIALTY" name="HOBBY_SPECIALTY" placeholder="カラオケ・食べること"
-                    value="{{ old('HOBBY_SPECIALTY', $talent->HOBBY_SPECIALTY) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="COMMENT">紹介文・コメント<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="COMMENT_FLG" value="0"
-                                {{ old('COMMENT_FLG', $talentInfo->COMMENT_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="COMMENT_FLG" value="1"
-                                {{ old('COMMENT_FLG', $talentInfo->COMMENT_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <textarea id="COMMENT" name="COMMENT" rows="5"
-                    placeholder="ここに紹介文を入れる">{{ old('COMMENT', $talent->COMMENT) }}</textarea>
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="SNS_1">X(旧Twitter) ID<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_1_FLG" value="0"
-                                {{ old('SNS_1_FLG', $talentInfo->SNS_1_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_1_FLG" value="1"
-                                {{ old('SNS_1_FLG', $talentInfo->SNS_1_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="text" id="SNS_1" name="SNS_1" value="{{ old('SNS_1', $talent->SNS_1) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="SNS_2">instagram ID<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_2_FLG" value="0"
-                                {{ old('SNS_2_FLG', $talentInfo->SNS_2_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_2_FLG" value="1"
-                                {{ old('SNS_2_FLG', $talentInfo->SNS_2_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="text" id="SNS_2" name="SNS_2" value="{{ old('SNS_2', $talent->SNS_2) }}" />
-            </div>
-            <div class="form-group">
-                <div class="check-area">
-                    <label for="SNS_3">TikTok ID<span class="required"></span></label>
-                    <div class="check-box">
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_3_FLG" value="0"
-                                {{ old('SNS_3_FLG', $talentInfo->SNS_3_FLG) == '0' ? 'checked' : '' }} />
-                            非公開
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="SNS_3_FLG" value="1"
-                                {{ old('SNS_3_FLG', $talentInfo->SNS_3_FLG) == '1' ? 'checked' : '' }} />
-                            公開する
-                        </label>
-                    </div>
-                </div>
-                <input type="text" id="SNS_3" name="SNS_3" value="{{ old('SNS_3', $talent->SNS_3) }}" />
-            </div>
-            <button type="submit" class="submit-button">送信する</button>
-        </form>
-    </div>
-</main>
+        </div>
+    </form>
+</div>
 
 @push('scripts')
-<script src="{{ asset('js/admin-script.js') }}"></script>
-<script>
-    function calculateAge() {
-    var birthday = new Date(document.getElementById('BIRTHDAY').value);
-    var today = new Date();
-    var age = today.getFullYear() - birthday.getFullYear();
-    var m = today.getMonth() - birthday.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
-        age--;
-    }
-    document.getElementById('AGE').value = age;
-}
-</script>
-
+    <script>
+        function calculateAgeEdit() {
+            const birthdayInput = document.getElementById('edit_BIRTHDAY');
+            const ageInput = document.getElementById('edit_AGE');
+            if (birthdayInput.value) {
+                const birthday = new Date(birthdayInput.value);
+                const today = new Date();
+                let age = today.getFullYear() - birthday.getFullYear();
+                const m = today.getMonth() - birthday.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+                    age--;
+                }
+                ageInput.value = age;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', calculateAgeEdit);
+    </script>
 @endpush

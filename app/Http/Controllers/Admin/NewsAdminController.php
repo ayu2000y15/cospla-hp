@@ -37,18 +37,18 @@ class NewsAdminController extends Controller
         $filePath = 'img/news/' . $newsId;
         session()->flash('activeTab', 'news-entry');
 
-        if($uploadedFiles <> null){
+        if ($uploadedFiles <> null) {
             $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, $newsId, $request->PRIORITY);
             if ($result['success']) {
-                return redirect()->route('admin')
-                ->with('message', 'ニュースが登録されました');
+                return redirect()->route('admin', ['tab' => 'news-entry'])
+                    ->with('message', 'ニュースが登録されました');
             } else {
-                return redirect()->route('admin')
-                ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
+                return redirect()->route('admin', ['tab' => 'news-entry'])
+                    ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
             }
         }
-        return redirect()->route('admin')
-                ->with('message', 'ニュースが登録されました');
+        return redirect()->route('admin', ['tab' => 'news-entry'])
+            ->with('message', 'ニュースが登録されました');
     }
 
     public function update(Request $request, $id)
@@ -62,41 +62,41 @@ class NewsAdminController extends Controller
         $filePath = 'img/news/' . $id;
         session()->flash('activeTab', 'news-entry');
 
-        if($uploadedFiles <> null){
+        if ($uploadedFiles <> null) {
             $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, $id, $request->PRIORITY);
             if ($result['success']) {
-                return redirect()->route('admin')
-                ->with('message', 'ニュースが更新されました');
+                return redirect()->route('admin', ['tab' => 'news-entry'])
+                    ->with('message', 'ニュースが更新されました');
             } else {
-                return redirect()->route('admin')
-                ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
+                return redirect()->route('admin', ['tab' => 'news-entry'])
+                    ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
             }
         }
-        return redirect()->route('admin')
-        ->with('message', 'ニュースが更新されました');
+        return redirect()->route('admin', ['tab' => 'news-entry'])
+            ->with('message', 'ニュースが更新されました');
     }
 
     public function delete($id)
     {
         News::destroy($id);
 
-        if (Storage::disk('public')->deleteDirectory('img/news/' . $id)){
-            return redirect()->route('admin')
-            ->with('message', 'ニュースが削除されました。')
-            ->with('activeTab', 'news-entry');
+        if (Storage::disk('public')->deleteDirectory('img/news/' . $id)) {
+            return redirect()->route('admin', ['tab' => 'news-entry'])
+                ->with('message', 'ニュースが削除されました。')
+                ->with('activeTab', 'news-entry');
         }
-        return redirect()->route('admin')
-        ->with('error', '削除に失敗しました。')
-        ->with('activeTab', 'news-entry');
+        return redirect()->route('admin', ['tab' => 'news-entry'])
+            ->with('error', '削除に失敗しました。')
+            ->with('activeTab', 'news-entry');
     }
 
     public function priority(Request $request)
     {
         $img = Image::where('FILE_NAME', $request->FILE_NAME)->first();
         $img->update(['PRIORITY' => $request->PRIORITY]);
-        return redirect()->route('admin')
-        ->with('error', '優先度を更新しました')
-        ->with('activeTab', 'news-entry');
+        return redirect()->route('admin', ['tab' => 'news-entry'])
+            ->with('error', '優先度を更新しました')
+            ->with('activeTab', 'news-entry');
     }
 
     public function getImages($id)
@@ -104,31 +104,30 @@ class NewsAdminController extends Controller
         $images = DB::table('images')
             ->where('NEWS_ID', $id)
             ->get();
-
         return response()->json($images);
     }
 
+    // ↓ この deleteImage メソッドを追記
     public function deleteImage($id)
-{
-    try {
-        $image = DB::table('images')->where('FILE_NAME', $id)->first();
+    {
+        try {
+            // 画像IDではなく、ファイル名で検索するように変更
+            $image = DB::table('images')->where('FILE_NAME', $id)->first();
 
-        if ($image) {
-            // 物理ファイルの削除
-            $filePath = public_path($image->FILE_PATH . $image->FILE_NAME);
-            if (file_exists($filePath)) {
-                unlink($filePath);
+            if ($image) {
+                // ファイルパスから 'storage/' を除外してStorageファサードで扱えるようにする
+                $filePath = str_replace('storage/', '', $image->FILE_PATH . $image->FILE_NAME);
+                Storage::disk('public')->delete($filePath);
+
+                // データベースレコードの削除
+                DB::table('images')->where('FILE_NAME', $id)->delete();
+
+                return response()->json(['success' => true, 'message' => '画像が正常に削除されました。']);
+            } else {
+                return response()->json(['success' => false, 'error' => '画像が見つかりません。'], 404);
             }
-
-            // データベースレコードの削除
-            DB::table('images')->where('FILE_NAME', $id)->delete();
-
-            return response()->json(['success' => true, 'message' => '画像が正常に削除されました。']);
-        } else {
-            return response()->json(['success' => false, 'error' => '画像が見つかりません。'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => '画像の削除中にエラーが発生しました。', 'details' => $e->getMessage()], 500);
         }
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => '画像の削除中にエラーが発生しました。'], 500);
     }
-}
 }

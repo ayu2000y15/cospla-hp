@@ -16,19 +16,15 @@ class CompanyAdminController extends Controller
             "SPARE2" => $request->SPARE2
         ]);
 
-        return redirect()->route('admin')
-        ->with('message', '問い合わせのお知らせ先メールアドレスが登録されました。')
-        ->with('activeTab', 'company-info');
+        return redirect()->route('admin', ['tab' => 'company-info'])
+            ->with('message', '問い合わせのお知らせ先メールアドレスが登録されました。');
     }
 
     public function update(Request $request)
     {
         $company = Company::all()->first();
         $company->update($request->all());
-        return redirect()->route('admin')
-        ->with('message', '会社情報が更新されました。')
-        ->with('activeTab', 'company-info');
+        return redirect()->route('admin', ['tab' => 'company-info'])
+            ->with('message', '会社情報が更新されました。');
     }
-
-
 }

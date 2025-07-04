@@ -12,18 +12,50 @@ class Talent extends Model
     const UPDATED_AT = 'UPD_DATE';
     public $timestamps = true;
 
-
     protected $fillable = [
-        'TALENT_NAME', 'TALENT_FURIGANA_JP', 'TALENT_FURIGANA_EN',
-        'LAYER_NAME', 'LAYER_FURIGANA_JP', 'LAYER_FURIGANA_EN',
-        'FOLLOWERS', 'STREAM_FLG', 'COS_FLG', 'HEIGHT', 'AGE',
-        'BIRTHDAY', 'THREE_SIZES_B', 'THREE_SIZES_W', 'THREE_SIZES_H',
-        'HOBBY_SPECIALTY', 'COMMENT', 'AFFILIATION_DATE', 'RETIREMENT_DATE',
-        'MAIL', 'TEL_NO', 'SNS_1', 'SNS_2', 'SNS_3',
-        'SPARE1', 'SPARE2', 'SPARE3', 'DEL_FLG'
+        'TALENT_NAME',
+        'TALENT_FURIGANA_JP',
+        'TALENT_FURIGANA_EN',
+        'LAYER_NAME',
+        'LAYER_FURIGANA_JP',
+        'LAYER_FURIGANA_EN',
+        'FOLLOWERS',
+        'STREAM_FLG',
+        'COS_FLG',
+        'HEIGHT',
+        'AGE',
+        'BIRTHDAY',
+        'THREE_SIZES_B',
+        'THREE_SIZES_W',
+        'THREE_SIZES_H',
+        'HOBBY_SPECIALTY',
+        'COMMENT',
+        'AFFILIATION_DATE',
+        'RETIREMENT_DATE',
+        'MAIL',
+        'TEL_NO',
+        'SNS_1',
+        'SNS_2',
+        'SNS_3',
+        'SPARE1',
+        'SPARE2',
+        'SPARE3',
+        'DEL_FLG'
     ];
 
-    protected $dates = ['BIRTHDAY', 'AFFILIATION_DATE', 'RETIREMENT_DATE', 'INS_DATE', 'UPD_DATE'];
+    /**
+     * 日付として扱う属性を定義します。
+     * Laravelが自動的にCarbonオブジェクトに変換してくれます。
+     *
+     * @var array
+     */
+    protected $casts = [
+        'BIRTHDAY' => 'date',
+        'AFFILIATION_DATE' => 'date',
+        'RETIREMENT_DATE' => 'date',
+        'INS_DATE' => 'datetime',
+        'UPD_DATE' => 'datetime',
+    ];
 
     public function careers()
     {
