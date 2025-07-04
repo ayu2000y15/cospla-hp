@@ -28,6 +28,7 @@ class CostumeClient extends Model
      */
     public function images()
     {
-        return $this->hasMany(CostumeClientImage::class, 'client_id', 'client_id')->orderBy('priority');
+        // ★★★ orderByを追加 ★★★
+        return $this->hasMany(CostumeClientImage::class, 'client_id', 'client_id')->orderBy('priority', 'asc');
     }
 }

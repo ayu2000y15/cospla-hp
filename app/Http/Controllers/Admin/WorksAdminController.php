@@ -9,16 +9,16 @@ use App\Models\CostumeClientImage;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Image;
 
-class OrderAdminController extends Controller
+class WorksAdminController extends Controller
 {
     /**
-     * ORDER編集ページ表示
+     * works編集ページ表示
      */
     public function index()
     {
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $clients = CostumeClient::with('images')->orderBy('priority')->get();
-        return view('admin.order-entry', compact('clients', 'logoImg'));
+        return view('admin.works-entry', compact('clients', 'logoImg'));
     }
 
     /**
@@ -38,7 +38,7 @@ class OrderAdminController extends Controller
 
         CostumeClient::create($validated);
 
-        return redirect()->route('admin.order.index')->with('message', '新しいグループを登録しました。');
+        return redirect()->route('admin.works.index')->with('message', '新しいグループを登録しました。');
     }
 
     /**
@@ -54,7 +54,7 @@ class OrderAdminController extends Controller
         ]);
 
         $clientId = $request->input('client_id');
-        $storagePath = 'order/' . $clientId;
+        $storagePath = 'works/' . $clientId;
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
@@ -70,7 +70,7 @@ class OrderAdminController extends Controller
             }
         }
 
-        return redirect()->route('admin.order.index')->with('message', '画像を追加しました。');
+        return redirect()->route('admin.works.index')->with('message', '画像を追加しました。');
     }
 
     /**
@@ -89,7 +89,7 @@ class OrderAdminController extends Controller
         ]);
 
         $client->update($validated);
-        return redirect()->route('admin.order.index')->with('message', 'グループ情報を更新しました。');
+        return redirect()->route('admin.works.index')->with('message', 'グループ情報を更新しました。');
     }
 
     /**
@@ -103,7 +103,7 @@ class OrderAdminController extends Controller
             $image->delete();
         }
         $client->delete();
-        return redirect()->route('admin.order.index')->with('message', 'グループを削除しました。');
+        return redirect()->route('admin.works.index')->with('message', 'グループを削除しました。');
     }
 
     /**
@@ -113,6 +113,32 @@ class OrderAdminController extends Controller
     {
         Storage::disk('public')->delete($image->file_name);
         $image->delete();
-        return redirect()->route('admin.order.index')->with('message', '画像を削除しました。');
+        return redirect()->route('admin.works.index')->with('message', '画像を削除しました。');
+    }
+
+    /**
+     * グループの並び順を更新
+     */
+    public function reorderClients(Request $request)
+    {
+        $request->validate(['order' => 'required|array']);
+
+        foreach ($request->order as $index => $clientId) {
+            CostumeClient::where('client_id', $clientId)->update(['priority' => $index]);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
+    /**
+     * 画像の情報を更新（現在は優先度のみ）
+     */
+    public function updateImage(Request $request, CostumeClientImage $image)
+    {
+        $request->validate(['priority' => 'required|integer']);
+
+        $image->update(['priority' => $request->priority]);
+
+        return redirect()->route('admin.works.index')->with('message', '画像の並び順を更新しました。');
     }
 }

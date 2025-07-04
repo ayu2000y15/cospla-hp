@@ -13,7 +13,11 @@ class Tag extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'TAG_NAME', 'TAG_COLOR', 'SPARE1', 'SPARE2', 'DEL_FLG'
+        'TAG_NAME',
+        'TAG_COLOR',
+        'SPARE1',
+        'SPARE2',
+        'DEL_FLG'
     ];
 
     protected $dates = ['INS_DATE', 'UPD_DATE'];

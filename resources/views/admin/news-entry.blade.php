@@ -4,40 +4,52 @@
         <h2 class="text-xl font-semibold leading-6 text-gray-900">ニュース登録・編集</h2>
         <p class="mt-1 text-sm text-gray-500">新しいニュースを登録、または一覧から選択して編集します。</p>
 
-        <form id="adminForm" action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
+        <form id="adminForm" action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data"
+            class="mt-6 space-y-6">
             @csrf
             <input type="hidden" name="NEWS_ID" id="NEWS_ID">
 
             <div>
                 <label for="TITLE" class="block text-sm font-medium text-gray-700">タイトル</label>
                 <div class="mt-1">
-                    <input type="text" name="TITLE" id="TITLE" required class="block w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <input type="text" name="TITLE" id="TITLE" required
+                        class="block w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
             </div>
 
             <div>
                 <label for="POST_DATE" class="block text-sm font-medium text-gray-700">投稿日</label>
                 <div class="mt-1">
-                    <input type="date" name="POST_DATE" id="POST_DATE" required value="{{ date('Y-m-d') }}" class="block p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <input type="date" name="POST_DATE" id="POST_DATE" required value="{{ date('Y-m-d') }}"
+                        class="block p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
             </div>
 
             <div>
                 <label for="CONTENT" class="block text-sm font-medium text-gray-700">内容</label>
                 <div class="mt-1">
-                    <textarea id="CONTENT" name="CONTENT" rows="5" required class="block w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                    <textarea id="CONTENT" name="CONTENT" rows="5" required
+                        class="block w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">画像 (ドラッグ＆ドロップ対応)</label>
-                <div id="drop-zone" class="flex justify-center w-full px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md">
-                     <div class="space-y-1 text-center">
-                        <svg class="w-12 h-12 mx-auto text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                <div id="drop-zone"
+                    class="flex justify-center w-full px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md">
+                    <div class="space-y-1 text-center">
+                        <svg class="w-12 h-12 mx-auto text-gray-400" stroke="currentColor" fill="none"
+                            viewBox="0 0 48 48" aria-hidden="true">
+                            <path
+                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                         <div class="flex text-sm text-gray-600">
-                            <label for="photo-upload" class="relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer focus-within:outline-none hover:text-indigo-500">
+                            <label for="photo-upload"
+                                class="relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer focus-within:outline-none hover:text-indigo-500">
                                 <span>ファイルを選択</span>
-                                <input id="photo-upload" name="upfile[]" type="file" class="sr-only" multiple accept="image/*">
+                                <input id="photo-upload" name="upfile[]" type="file" class="sr-only" multiple
+                                    accept="image/*">
                             </label>
                             <p class="pl-1">またはドラッグ＆ドロップ</p>
                         </div>
@@ -48,13 +60,16 @@
             </div>
 
             <div id="current-images-section" class="hidden">
-                 <label class="block text-sm font-medium text-gray-700">登録済みの画像</label>
-                 <div id="current-images-container" class="grid grid-cols-3 gap-4 mt-2 sm:grid-cols-4 md:grid-cols-6"></div>
+                <label class="block text-sm font-medium text-gray-700">登録済みの画像</label>
+                <div id="current-images-container" class="grid grid-cols-3 gap-4 mt-2 sm:grid-cols-4 md:grid-cols-6">
+                </div>
             </div>
 
             <div class="flex justify-end gap-3">
-                 <button type="button" onclick="resetForm()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">リセット</button>
-                <button type="submit" id="submitBtn" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">登録</button>
+                <button type="button" onclick="resetForm()"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">リセット</button>
+                <button type="submit" id="submitBtn"
+                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">登録</button>
             </div>
         </form>
     </div>
@@ -65,36 +80,50 @@
             <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">タイトル</th>
-                        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">投稿日</th>
-                        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">画像</th>
-                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Actions</span></th>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                            タイトル</th>
+                        <th scope="col"
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">投稿日
+                        </th>
+                        <th scope="col"
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">画像
+                        </th>
+                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Actions</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($newsList as $news)
                         <tr>
-                            <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                            <td
+                                class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                                 {{ $news->TITLE }}
                                 <dl class="font-normal lg:hidden">
                                     <dt class="sr-only">投稿日</dt>
-                                    <dd class="mt-1 text-gray-500 truncate">{{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</dd>
+                                    <dd class="mt-1 text-gray-500 truncate">
+                                        {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</dd>
                                 </dl>
                             </td>
-                            <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                 <div class="flex -space-x-1 overflow-hidden">
+                                {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</td>
+                            <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                                <div class="flex -space-x-1 overflow-hidden">
                                     @foreach ($newsImgList->where('NEWS_ID', $news->NEWS_ID)->take(4) as $img)
-                                        <img class="inline-block object-cover w-8 h-8 rounded-full ring-2 ring-white" src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="">
+                                        <img class="inline-block object-cover w-8 h-8 rounded-full ring-2 ring-white"
+                                            src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="">
                                     @endforeach
                                     @if($newsImgList->where('NEWS_ID', $news->NEWS_ID)->count() > 4)
-                                        <div class="inline-flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 bg-gray-100 rounded-full ring-2 ring-white">+{{ $newsImgList->where('NEWS_ID', $news->NEWS_ID)->count() - 4 }}</div>
+                                        <div
+                                            class="inline-flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 bg-gray-100 rounded-full ring-2 ring-white">
+                                            +{{ $newsImgList->where('NEWS_ID', $news->NEWS_ID)->count() - 4 }}</div>
                                     @endif
                                 </div>
                             </td>
                             <td class="py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                <button onclick='editItem({!! json_encode($news) !!})' class="text-indigo-600 hover:text-indigo-900">編集</button>
-                                 <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" method="POST" class="inline ml-4" onsubmit="return confirm('本当に削除しますか？');">
+                                <button onclick='editItem({!! json_encode($news) !!})'
+                                    class="text-indigo-600 hover:text-indigo-900">編集</button>
+                                <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" method="POST"
+                                    class="inline ml-4" onsubmit="return confirm('本当に削除しますか？');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-900">削除</button>

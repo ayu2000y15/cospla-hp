@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TalentController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WorksController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsController;
 
@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\TalentAdminController;
 use App\Http\Controllers\Admin\AcmailAdminController;
 
-use App\Http\Controllers\Admin\OrderAdminController;
+use App\Http\Controllers\Admin\WorksAdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,8 +40,8 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/talent', [TalentController::class, 'index'])->name('talent');
 Route::post('/talent', [TalentController::class, 'show'])->name('talent.show');
 
-// Cosplayページ
-Route::get('/order', [OrderController::class, 'index'])->name('order');
+// Worksページ
+Route::get('/works', [WorksController::class, 'index'])->name('works');
 
 // Contactページ
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -148,12 +148,14 @@ Route::put('/admin/ac/update', [AcmailAdminController::class, 'update'])->name('
 Route::get('/admin/ac/editEntry', [AdminController::class, 'editEntry'])->name('admin.ac.editEntry');
 Route::post('/admin/ac/delete', [AcmailAdminController::class, 'delete'])->name('admin.ac.delete');
 
-// ORDERページ管理
-Route::prefix('admin/order')->name('admin.order.')->group(function () {
-    Route::get('/', [OrderAdminController::class, 'index'])->name('index');
-    Route::post('/client', [OrderAdminController::class, 'storeClient'])->name('client.store');
-    Route::put('/client/{client}', [OrderAdminController::class, 'updateClient'])->name('client.update'); // 更新
-    Route::delete('/client/{client}', [OrderAdminController::class, 'destroyClient'])->name('client.destroy'); // 削除
-    Route::post('/images', [OrderAdminController::class, 'uploadImages'])->name('images.upload');
-    Route::delete('/image/{image}', [OrderAdminController::class, 'destroyImage'])->name('image.destroy'); // 画像削除
+// Worksページ管理
+Route::prefix('admin/works')->name('admin.works.')->group(function () {
+    Route::get('/', [WorksAdminController::class, 'index'])->name('index');
+    Route::post('/client', [WorksAdminController::class, 'storeClient'])->name('client.store');
+    Route::put('/client/{client}', [WorksAdminController::class, 'updateClient'])->name('client.update'); // 更新
+    Route::delete('/client/{client}', [WorksAdminController::class, 'destroyClient'])->name('client.destroy'); // 削除
+    Route::post('/images', [WorksAdminController::class, 'uploadImages'])->name('images.upload');
+    Route::delete('/image/{image}', [WorksAdminController::class, 'destroyImage'])->name('image.destroy'); // 画像削除
+    Route::post('/client/reorder', [WorksAdminController::class, 'reorderClients'])->name('client.reorder');
+    Route::put('/image/{image}', [WorksAdminController::class, 'updateImage'])->name('image.update');
 });

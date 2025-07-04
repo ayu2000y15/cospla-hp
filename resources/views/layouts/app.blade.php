@@ -7,7 +7,7 @@
     <meta name="description" content="コスプラットフォーム株式会社はタレントマネジメント、衣装販売、レンタル、製作を行っています。" />
     <meta name="google-site-verification" content="LoQ0AmXHnOUbDWgeVG6_3pQ3IrjdvqnRjp4zD7RP7NM" />
     <title>@yield('title', 'COSPLATFORM')</title>
-
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- style.cssはTailwindに移行したため不要であれば削除 --}}
     {{--

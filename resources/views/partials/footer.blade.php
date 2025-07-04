@@ -21,8 +21,8 @@
                     class="text-gray-300 no-underline transition hover:text-pink-400">TALENT</a>
                 <a href="{{ route('news.index') }}"
                     class="text-gray-300 no-underline transition hover:text-pink-400">NEWS</a>
-                <a href="{{ route('order') }}"
-                    class="text-gray-300 no-underline transition hover:text-pink-400">ORDER</a>
+                <a href="{{ route('works') }}"
+                    class="text-gray-300 no-underline transition hover:text-pink-400">WORKS</a>
                 <a href="{{ route('contact') }}"
                     class="text-gray-300 no-underline transition hover:text-pink-400">CONTACT</a>
             </nav>

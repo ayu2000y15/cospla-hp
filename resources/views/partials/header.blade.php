@@ -21,7 +21,7 @@
                 <a href="{{ route('about') }}" class="font-bold text-gray-600 hover:text-pink-500">ABOUT</a>
                 <a href="{{ route('talent') }}" class="font-bold text-gray-600 hover:text-pink-500">TALENT</a>
                 <a href="{{ route('news.index') }}" class="font-bold text-gray-600 hover:text-pink-500">NEWS</a>
-                <a href="{{ route('order') }}" class="font-bold text-gray-600 hover:text-pink-500">ORDER</a>
+                <a href="{{ route('works') }}" class="font-bold text-gray-600 hover:text-pink-500">WORKS</a>
                 <a href="{{ route('contact') }}" class="font-bold text-gray-600 hover:text-pink-500">CONTACT</a>
             </nav>
             {{-- スマホ用SNSアイコン --}}
@@ -104,7 +104,7 @@
         <a href="{{ route('about') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">ABOUT</a>
         <a href="{{ route('talent') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">TALENT</a>
         <a href="{{ route('news.index') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">NEWS</a>
-        <a href="{{ route('order') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">ORDER</a>
+        <a href="{{ route('works') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">WORKS</a>
         <a href="{{ route('contact') }}" class="block px-4 py-3 font-bold text-gray-600 hover:bg-gray-100">CONTACT</a>
     </nav>
 </header>
