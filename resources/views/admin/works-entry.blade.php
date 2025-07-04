@@ -65,6 +65,16 @@
                             <div class="flex items-center gap-3">
                                 <span class="cursor-move text-gray-400 hover:text-gray-600">⠿</span>
                                 <h4 class="text-xl font-semibold text-gray-800">{{ $client->client_name }}</h4>
+
+                                <form action="{{ route('admin.works.client.toggle', $client) }}" method="POST" class="ml-4">
+                                    @csrf
+                                    @method('PUT')
+                                    @if($client->is_visible)
+                                        <button type="submit" class="px-3 py-1 text-xs font-medium text-white bg-green-500 rounded-full shadow-sm hover:bg-green-600">公開中</button>
+                                    @else
+                                        <button type="submit" class="px-3 py-1 text-xs font-medium text-white bg-gray-400 rounded-full shadow-sm hover:bg-gray-500">非公開</button>
+                                    @endif
+                                </form>
                             </div>
                             <svg class="w-5 h-5 transition-transform duration-300 transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

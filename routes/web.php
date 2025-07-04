@@ -158,4 +158,5 @@ Route::prefix('admin/works')->name('admin.works.')->group(function () {
     Route::delete('/image/{image}', [WorksAdminController::class, 'destroyImage'])->name('image.destroy'); // 画像削除
     Route::post('/client/reorder', [WorksAdminController::class, 'reorderClients'])->name('client.reorder');
     Route::put('/image/{image}', [WorksAdminController::class, 'updateImage'])->name('image.update');
+    Route::put('/client/{client}/toggle', [WorksAdminController::class, 'toggleVisibility'])->name('client.toggle');
 });

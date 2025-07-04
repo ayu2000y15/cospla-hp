@@ -8,7 +8,7 @@
             style="background-image: url('{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}')">
         </section>
         <h1 class="mt-12 mb-4 text-5xl font-extrabold text-center text-white drop-shadow-md">
-            TALENT
+            NEWS
         </h1>
         <div class="container px-4 mx-auto max-w-6xl">
             <div class="p-8 my-16 bg-white/80 text-purple-900 rounded-3xl">

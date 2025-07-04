@@ -141,4 +141,16 @@ class WorksAdminController extends Controller
 
         return redirect()->route('admin.works.index')->with('message', '画像の並び順を更新しました。');
     }
+
+    /**
+     * グループの公開・非公開を切り替える
+     */
+    public function toggleVisibility(CostumeClient $client)
+    {
+        $client->update(['is_visible' => !$client->is_visible]);
+
+        $message = $client->is_visible ? 'グループを公開しました。' : 'グループを非公開にしました。';
+
+        return redirect()->route('admin.works.index')->with('message', $message);
+    }
 }
