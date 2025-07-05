@@ -1,4 +1,4 @@
-<details class="bg-white rounded-lg shadow group">
+<details class="bg-white rounded-lg shadow group" open>
     <summary class="flex items-center justify-between p-4 font-medium list-none cursor-pointer">
         <h3 class="text-lg leading-6 text-gray-900">タグ管理</h3>
         <svg class="w-5 h-5 transition-transform duration-300 transform group-open:rotate-180" fill="none"
@@ -8,37 +8,37 @@
     </summary>
     <div class="p-6 border-t border-gray-200">
         <div class="space-y-8">
-            <div>
-                <h4 class="text-base font-medium leading-6 text-gray-900">タグ新規登録</h4>
-                <form action="{{ route('admin.tag.store') }}" method="POST"
-                    class="mt-4 space-y-4 sm:flex sm:items-end sm:space-y-0 sm:space-x-3">
-                    @csrf
-                    <div class="flex-grow">
-                        <label for="TAG_NAME" class="block text-sm font-medium text-gray-700">タグ名</label>
-                        <div class="mt-1">
-                            <input type="text" name="TAG_NAME" id="TAG_NAME" required placeholder="例: Vtuber"
-                                class="block w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm">
-                        </div>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <label for="TAG_COLOR" class="block text-sm font-medium text-gray-700">色</label>
-                        <div class="mt-1">
-                            <input type="color" name="TAG_COLOR" id="TAG_COLOR" value="#8b5cf6"
-                                class="w-full p-1 bg-white border border-gray-300 rounded-md shadow-sm h-10 sm:w-16">
-                        </div>
-                    </div>
-                    <button type="submit"
-                        class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm sm:w-auto hover:bg-indigo-700">作成</button>
-                </form>
-            </div>
 
-            <div class="pt-8 border-t border-gray-200">
+            {{-- 登録済みタグ一覧セクション --}}
+            <div>
                 <h4 class="text-base font-medium leading-6 text-gray-900">登録済みタグ一覧</h4>
-                <div class="flex flex-wrap gap-3 mt-4">
+                <p class="mt-1 text-sm text-gray-500">タグをクリックすると色を変更できます。<br>
+                    既に使用されているタグは削除できません。
+                </p>
+                <div class="flex flex-wrap gap-4 mt-4">
                     @forelse ($tagList as $tag)
-                        <div class="flex items-center gap-2 px-3 py-1 text-sm font-medium text-white rounded-full shadow"
-                            style="background-color: {{ $tag->TAG_COLOR }};">
-                            <span>#{{ $tag->TAG_NAME }}</span>
+                        <div x-data="{}" x-init="
+                                    let picker = document.getElementById('color-picker-{{ $tag->TAG_ID }}');
+                                    picker.addEventListener('input', (event) => {
+                                        // 色が変更されたら、500ms待ってからサーバーに更新リクエストを送信
+                                        updateTagColor({{ $tag->TAG_ID }}, event.target.value);
+                                        // タグバッジの色をリアルタイムで変更
+                                        document.getElementById('tag-badge-{{ $tag->TAG_ID }}').style.backgroundColor = event.target.value;
+                                    });
+                                "
+                            class="flex items-center gap-2 px-3 py-1 text-sm font-medium text-white rounded-full shadow"
+                            id="tag-badge-{{ $tag->TAG_ID }}" style="background-color: {{ $tag->TAG_COLOR }};">
+
+                            {{-- 色変更できるタグ名 --}}
+                            <span @click="$refs.colorInput.click()" class="cursor-pointer">
+                                #{{ $tag->TAG_NAME }}
+                            </span>
+                            {{-- 見えないカラーピッカー --}}
+                            <input type="color" id="color-picker-{{ $tag->TAG_ID }}" x-ref="colorInput"
+                                value="{{ $tag->TAG_COLOR }}" class="absolute w-0 h-0 p-0 border-0"
+                                style="visibility: hidden;">
+
+                            {{-- 削除フォーム --}}
                             <form action="{{ route('admin.tag.delete', $tag->TAG_ID) }}" method="POST"
                                 onsubmit="return confirm('このタグを削除しますか？');">
                                 @csrf
@@ -55,3 +55,32 @@
         </div>
     </div>
 </details>
+
+{{-- スクリプトはページ内で一度だけ読み込まれればOKです --}}
+@push('scripts')
+    <script>
+        // サーバーサイドに色情報を更新する関数
+        function updateTagColor(tagId, newColor) {
+            // 短時間に何度もリクエストが飛ばないように、少し待ってから実行する
+            if (window.colorUpdateTimeout) {
+                clearTimeout(window.colorUpdateTimeout);
+            }
+            window.colorUpdateTimeout = setTimeout(() => {
+                fetch(`/admin/tags/${tagId}/update-color`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ color: newColor })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error('色の更新に失敗しました。');
+                        }
+                    })
+                    .catch(error => console.error('通信エラー:', error));
+            }, 500);
+        }
+    </script>
+@endpush

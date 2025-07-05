@@ -141,6 +141,7 @@ Route::put('/admin/photos/bulkUpdate', [PhotoAdminController::class, 'bulkUpdate
 Route::get('/admin/tag', [TagAdminController::class, 'entry'])->name('admin.tag.entry');
 Route::post('/admin/tag', [TagAdminController::class, 'store'])->name('admin.tag.store');
 Route::delete('/admin/tag/{id}', [TagAdminController::class, 'delete'])->name('admin.tag.delete');
+Route::post('/admin/tags/{tag}/update-color', [TagAdminController::class, 'updateColor'])->name('admin.tags.updateColor');
 
 //会社情報・問い合わせメール管理
 Route::post('/admin/company/mail', [CompanyAdminController::class, 'mail'])->name('admin.company.mail');

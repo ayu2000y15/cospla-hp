@@ -48,4 +48,19 @@ class TagAdminController extends Controller
         return redirect()->route('admin', ['tab' => 'categories'])
             ->with('message', 'タグが削除されました。');
     }
+
+    /**
+     * タグの色を更新する
+     */
+    public function updateColor(Request $request, Tag $tag)
+    {
+        $request->validate([
+            'color' => 'required|string|regex:/^#[a-fA-F0-9]{6}$/',
+        ]);
+
+        $tag->TAG_COLOR = $request->input('color');
+        $tag->save();
+
+        return response()->json(['success' => true, 'message' => 'タグの色を更新しました。']);
+    }
 }
