@@ -13,34 +13,35 @@
 
         <div class="container px-4 mx-auto max-w-6xl">
             <div x-data="{
-                    isPreviewOpen: false,
-                    previewImageSrc: '',
-                    currentImages: [],
-                    currentImageIndex: 0,
-                    openPreview(images, index) {
-                        this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
-                        this.currentImageIndex = index;
-                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                        this.isPreviewOpen = true;
-                        document.body.style.overflow = 'hidden';
-                    },
-                    closePreview() {
-                        this.isPreviewOpen = false;
-                        document.body.style.overflow = '';
-                    },
-                    nextImage() {
-                        if (this.currentImageIndex < this.currentImages.length - 1) {
-                            this.currentImageIndex++;
-                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                        }
-                    },
-                    prevImage() {
-                        if (this.currentImageIndex > 0) {
-                            this.currentImageIndex--;
-                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                        }
-                    }
-                }" @keydown.escape.window="closePreview()" class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
+                                isPreviewOpen: false,
+                                previewImageSrc: '',
+                                currentImages: [],
+                                currentImageIndex: 0,
+                                openPreview(images, index) {
+                                    this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
+                                    this.currentImageIndex = index;
+                                    this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                    this.isPreviewOpen = true;
+                                    document.body.style.overflow = 'hidden';
+                                },
+                                closePreview() {
+                                    this.isPreviewOpen = false;
+                                    document.body.style.overflow = '';
+                                },
+                                nextImage() {
+                                    if (this.currentImageIndex < this.currentImages.length - 1) {
+                                        this.currentImageIndex++;
+                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                    }
+                                },
+                                prevImage() {
+                                    if (this.currentImageIndex > 0) {
+                                        this.currentImageIndex--;
+                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                    }
+                                }
+                            }" @keydown.escape.window="closePreview()"
+                class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
 
                 <section class="order-page space-y-12">
                     {{-- 静的コンテンツ --}}
@@ -49,10 +50,16 @@
                         <p class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto">
                             コスプレやアイドルの衣装、カフェの制服など<br>お客様のご要望に合わせたオーダーメイドの衣装を制作いたします。
                         </p>
-                        <a href="{{ route('contact') }}"
-                            class="inline-block px-8 py-3 font-semibold text-white transition-transform duration-300 bg-purple-500 rounded-full shadow-md hover:bg-purple-600 hover:scale-105">
-                            制作に関するご相談はこちら
-                        </a>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <a href="https://mercari-shops.com/shops/YhSGSP4Bt6vSztgopFj5DY" target="_blank" rel="noopener"
+                                class="inline-block px-8 py-3 font-semibold text-white transition-transform duration-300 bg-pink-500 rounded-full shadow-md hover:bg-pink-600 hover:scale-105">
+                                販売ページはこちら
+                            </a>
+                            <a href="{{ route('contact') }}"
+                                class="inline-block px-8 py-3 font-semibold text-white transition-transform duration-300 bg-purple-500 rounded-full shadow-md hover:bg-purple-600 hover:scale-105">
+                                制作に関するご相談はこちら
+                            </a>
+                        </div>
                     </div>
 
                     {{-- 動的に表示されるグループ一覧 --}}
@@ -125,13 +132,13 @@
                                     })->toJson();
                                 @endphp
                                 <div class="relative max-w-3xl mx-auto" x-data="{
-                                                activeSlide: 0,
-                                                slideCount: {{ $client->images->count() }},
-                                                interval: null,
-                                                startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
-                                                stopAutoSlide() { clearInterval(this.interval); },
-                                                restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
-                                            }" x-init="startAutoSlide()">
+                                                                                    activeSlide: 0,
+                                                                                    slideCount: {{ $client->images->count() }},
+                                                                                    interval: null,
+                                                                                    startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
+                                                                                    stopAutoSlide() { clearInterval(this.interval); },
+                                                                                    restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                }" x-init="startAutoSlide()">
 
                                     <div class="relative w-full overflow-hidden bg-transparent rounded-xl">
                                         <div class="w-full aspect-[4/3]">
