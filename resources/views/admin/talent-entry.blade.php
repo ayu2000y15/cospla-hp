@@ -63,6 +63,42 @@
                             class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
                     </div>
 
+                    <div class="sm:col-span-3">
+                        <label for="COS_FLG" class="block text-sm font-medium text-gray-700">コスプレの種類</label>
+                        <select id="COS_FLG" name="COS_FLG"
+                            class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                            <option value="1">男装</option>
+                            <option value="2">女装</option>
+                            <option value="3" selected>男装・女装</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label for="STREAM_FLG" class="block text-sm font-medium text-gray-700">配信</label>
+                        <select id="STREAM_FLG" name="STREAM_FLG"
+                            class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                            <option value="0">不可</option>
+                            <option value="1">可</option>
+                        </select>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="CONTRACT_TYPE" class="block text-sm font-medium text-gray-700">契約形態</label>
+                        <fieldset class="mt-2">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <input id="contract_type_0" name="CONTRACT_TYPE" type="radio" value="0" checked
+                                        class="w-4 h-4 text-indigo-600 border-gray-300">
+                                    <label for="contract_type_0" class="ml-2 text-sm text-gray-700">通常</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="contract_type_1" name="CONTRACT_TYPE" type="radio" value="1"
+                                        class="w-4 h-4 text-indigo-600 border-gray-300">
+                                    <label for="contract_type_1" class="ml-2 text-sm text-gray-700">専属</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
                     @php
                         $fields = [
                             ['id' => 'FOLLOWERS', 'label' => 'フォロワー数（およそ）', 'type' => 'number', 'placeholder' => '10000'],

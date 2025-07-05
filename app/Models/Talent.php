@@ -41,6 +41,7 @@ class Talent extends Model
         'SPARE2',
         'SPARE3',
         'PRIORITY',
+        'CONTRACT_TYPE',
         'DEL_FLG'
     ];
 

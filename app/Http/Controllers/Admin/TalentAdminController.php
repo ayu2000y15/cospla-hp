@@ -65,7 +65,8 @@ class TalentAdminController extends Controller
             'TEL_NO',
             'SNS_1',
             'SNS_2',
-            'SNS_3'
+            'SNS_3',
+            'CONTRACT_TYPE'
         ]);
 
         if ($request->BIRTHDAY_FLG == '2') {
@@ -288,6 +289,7 @@ class TalentAdminController extends Controller
             'SNS_1'                => $request->SNS_1,
             'SNS_2'                => $request->SNS_2,
             'SNS_3'                => $request->SNS_3,
+            'CONTRACT_TYPE'        => $request->CONTRACT_TYPE,
             'DEL_FLG'              => $delFlg
         ]);
 

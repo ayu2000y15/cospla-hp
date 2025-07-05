@@ -78,6 +78,24 @@
                     </select>
                 </div>
 
+                <div class="sm:col-span-3">
+                    <label for="edit_CONTRACT_TYPE" class="block text-sm font-medium text-gray-700">契約形態</label>
+                    <fieldset class="mt-2">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center">
+                                <input id="edit_contract_type_0" name="CONTRACT_TYPE" type="radio" value="0" {{ old('CONTRACT_TYPE', $talent->CONTRACT_TYPE) == '0' ? 'checked' : '' }}
+                                    class="w-4 h-4 text-indigo-600 border-gray-300">
+                                <label for="edit_contract_type_0" class="ml-2 text-sm text-gray-700">通常</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit_contract_type_1" name="CONTRACT_TYPE" type="radio" value="1" {{ old('CONTRACT_TYPE', $talent->CONTRACT_TYPE) == '1' ? 'checked' : '' }}
+                                    class="w-4 h-4 text-indigo-600 border-gray-300">
+                                <label for="edit_contract_type_1" class="ml-2 text-sm text-gray-700">専属</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
                 @php
                     $fields = [
                         ['id' => 'FOLLOWERS', 'label' => 'フォロワー数（およそ）', 'type' => 'number', 'value' => $talent->FOLLOWERS, 'flag' => $talentInfo->FOLLOWERS_FLG],
