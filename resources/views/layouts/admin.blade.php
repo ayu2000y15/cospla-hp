@@ -68,7 +68,6 @@
                             d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
-                <img src="{{ asset('counter.cgi') }}" alt="カウンター">
 
                 <div class="flex flex-1 justify-end px-4">
                     <div class="ml-4 flex items-center md:ml-6">
