@@ -13,34 +13,34 @@
 
         <div class="container px-4 mx-auto max-w-6xl">
             <div x-data="{
-                                isPreviewOpen: false,
-                                previewImageSrc: '',
-                                currentImages: [],
-                                currentImageIndex: 0,
-                                openPreview(images, index) {
-                                    this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
-                                    this.currentImageIndex = index;
-                                    this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                                    this.isPreviewOpen = true;
-                                    document.body.style.overflow = 'hidden';
-                                },
-                                closePreview() {
-                                    this.isPreviewOpen = false;
-                                    document.body.style.overflow = '';
-                                },
-                                nextImage() {
-                                    if (this.currentImageIndex < this.currentImages.length - 1) {
-                                        this.currentImageIndex++;
+                                    isPreviewOpen: false,
+                                    previewImageSrc: '',
+                                    currentImages: [],
+                                    currentImageIndex: 0,
+                                    openPreview(images, index) {
+                                        this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
+                                        this.currentImageIndex = index;
                                         this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                        this.isPreviewOpen = true;
+                                        document.body.style.overflow = 'hidden';
+                                    },
+                                    closePreview() {
+                                        this.isPreviewOpen = false;
+                                        document.body.style.overflow = '';
+                                    },
+                                    nextImage() {
+                                        if (this.currentImageIndex < this.currentImages.length - 1) {
+                                            this.currentImageIndex++;
+                                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                        }
+                                    },
+                                    prevImage() {
+                                        if (this.currentImageIndex > 0) {
+                                            this.currentImageIndex--;
+                                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                        }
                                     }
-                                },
-                                prevImage() {
-                                    if (this.currentImageIndex > 0) {
-                                        this.currentImageIndex--;
-                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                                    }
-                                }
-                            }" @keydown.escape.window="closePreview()"
+                                }" @keydown.escape.window="closePreview()"
                 class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
 
                 <section class="order-page space-y-12">
@@ -131,67 +131,76 @@
                                         return ['src' => asset($image->file_path . $image->file_name), 'alt' => $image->alt_text];
                                     })->toJson();
                                 @endphp
-                                <div class="relative max-w-3xl mx-auto" x-data="{
-                                                                                    activeSlide: 0,
-                                                                                    slideCount: {{ $client->images->count() }},
-                                                                                    interval: null,
-                                                                                    startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
-                                                                                    stopAutoSlide() { clearInterval(this.interval); },
-                                                                                    restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
-                                                                                }" x-init="startAutoSlide()">
+                                <div class="flex items-center justify-center max-w-4xl gap-2 mx-auto md:gap-4" x-data="{
+                                                activeSlide: 0,
+                                                slideCount: {{ $client->images->count() }},
+                                                interval: null,
+                                                startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
+                                                stopAutoSlide() { clearInterval(this.interval); },
+                                                restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
+                                            }" x-init="startAutoSlide()">
 
-                                    <div class="relative w-full overflow-hidden bg-transparent rounded-xl">
-                                        <div class="w-full aspect-[4/3]">
-                                            @foreach($client->images as $index => $image)
-                                                <div x-show="activeSlide === {{ $index }}" class="absolute inset-0 w-full h-full"
-                                                    x-cloak>
-                                                    <img src="{{ asset($image->file_path . $image->file_name) }}"
-                                                        alt="{{ $image->alt_text }}" class="object-contain w-full h-full cursor-pointer"
-                                                        @click="openPreview({{ $clientImagesJson }}, {{ $index }})">
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-
+                                    {{-- 「前へ」ボタン --}}
                                     @if($client->images->count() > 1)
                                         <button @click="activeSlide = (activeSlide - 1 + slideCount) % slideCount; restartAutoSlide();"
-                                            class="absolute top-1/2 left-3 transform -translate-y-1/2 bg-purple-600 bg-opacity-80 text-white rounded-full p-3 hover:bg-opacity-100 transition-all duration-300 z-10 shadow-lg"
+                                            class="flex-shrink-0 p-2 text-white transition-all duration-300 bg-purple-600 rounded-full shadow-lg bg-opacity-80 hover:bg-opacity-100"
                                             aria-label="前の画像へ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                                 stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 19l-7-7 7-7" />
                                             </svg>
                                         </button>
+                                    @endif
+
+                                    {{-- 画像とインジケーターのコンテナ --}}
+                                    <div class="flex-grow w-full max-w-3xl">
+                                        <div class="relative w-full overflow-hidden bg-transparent rounded-xl">
+                                            <div class="w-full aspect-[4/3]">
+                                                @foreach($client->images as $index => $image)
+                                                    <div x-show="activeSlide === {{ $index }}" class="absolute inset-0 w-full h-full"
+                                                        x-cloak>
+                                                        <img src="{{ asset($image->file_path . $image->file_name) }}"
+                                                            alt="{{ $image->alt_text }}"
+                                                            class="object-contain w-full h-full cursor-pointer"
+                                                            @click="openPreview({{ $clientImagesJson }}, {{ $index }})">
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        {{-- インジケーター --}}
+                                        @if($client->images->count() > 1)
+                                            <div class="flex justify-center mt-4 space-x-2">
+                                                @foreach($client->images as $index => $image)
+                                                    <button @click="activeSlide = {{ $index }}; restartAutoSlide();"
+                                                        class="w-3 h-3 rounded-full transition-all duration-300"
+                                                        :class="activeSlide === {{ $index }} ? 'bg-purple-600' : 'bg-purple-300 hover:bg-purple-400'"
+                                                        aria-label="画像{{ $index + 1 }}を表示">
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    {{-- 「次へ」ボタン --}}
+                                    @if($client->images->count() > 1)
                                         <button @click="activeSlide = (activeSlide + 1) % slideCount; restartAutoSlide();"
-                                            class="absolute top-1/2 right-3 transform -translate-y-1/2 bg-purple-600 bg-opacity-80 text-white rounded-full p-3 hover:bg-opacity-100 transition-all duration-300 z-10 shadow-lg"
+                                            class="flex-shrink-0 p-2 text-white transition-all duration-300 bg-purple-600 rounded-full shadow-lg bg-opacity-80 hover:bg-opacity-100"
                                             aria-label="次の画像へ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                                 stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9 5l7 7-7 7" />
                                             </svg>
                                         </button>
-
-                                        {{-- インジケーター --}}
-                                        <div class="flex justify-center mt-4 space-x-2">
-                                            @foreach($client->images as $index => $image)
-                                                <button @click="activeSlide = {{ $index }}; restartAutoSlide();"
-                                                    class="w-3 h-3 rounded-full transition-all duration-300"
-                                                    :class="activeSlide === {{ $index }} ? 'bg-purple-600' : 'bg-purple-300 hover:bg-purple-400'"
-                                                    aria-label="画像{{ $index + 1 }}を表示">
-                                                </button>
-                                            @endforeach
-                                        </div>
                                     @endif
                                 </div>
                             @endif
-                        </div>
                     @empty
-                        <div class="text-center py-12">
-                            <p class="text-gray-500 text-lg">現在、公開中の制作実績はありません。</p>
-                        </div>
-                    @endforelse
+                            <div class="text-center py-12">
+                                <p class="text-gray-500 text-lg">現在、公開中の制作実績はありません。</p>
+                            </div>
+                        @endforelse
                 </section>
 
                 {{-- 画像プレビュー用のモーダル --}}
