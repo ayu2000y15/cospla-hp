@@ -119,7 +119,9 @@
                         </div>
                         <div class="flex flex-wrap gap-2 mt-4">
                             @foreach($talentTag as $tag)
-                                <span class="px-3 py-1 text-sm font-medium text-white rounded-full" style="background-color: {{ $tag->TAG_COLOR }};">#{{ $tag->TAG_NAME }}</span>
+                                <a href="{{ route('tags.search', ['tagName' => $tag->TAG_NAME]) }}" class="px-3 py-1 text-sm font-medium text-white rounded-full transition-transform transform hover:scale-105" style="background-color: {{ $tag->TAG_COLOR }};">
+                                    #{{ $tag->TAG_NAME }}
+                                </a>
                             @endforeach
                         </div>
                     </div>

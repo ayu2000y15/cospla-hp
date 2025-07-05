@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\TalentAdminController;
 use App\Http\Controllers\Admin\AcmailAdminController;
 
 use App\Http\Controllers\Admin\WorksAdminController;
+use App\Http\Controllers\TagSearchController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,6 +57,9 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 // プライバシーポリシー
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+
+// 検索ページ
+Route::get('/tags/{tagName}', [TagSearchController::class, 'search'])->name('tags.search');
 
 // 管理者ページログイン
 Route::get('/login', [AdminController::class, 'login'])->name('login');

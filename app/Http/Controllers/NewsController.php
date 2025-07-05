@@ -18,7 +18,7 @@ class NewsController extends Controller
         $sns = Company::first();
 
         // すべてのニュースを投稿日の降順で取得
-        $newsItems = News::orderBy('post_date', 'desc')->get();
+        $newsItems = News::with('tags')->orderBy('POST_DATE', 'desc')->get();
 
         return view('news.index', compact('newsItems', 'topImg', 'backImg', 'logoImg', 'sns'));
     }
@@ -30,7 +30,7 @@ class NewsController extends Controller
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        $newsItem = News::findOrFail($id);
+        $newsItem = News::with('tags')->findOrFail($id);
         $newsImgList = Image::where('VIEW_FLG',  'S501')->orderBy('NEWS_ID')->get();
 
         return view('news.show', compact('newsItem', 'topImg', 'backImg', 'logoImg', 'sns', 'newsImgList'));

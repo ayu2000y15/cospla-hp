@@ -32,6 +32,18 @@
                     </p>
                 </div>
 
+                @if($newsItem->tags->isNotEmpty())
+                    <div class="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-gray-300">
+                        @foreach($newsItem->tags as $tag)
+                            <a href="{{ route('tags.search', ['tagName' => $tag->TAG_NAME]) }}"
+                                class="px-3 py-1 text-xs font-medium text-white rounded-full transition-transform transform hover:scale-105"
+                                style="background-color: {{ $tag->TAG_COLOR }};">
+                                #{{ $tag->TAG_NAME }}
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+
                 {{-- Image Gallery --}}
                 @php
                     // ->values() を使ってキーを0からの連番にリセットする

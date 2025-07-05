@@ -2,12 +2,6 @@
 
 @section('title', 'WORKS - コスプラットフォーム株式会社')
 
-@push('scripts')
-    {{-- Alpine.jsは重複して読み込まないように、レイアウトファイルで一度だけ読み込むのが理想です --}}
-    {{--
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
-@endpush
-
 @section('content')
     <main class="pt-16">
         <section class="relative h-[300px] bg-cover bg-center pt-16"
@@ -18,9 +12,38 @@
         </h1>
 
         <div class="container px-4 mx-auto max-w-6xl">
-            <div class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
+            <div x-data="{
+                    isPreviewOpen: false,
+                    previewImageSrc: '',
+                    currentImages: [],
+                    currentImageIndex: 0,
+                    openPreview(images, index) {
+                        this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
+                        this.currentImageIndex = index;
+                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                        this.isPreviewOpen = true;
+                        document.body.style.overflow = 'hidden';
+                    },
+                    closePreview() {
+                        this.isPreviewOpen = false;
+                        document.body.style.overflow = '';
+                    },
+                    nextImage() {
+                        if (this.currentImageIndex < this.currentImages.length - 1) {
+                            this.currentImageIndex++;
+                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                        }
+                    },
+                    prevImage() {
+                        if (this.currentImageIndex > 0) {
+                            this.currentImageIndex--;
+                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                        }
+                    }
+                }" @keydown.escape.window="closePreview()" class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
+
                 <section class="order-page space-y-12">
-                    {{-- 静的コンテンツ - カードデザインを削除 --}}
+                    {{-- 静的コンテンツ --}}
                     <div class="text-center space-y-6">
                         <h2 class="text-3xl font-bold text-purple-800 drop-shadow-sm">オーダーメイド衣装制作</h2>
                         <p class="text-lg leading-relaxed text-gray-700 max-w-3xl mx-auto">
@@ -96,32 +119,28 @@
 
                             {{-- 画像スライダー --}}
                             @if($client->images->isNotEmpty())
+                                @php
+                                    $clientImagesJson = $client->images->map(function ($image) {
+                                        return ['src' => asset($image->file_path . $image->file_name), 'alt' => $image->alt_text];
+                                    })->toJson();
+                                @endphp
                                 <div class="relative max-w-3xl mx-auto" x-data="{
-                                                                                                                 activeSlide: 0,
-                                                                                                                 slideCount: {{ $client->images->count() }},
-                                                                                                                 interval: null,
-                                                                                                                 startAutoSlide() {
-                                                                                                                     if (this.slideCount > 1) {
-                                                                                                                         this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000);
-                                                                                                                     }
-                                                                                                                 },
-                                                                                                                 stopAutoSlide() {
-                                                                                                                     clearInterval(this.interval);
-                                                                                                                 },
-                                                                                                                 restartAutoSlide() {
-                                                                                                                     this.stopAutoSlide();
-                                                                                                                     this.startAutoSlide();
-                                                                                                                 }
-                                                                                                             }"
-                                    x-init="startAutoSlide()">
+                                                activeSlide: 0,
+                                                slideCount: {{ $client->images->count() }},
+                                                interval: null,
+                                                startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
+                                                stopAutoSlide() { clearInterval(this.interval); },
+                                                restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
+                                            }" x-init="startAutoSlide()">
 
-                                    <div class="relative w-full overflow-hidden bg-transparent rounded-xl ">
+                                    <div class="relative w-full overflow-hidden bg-transparent rounded-xl">
                                         <div class="w-full aspect-[4/3]">
                                             @foreach($client->images as $index => $image)
                                                 <div x-show="activeSlide === {{ $index }}" class="absolute inset-0 w-full h-full"
                                                     x-cloak>
                                                     <img src="{{ asset($image->file_path . $image->file_name) }}"
-                                                        alt="{{ $image->alt_text }}" class="object-contain w-full h-full">
+                                                        alt="{{ $image->alt_text }}" class="object-contain w-full h-full cursor-pointer"
+                                                        @click="openPreview({{ $clientImagesJson }}, {{ $index }})">
                                                 </div>
                                             @endforeach
                                         </div>
@@ -167,6 +186,34 @@
                         </div>
                     @endforelse
                 </section>
+
+                {{-- 画像プレビュー用のモーダル --}}
+                <div x-show="isPreviewOpen" @click.self="closePreview()"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm"
+                    x-cloak>
+                    <span @click="closePreview()"
+                        class="absolute text-4xl text-white cursor-pointer top-4 right-6">&times;</span>
+
+                    <button @click="prevImage()" x-show="currentImageIndex > 0"
+                        class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full preview-arrow preview-prev top-1/2 left-4 md:left-8"
+                        aria-label="前の画像">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <img :src="previewImageSrc" class="max-w-[90%] max-h-[90%] object-contain rounded-md shadow-lg" alt="">
+
+                    <button @click="nextImage()" x-show="currentImageIndex < currentImages.length - 1"
+                        class="absolute p-2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full preview-arrow preview-next top-1/2 right-4 md:right-8"
+                        aria-label="次の画像">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+
             </div>
         </div>
     </main>
