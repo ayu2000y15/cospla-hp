@@ -40,6 +40,7 @@ class Talent extends Model
         'SPARE1',
         'SPARE2',
         'SPARE3',
+        'PRIORITY',
         'DEL_FLG'
     ];
 

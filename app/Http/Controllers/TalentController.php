@@ -32,9 +32,7 @@ class TalentController extends Controller
             ->where('t.DEL_FLG', '0')
             ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
             ->where('t.SPARE1', '1')
-            ->orderByRaw('img1.PRIORITY is null')
-            ->orderByRaw('img1.PRIORITY = 0')
-            ->orderBy('img1.PRIORITY')
+            ->orderBy('t.PRIORITY', 'asc')
             ->orderBy('t.LAYER_NAME')
             ->get();
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();

@@ -27,4 +27,13 @@ class News extends Model
     {
         return $query->where('DEL_FLG', '0');
     }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * このお知らせが所有するタグを取得
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'news_tags', 'news_id', 'tag_id');
+    }
 }

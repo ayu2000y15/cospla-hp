@@ -33,6 +33,32 @@
                 </div>
             </div>
 
+            <div class="pt-4 border-t border-gray-200">
+                <label class="block text-sm font-medium text-gray-700">タグ</label>
+                <p class="text-xs text-gray-500">複数のタグをカンマ（,）で区切って入力してください。<br>
+                    存在しないタグは自動で作成されます。<br>
+                    新しく作成されるタグカラーはランダムで設定されます。<br>
+                    各種設定のタグ管理より、タグカラーの変更が可能です。</p>
+                <input type="text" name="tags" id="tags-input"
+                    class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm"
+                    placeholder="例: お知らせ, イベント, 重要">
+
+                <div class="mt-2">
+                    <h4 class="text-xs font-medium text-gray-600">既存のタグ</h4>
+                    <p class="text-xs text-gray-500">クリックしてタグを追加できます。</p>
+                    <div id="existing-tags-container" class="flex flex-wrap gap-2 mt-1">
+                        {{-- AdminControllerから渡された$tagListを使ってタグを表示 --}}
+                        @foreach($tagList as $tag)
+                            <button type="button"
+                                class="existing-tag-btn px-2 py-1 text-xs font-medium text-white rounded-full shadow-sm"
+                                style="background-color: {{ $tag->TAG_COLOR }};" data-tag-name="{{ $tag->TAG_NAME }}">
+                                #{{ $tag->TAG_NAME }}
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <label class="block text-sm font-medium text-gray-700">画像 (ドラッグ＆ドロップ対応)</label>
                 <div id="drop-zone"
@@ -80,10 +106,13 @@
             <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th scope="col"
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">投稿日
+                        </th>
                         <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                             タイトル</th>
                         <th scope="col"
-                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">投稿日
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">タグ
                         </th>
                         <th scope="col"
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">画像
@@ -95,17 +124,31 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($newsList as $news)
                         <tr>
+                            <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                                {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}
+                            </td>
                             <td
                                 class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                                 {{ $news->TITLE }}
                                 <dl class="font-normal lg:hidden">
                                     <dt class="sr-only">投稿日</dt>
                                     <dd class="mt-1 text-gray-500 truncate">
-                                        {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</dd>
+                                        {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}
+                                    </dd>
                                 </dl>
                             </td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}</td>
+                                <div class="flex flex-wrap gap-1">
+                                    @forelse($news->tags as $tag)
+                                        <span class="px-2 py-1 text-xs font-medium text-white rounded-full"
+                                            style="background-color: {{ $tag->TAG_COLOR }};">
+                                            #{{ $tag->TAG_NAME }}
+                                        </span>
+                                    @empty
+                                        <span>-</span>
+                                    @endforelse
+                                </div>
+                            </td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                                 <div class="flex -space-x-1 overflow-hidden">
                                     @foreach ($newsImgList->where('NEWS_ID', $news->NEWS_ID)->take(4) as $img)
@@ -120,7 +163,7 @@
                                 </div>
                             </td>
                             <td class="py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                <button onclick='editItem({!! json_encode($news) !!})'
+                                <button onclick='editItem({!! json_encode($news->toArray()) !!})'
                                     class="text-indigo-600 hover:text-indigo-900">編集</button>
                                 <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" method="POST"
                                     class="inline ml-4" onsubmit="return confirm('本当に削除しますか？');">
@@ -179,6 +222,26 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         setupDragAndDrop('drop-zone', 'photo-upload', 'preview-container');
+
+        const tagsInput = document.getElementById('tags-input');
+        const existingTagsContainer = document.getElementById('existing-tags-container');
+
+        if (tagsInput && existingTagsContainer) {
+            existingTagsContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('existing-tag-btn')) {
+                    const tagName = e.target.dataset.tagName;
+                    let currentTags = tagsInput.value
+                        .split(',')
+                        .map(t => t.trim())
+                        .filter(t => t.length > 0);
+
+                    if (!currentTags.includes(tagName)) {
+                        currentTags.push(tagName);
+                        tagsInput.value = currentTags.join(', ');
+                    }
+                }
+            });
+        }
     });
 
     const adminForm = document.getElementById('adminForm');
@@ -190,6 +253,13 @@
         document.getElementById('TITLE').value = item.TITLE;
         document.getElementById('POST_DATE').value = item.POST_DATE;
         document.getElementById('CONTENT').value = item.CONTENT;
+
+        // タグ情報を設定
+        if (item.tags && Array.isArray(item.tags)) {
+            document.getElementById('tags-input').value = item.tags.map(tag => tag.TAG_NAME).join(', ');
+        } else {
+            document.getElementById('tags-input').value = '';
+        }
 
         adminForm.action = `{{ url('admin/news') }}/${item.NEWS_ID}`;
 
@@ -205,6 +275,7 @@
         newsIdInput.value = '';
         adminForm.action = "{{ route('admin.news.store') }}";
         submitBtn.textContent = '登録';
+        document.getElementById('tags-input').value = '';
         document.getElementById('preview-container').innerHTML = '';
         document.getElementById('current-images-section').classList.add('hidden');
         document.getElementById('current-images-container').innerHTML = '';

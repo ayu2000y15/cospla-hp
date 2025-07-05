@@ -203,18 +203,7 @@ class TalentAdminController extends Controller
             $tagItem[] = $tag->TAG_ID;
         }
 
-        //タレントが持っていないタグリスト（プルダウンで使用）
-        $tagNotList = DB::table('tags as t')
-            ->select(
-                't.TAG_ID as TAG_ID',
-                't.TAG_NAME as TAG_NAME'
-            )
-            // ★ $tagItemが空でない場合のみwhereNotInを実行
-            ->when(!empty($tagItem), function ($query) use ($tagItem) {
-                return $query->whereNotIn('t.TAG_ID', $tagItem);
-            })
-            ->orderBy('t.TAG_ID')
-            ->get();
+        $allTags = Tag::orderBy('TAG_NAME')->get();
 
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
@@ -232,8 +221,8 @@ class TalentAdminController extends Controller
                 'careerCategories',
                 'talentCareer',
                 'tagList',
-                'tagNotList',
-                'logoImg'
+                'logoImg',
+                'allTags'
             )
         );
     }
@@ -530,31 +519,42 @@ class TalentAdminController extends Controller
             ->with('message', '経歴を一括で登録しました。');
     }
 
-    // タレントにタグを追加
-    public function addTag(Request $request)
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * タレントに紐づくタグを一括で更新する
+     */
+    public function updateTalentTags(Request $request)
     {
-        $count = Tag::where('TAG_NAME', $request->TAG_NAME)->count();
-        session()->flash('activeTabT', 'tag');
+        $request->validate([
+            'TALENT_ID' => 'required|integer|exists:talents,TALENT_ID',
+            'tags' => 'nullable|string',
+        ]);
 
-        if ($count > 0) {
-            return redirect()->route('admin.talent.admin')
-                ->with('error', 'タグが既に登録されています。タグ名を変更してください。');
+        $talent = Talent::findOrFail($request->TALENT_ID);
+        $tagNames = $request->filled('tags') ? array_map('trim', explode(',', $request->input('tags'))) : [];
+
+        $tagIds = [];
+        if (!empty($tagNames)) {
+            foreach ($tagNames as $tagName) {
+                if (empty($tagName)) continue;
+
+                // タグ名で検索、なければ作成（firstOrCreate）
+                $tag = Tag::firstOrCreate(
+                    ['TAG_NAME' => $tagName],
+                    ['TAG_COLOR' => '#' . substr(md5(rand()), 0, 6)] // 新規作成時はランダムな色を割り当て
+                );
+                $tagIds[] = $tag->TAG_ID;
+            }
         }
-        $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
-        $talent->tags()->attach($request->TAG_ID);
-        return redirect()->route('admin.talent.admin', $talent)
-            ->with('message', 'タグが追加されました。');
+
+        // syncメソッドで関連を更新（差分を自動で処理）
+        $talent->tags()->sync($tagIds);
+
+        session()->flash('activeTabT', 'tag');
+        return redirect()->route('admin.talent.admin', ['id' => $talent->TALENT_ID])
+            ->with('message', 'タグ情報を更新しました。');
     }
 
-    // タレントからタグを削除
-    public function deleteTag(Request $request)
-    {
-        $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
-        $talent->tags()->detach($request->TAG_ID);
-        session()->flash('activeTabT', 'tag');
-        return redirect()->route('admin.talent.admin', $talent)
-            ->with('message', 'タグが削除されました。');
-    }
 
     // タレント退職処理
     public function retire(Request $request)
@@ -570,5 +570,23 @@ class TalentAdminController extends Controller
         session()->flash('activeTabT', 'retire');
         return redirect()->route('admin.talent.admin', $talent)
             ->with('message', 'タレントの退職日が設定されました。');
+    }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * タレントの並び順を更新
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'integer',
+        ]);
+
+        foreach ($request->order as $index => $talentId) {
+            Talent::where('TALENT_ID', $talentId)->update(['PRIORITY' => $index]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'タレントの並び順を更新しました。']);
     }
 }

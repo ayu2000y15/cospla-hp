@@ -6,6 +6,7 @@ use App\Models\News;
 use App\Models\Image;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Models\Tag;
 
 class NewsController extends Controller
 {

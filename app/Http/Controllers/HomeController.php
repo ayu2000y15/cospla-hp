@@ -15,28 +15,29 @@ class HomeController extends Controller
     public function index()
     {
         $talent = DB::table('images as img')
-        ->select('img.FILE_PATH as FILE_PATH',
-            'img.FILE_NAME as FILE_NAME',
-            'img.COMMENT as ALT',
-            't.LAYER_NAME as LAYER_NAME'
-        )
-        ->join('talents as t', 't.TALENT_ID', '=', 'img.TALENT_ID')
-        ->where('VIEW_FLG','01')
-        ->whereRaw('img.PRIORITY > 0')
-        ->where('t.DEL_FLG', '0')
-        ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
-        ->where('t.SPARE1', '1')
-        ->orderBy('img.PRIORITY')
-        ->take(4)->get();
+            ->select(
+                'img.FILE_PATH as FILE_PATH',
+                'img.FILE_NAME as FILE_NAME',
+                'img.COMMENT as ALT',
+                't.LAYER_NAME as LAYER_NAME'
+            )
+            ->join('talents as t', 't.TALENT_ID', '=', 'img.TALENT_ID')
+            ->where('VIEW_FLG', '01')
+            ->whereRaw('img.PRIORITY > 0')
+            ->where('t.DEL_FLG', '0')
+            ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
+            ->where('t.SPARE1', '1')
+            ->orderBy('t.PRIORITY', 'asc')
+            ->take(4)->get();
 
         $cosplay = Image::where('VIEW_FLG', 'S203')->active()->visible()
-        ->orderByRaw('PRIORITY is null')
-        ->orderByRaw('PRIORITY = 0')
-        ->orderBy('PRIORITY')->take(6)->get();
+            ->orderByRaw('PRIORITY is null')
+            ->orderByRaw('PRIORITY = 0')
+            ->orderBy('PRIORITY')->take(6)->get();
         $slides = Image::where('VIEW_FLG', 'S201')->active()->visible()
-        ->orderByRaw('PRIORITY is null')
-        ->orderByRaw('PRIORITY = 0')
-        ->orderBy('PRIORITY')->get();
+            ->orderByRaw('PRIORITY is null')
+            ->orderByRaw('PRIORITY = 0')
+            ->orderBy('PRIORITY')->get();
         $slidesCnt = $slides->count();
         $newsTitle = News::active()->orderBy('POST_DATE', 'desc')->take(5)->get();
 
@@ -45,15 +46,16 @@ class HomeController extends Controller
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        return view('home', compact('talent', 'cosplay', 'slides', 'slidesCnt', 'newsTitle', 'topImg', 'backImg', 'logoImg','sns'));
+        return view('home', compact('talent', 'cosplay', 'slides', 'slidesCnt', 'newsTitle', 'topImg', 'backImg', 'logoImg', 'sns'));
     }
 
-    public function privacyPolicy(){
+    public function privacyPolicy()
+    {
         $topImg = Image::where('VIEW_FLG', 'S102')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG', 'S002')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        return view('privacy-policy', compact('topImg', 'backImg', 'logoImg','sns'));
+        return view('privacy-policy', compact('topImg', 'backImg', 'logoImg', 'sns'));
     }
 }

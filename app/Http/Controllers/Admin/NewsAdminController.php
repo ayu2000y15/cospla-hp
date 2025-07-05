@@ -9,6 +9,7 @@ use App\Models\Image;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Tag;
 
 class NewsAdminController extends Controller
 {
@@ -30,8 +31,11 @@ class NewsAdminController extends Controller
     public function store(Request $request)
     {
         $newsInfo = $request->only(['TITLE', 'POST_DATE', 'CONTENT']);
-        News::create($newsInfo);
-        $newsId = News::max('NEWS_ID');
+        $news = News::create($newsInfo);
+        $newsId = $news->NEWS_ID;
+
+        // ★★★ タグの処理を追記 ★★★
+        $this->syncTags($news, $request->input('tags'));
 
         $uploadedFiles = $request->file('upfile');
         $filePath = 'img/news/' . $newsId;
@@ -57,6 +61,8 @@ class NewsAdminController extends Controller
 
         $newsInfo = $request->only(['TITLE', 'POST_DATE', 'CONTENT']);
         $news->update($newsInfo);
+
+        $this->syncTags($news, $request->input('tags'));
 
         $uploadedFiles = $request->file('upfile');
         $filePath = 'img/news/' . $id;
@@ -129,5 +135,32 @@ class NewsAdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => '画像の削除中にエラーが発生しました。', 'details' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * タグの同期処理
+     */
+    private function syncTags(News $news, ?string $tagString): void
+    {
+        if (is_null($tagString)) {
+            $news->tags()->sync([]);
+            return;
+        }
+
+        $tagNames = array_map('trim', explode(',', $tagString));
+        $tagIds = [];
+
+        foreach ($tagNames as $tagName) {
+            if (empty($tagName)) continue;
+
+            $tag = Tag::firstOrCreate(
+                ['TAG_NAME' => $tagName],
+                ['TAG_COLOR' => '#' . substr(md5(rand()), 0, 6)]
+            );
+            $tagIds[] = $tag->TAG_ID;
+        }
+
+        $news->tags()->sync($tagIds);
     }
 }

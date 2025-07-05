@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Session;
+
 class AdminController extends Controller
 {
     protected $fileUploadService;
@@ -30,18 +31,20 @@ class AdminController extends Controller
         $this->fileUploadService = $fileUploadService;
     }
 
-    public function login(){
+    public function login()
+    {
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         return view('admin.login', compact('logoImg'));
     }
 
-    public function loginAccess(Request $request){
-        $user = User::where('name', '=' , $request->name)
-        ->where('password', '=', $request->password);
+    public function loginAccess(Request $request)
+    {
+        $user = User::where('name', '=', $request->name)
+            ->where('password', '=', $request->password);
 
-        if($user->count() == 0){
+        if ($user->count() == 0) {
             return redirect()->route('login')
-            ->with('error', 'ログインに失敗しました。IDかパスワードが間違っています。');
+                ->with('error', 'ログインに失敗しました。IDかパスワードが間違っています。');
         }
         $user = $user->first();
         $root = AccessControl::select('access_view', 'access_root')->where('access_id', $user['access_id'])->first();
@@ -49,21 +52,23 @@ class AdminController extends Controller
         return redirect()->route($root->access_root);
     }
 
-    public function logout(){
+    public function logout()
+    {
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         Session::flush();
         return redirect()->route('login')
-        ->with('error', 'ログアウトしました。再度ログインしてください');    }
+            ->with('error', 'ログアウトしました。再度ログインしてください');
+    }
 
     public function index()
     {
         if (!Session::has('access_view')) {
             return redirect()->route('login')
-            ->with('error', 'セッションがありません。ログインしなおしてください。');
+                ->with('error', 'セッションがありません。ログインしなおしてください。');
         }
         $access_view = Session::get('access_view');
         //タレント一覧
-        $talentList = Talent::all()->sortByDesc('TALENT_ID');
+        $talentList = Talent::orderBy('PRIORITY')->orderBy('LAYER_NAME')->get();
         //タグ登録・削除
         $tagList = Tag::all()->sortBy('TAG_ID');
         //経歴カテゴリ登録・削除
@@ -71,7 +76,7 @@ class AdminController extends Controller
         //問い合わせカテゴリ登録・削除
         $contactList = ContactCategory::all()->sortBy('CONTACT_CATEGORY_ID');
         //ニュース登録・変更
-        $newsList = News::all()->sortByDesc('POST_DATE');
+        $newsList = News::with('tags')->orderBy('POST_DATE', 'desc')->get();
         $newsImgList = Image::whereRaw('NEWS_ID is not null')->orderBy('NEWS_ID')->orderBy('PRIORITY')->get();
 
         // $newsList = DB::table('news as n')
@@ -94,34 +99,34 @@ class AdminController extends Controller
         //HP画像登録・変更
         if (!Session::has('imgList')) {
             $imgList = Image::where('TALENT_ID', null)
-            ->orderBy('VIEW_FLG')
-            ->orderByRaw('PRIORITY is null')
-            ->orderByRaw('PRIORITY = 0')
-            ->orderBy('PRIORITY')->get();
-        }else{
+                ->orderBy('VIEW_FLG')
+                ->orderByRaw('PRIORITY is null')
+                ->orderByRaw('PRIORITY = 0')
+                ->orderBy('PRIORITY')->get();
+        } else {
             $imgList = Session::get('imgList');
         }
 
-        if(!Session::has('activeBtn')){
+        if (!Session::has('activeBtn')) {
             Session::put('activeBtn', 'photo');
         }
 
         $talentImgList = Image::whereNotNull('TALENT_ID')
-        ->where('VIEW_FLG', '=', '01')
-        ->orderBy('VIEW_FLG')
-        ->orderByRaw('PRIORITY is null')
-        ->orderByRaw('PRIORITY = 0')
-        ->orderBy('PRIORITY')
-        ->orderBy('TALENT_ID')
-        ->get();
+            ->where('VIEW_FLG', '=', '01')
+            ->orderBy('VIEW_FLG')
+            ->orderByRaw('PRIORITY is null')
+            ->orderByRaw('PRIORITY = 0')
+            ->orderBy('PRIORITY')
+            ->orderBy('TALENT_ID')
+            ->get();
         $viewFlags = ViewFlag::select('VIEW_FLG', 'COMMENT')
-        ->where('VIEW_FLG', 'like', 'S%')
-        ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
+            ->where('VIEW_FLG', 'like', 'S%')
+            ->orWhere('VIEW_FLG', '=', '00')->distinct()->get();
         $viewFlagsBulk = ViewFlag::select('VIEW_FLG', 'COMMENT')
-        ->where('MAX_COUNT', '<>', 1)
-        ->where('VIEW_FLG', 'like', 'S%')
-        ->orWhere('VIEW_FLG', '=', '00')
-        ->distinct()->orderBy('VIEW_FLG')->get();
+            ->where('MAX_COUNT', '<>', 1)
+            ->where('VIEW_FLG', 'like', 'S%')
+            ->orWhere('VIEW_FLG', '=', '00')
+            ->distinct()->orderBy('VIEW_FLG')->get();
         //会社情報
         $company = Company::all()->first();
 
@@ -138,19 +143,20 @@ class AdminController extends Controller
 
         $acmail = Acmail::all()->sortByDesc('AC_ID');
 
-        return view($access_view, compact('talentList'
-        ,'newsList'
-        ,'newsImgList'
-        ,'imgList'
-        ,'talentImgList'
-        ,'viewFlags'
-        ,'viewFlagsBulk'
-        ,'tagList'
-        ,'careerList'
-        ,'contactList'
-        ,'company'
-        ,'logoImg'
-        ,'acmail'
+        return view($access_view, compact(
+            'talentList',
+            'newsList',
+            'newsImgList',
+            'imgList',
+            'talentImgList',
+            'viewFlags',
+            'viewFlagsBulk',
+            'tagList',
+            'careerList',
+            'contactList',
+            'company',
+            'logoImg',
+            'acmail'
         ));
     }
 
@@ -163,7 +169,7 @@ class AdminController extends Controller
             session()->flash('activeTab', 'talent-entry');
         }
         return view($access_view, compact(
-        'logoImg'
+            'logoImg'
         ));
     }
 
@@ -180,7 +186,8 @@ class AdminController extends Controller
         }
 
         return view($access_view, compact(
-        'logoImg',  'acmail'
+            'logoImg',
+            'acmail'
         ));
     }
 }

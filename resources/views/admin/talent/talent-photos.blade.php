@@ -3,7 +3,8 @@
     {{-- 1. 新規写真登録セクション --}}
     <div class="p-6 bg-white rounded-lg shadow">
         <h3 class="text-lg font-medium leading-6 text-gray-900">写真の新規登録</h3>
-        <p class="mt-1 text-sm text-gray-500">このタレントに関連する写真をアップロードします。</p>
+        <p class="mt-1 text-sm text-gray-500">このタレントに関連する写真をアップロードします。<br>
+            「TALENTページに表示」、「TALENTページに表示(切り替えのほう)」の2枚を登録しないとホームページに掲載されません。</p>
 
         <form action="{{ route('admin.talent.photos.upload') }}" method="POST" enctype="multipart/form-data"
             class="mt-6 space-y-6">

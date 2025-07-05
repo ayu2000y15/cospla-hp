@@ -76,6 +76,8 @@ Route::post('/admin/talent/store', [TalentAdminController::class, 'store'])->nam
 Route::put('/admin/bulkUpdate', [TalentAdminController::class, 'bulkUpdateTalent'])->name('admin.talent.bulkUpdate');
 Route::get('/admin/talent-admin', [TalentAdminController::class, 'talentAdmin'])->name('admin.talent.admin');
 
+Route::post('/admin/talent/reorder', [TalentAdminController::class, 'reorder'])->name('admin.talent.reorder');
+
 //タレント詳細ページ
 Route::post('/admin/talent-admin/detail', [TalentAdminController::class, 'detail'])->name('admin.talent.detail');
 //タレント情報変更
@@ -95,8 +97,8 @@ Route::post('/admin/talent-admin/career/reorder', [TalentAdminController::class,
 Route::post('/admin/talent-admin/career/store-multiple', [TalentAdminController::class, 'storeMultipleCareers'])->name('admin.talent.career.store-multiple');
 
 //タレントタグ
-Route::delete('/admin/talent-admin/tag/delete', [TalentAdminController::class, 'deleteTag'])->name('admin.talent.tag.delete');
-Route::post('/admin/talent-admin/tag/add', [TalentAdminController::class, 'addTag'])->name('admin.talent.tag.add');
+Route::post('/admin/talent-admin/tags/update', [TalentAdminController::class, 'updateTalentTags'])->name('admin.talent.tags.update');
+
 //タレント退職
 Route::put('/admin/talent-admin/retire', [TalentAdminController::class, 'retire'])->name('admin.talent.retire');
 

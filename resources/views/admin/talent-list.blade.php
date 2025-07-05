@@ -20,16 +20,24 @@
     </div>
 </form>
 
+<p class="mt-2 text-sm text-gray-500">ドラッグ＆ドロップでタレントの表示順を変更できます。<br>
+    タレント詳細にて、写真の登録を行わないとホームページにタレント情報が掲載されません。
+</p>
+
 {{-- タレント一覧テーブル --}}
 <div class="flow-root mt-8">
     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8" id="talent-list">
             <table class="min-w-full divide-y divide-gray-300">
                 <thead>
                     <tr>
                         <th scope="col" class="relative px-7 sm:w-12 sm:px-6">
-                            {{-- This header is for the checkbox column --}}
+                            {{-- Checkbox --}}
                         </th>
+                        {{-- ★★★ このヘッダーを追記 ★★★ --}}
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 w-12">
+                        </th>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">表示順</th>
                         <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                             レイヤーネーム</th>
                         <th scope="col"
@@ -41,13 +49,20 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                     @forelse ($talentList as $talent)
-                        <tr class="clickable-row cursor-pointer hover:bg-gray-50" data-talent-id="{{ $talent->TALENT_ID }}">
+                        <tr class="clickable-row hover:bg-gray-50" data-id="{{ $talent->TALENT_ID }}">
                             <td class="relative px-7 sm:w-12 sm:px-6">
                                 <input type="checkbox" name="TALENT_PUBLIC[]" value="{{ $talent->TALENT_ID }}"
                                     class="talent-checkbox absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     form="bulkUpdateTalentForm">
                             </td>
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                            <td class="whitespace-nowrap px-3 py-4 text-center text-gray-400">
+                                <span class="drag-handle cursor-move text-xl text-gray-400 hover:text-gray-600">⠿</span>
+                            </td>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
+                                {{ $loop->iteration }}
+                            </td>
+                            <td
+                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 cursor-pointer">
                                 {{ $talent->LAYER_NAME }}
                                 <dl class="font-normal md:hidden">
                                     <dt class="sr-only">在籍状況</dt>
@@ -60,14 +75,15 @@
                                     </dd>
                                 </dl>
                             </td>
-                            <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 md:table-cell">
+                            <td
+                                class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 md:table-cell cursor-pointer">
                                 @if($talent->RETIREMENT_DATE <= date('Y-m-d') && $talent->DEL_FLG === '1')
                                     退職済み
                                 @else
                                     在籍
                                 @endif
                             </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 cursor-pointer">
                                 @if($talent->SPARE1 == '1')
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開</span>
@@ -88,7 +104,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-500">
+                            <td colspan="7" class="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-500">
                                 タレントはまだ登録されていません。
                             </td>
                         </tr>
@@ -107,12 +123,14 @@
 
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const selectAllCheckbox = document.getElementById('selectAllt');
             const talentCheckboxes = document.querySelectorAll('.talent-checkbox');
             const clickableRows = document.querySelectorAll('.clickable-row');
             const bulkUpdateForm = document.getElementById('bulkUpdateTalentForm');
+            const talentList = document.getElementById('talent-list');
 
             // 全選択/全解除
             selectAllCheckbox.addEventListener('change', function () {
@@ -126,7 +144,6 @@
                     if (!this.checked) {
                         selectAllCheckbox.checked = false;
                     } else {
-                        // すべてチェックされたか確認
                         const allChecked = Array.from(talentCheckboxes).every(c => c.checked);
                         selectAllCheckbox.checked = allChecked;
                     }
@@ -136,12 +153,11 @@
             // 行クリックで詳細ページへ
             clickableRows.forEach(row => {
                 row.addEventListener('click', function (e) {
-                    // チェックボックスや削除ボタンのクリックは除外
-                    if (e.target.matches('input[type="checkbox"], button, a, form')) {
+                    // ★★★ 修正箇所: ハンドルや操作要素のクリックは除外 ★★★
+                    if (e.target.closest('.drag-handle') || e.target.matches('input, button, a, form, label')) {
                         return;
                     }
-
-                    const talentId = this.dataset.talentId;
+                    const talentId = this.dataset.id; // data-talent-id から data-id に変更
                     document.getElementById('talent-id-input').value = talentId;
                     document.getElementById('detail-page-form').submit();
                 });
@@ -158,6 +174,40 @@
                     }
                     if (!confirm(`${selectedCount}人のタレント情報を一括で変更しますか？`)) {
                         e.preventDefault();
+                    }
+                });
+            }
+
+            // ドラッグ＆ドロップによる並び替え
+            if (talentList) {
+                const tbody = talentList.querySelector('tbody');
+                new Sortable(tbody, {
+                    animation: 150,
+                    // ★★★ 修正箇所: ハンドルを指定 ★★★
+                    handle: '.drag-handle',
+                    onEnd: function (evt) {
+                        const order = Array.from(evt.target.children).map(item => item.dataset.id);
+
+                        fetch('{{ route('admin.talent.reorder') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ order: order })
+                        }).then(response => {
+                            if (!response.ok) {
+                                alert('並び替えの保存に失敗しました。');
+                            }
+                            // 並び替え後にNo.を再採番する
+                            const rows = tbody.querySelectorAll('tr');
+                            rows.forEach((row, index) => {
+                                // 3番目のセル(No.列)のテキストを更新
+                                row.cells[2].textContent = index + 1;
+                            });
+                        }).catch(() => {
+                            alert('並び替えの保存中にエラーが発生しました。');
+                        });
                     }
                 });
             }
