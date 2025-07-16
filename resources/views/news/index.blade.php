@@ -24,7 +24,7 @@
                                         {{-- 投稿日 --}}
                                         <p class="m-0 text-sm font-medium text-gray-500 whitespace-nowrap shrink-0">
                                             <time datetime="{{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y-m-d') }}">
-                                                {{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y年n月j日') }}
+                                                {{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y/m/d') }}
                                             </time>
                                         </p>
                                         {{-- タイトルとタグをまとめるコンテナ --}}

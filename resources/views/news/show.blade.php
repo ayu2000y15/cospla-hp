@@ -20,7 +20,7 @@
                     </h1>
                     <p class="text-sm text-gray-500">
                         <time datetime="{{ \Carbon\Carbon::parse($newsItem->POST_DATE)->format('Y-m-d') }}">
-                            公開日: {{ \Carbon\Carbon::parse($newsItem->POST_DATE)->format('Y年n月j日') }}
+                            公開日: {{ \Carbon\Carbon::parse($newsItem->POST_DATE)->format('Y/m/d') }}
                         </time>
                     </p>
                 </div>

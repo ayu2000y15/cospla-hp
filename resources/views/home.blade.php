@@ -88,7 +88,7 @@
                                 class="flex items-center justify-between p-4 transition duration-300 ease-in-out bg-white bg-opacity-50 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
                                 <div class="flex items-center gap-4">
                                     <p class="m-0 text-sm font-medium text-gray-500 whitespace-nowrap">
-                                        {{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y-m-d') }}
+                                        {{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y/m/d') }}
                                     </p>
                                     <p class="m-0 font-semibold text-gray-800">{{ $item->TITLE }}</p>
                                 </div>

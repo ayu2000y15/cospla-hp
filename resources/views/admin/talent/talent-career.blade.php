@@ -62,8 +62,60 @@
         </form>
     </div>
 
+    {{-- 2. 経歴 登録・編集フォーム --}}
+    <div class="p-6 bg-white rounded-lg shadow">
+        <h3 id="career-form-title" class="text-lg font-medium leading-6 text-gray-900">経歴の新規登録</h3>
+        <p class="mt-1 text-sm text-gray-500">経歴を1件ずつ登録または編集します。「編集」ボタンを押すと内容がここに読み込まれます。</p>
 
-    {{-- 2. 登録済み経歴一覧 (カテゴリ別・アコーディオン) --}}
+        <form id="careerAdminForm" action="{{ route('admin.talent.career.store') }}" method="POST" class="mt-6 space-y-6" onsubmit="return confirm('入力内容を保存しますか？');">
+            @csrf
+            <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+            <input type="hidden" id="CAREER_ID" name="CAREER_ID" value="">
+            {{-- editCareer関数で 'PUT' メソッドを挿入する場所 --}}
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div>
+                    <label for="CAREER_CATEGORY_ID" class="block text-sm font-medium text-gray-700">経歴カテゴリ</label>
+                    <select id="CAREER_CATEGORY_ID" name="CAREER_CATEGORY_ID" required class="block w-full max-w-xs p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                        @foreach ($careerCategories as $select)
+                        <option value="{{ $select->CAREER_CATEGORY_ID }}">{{ $select->CAREER_CATEGORY_NAME }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="ACTIVE_DATE" class="text-sm font-medium text-gray-700">活動日</label>
+                    <input id="ACTIVE_DATE" name="ACTIVE_DATE" type="date" class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-gray-700">表示形式</label>
+                <fieldset id="SPARE2_container" class="mt-2">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <div class="flex items-center"><input id="date_format_0" name="SPARE2" type="radio" value="0" checked class="w-4 h-4"><label for="date_format_0" class="ml-2 text-sm">指定なし</label></div>
+                        <div class="flex items-center"><input id="date_format_1" name="SPARE2" type="radio" value="1" class="w-4 h-4"><label for="date_format_1" class="ml-2 text-sm">年月日</label></div>
+                        <div class="flex items-center"><input id="date_format_2" name="SPARE2" type="radio" value="2" class="w-4 h-4"><label for="date_format_2" class="ml-2 text-sm">年月</label></div>
+                        <div class="flex items-center"><input id="date_format_3" name="SPARE2" type="radio" value="3" class="w-4 h-4"><label for="date_format_3" class="ml-2 text-sm">年のみ</label></div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div>
+                <label for="CONTENT" class="text-sm font-medium text-gray-700">経歴内容 <span class="text-red-500">*</span></label>
+                <textarea id="CONTENT" name="CONTENT" rows="3" required class="block w-full p-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm"></textarea>
+            </div>
+
+            <input type="hidden" id="SPARE1" name="SPARE1" value="">
+
+            <div class="flex items-center justify-end pt-4 space-x-4 border-t border-gray-200">
+                 <button type="button" id="cancel-edit-btn" style="display: none;" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">キャンセル</button>
+                <button type="submit" id="career-submit-btn" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">経歴を追加</button>
+            </div>
+        </form>
+    </div>
+
+
+    {{-- 3. 登録済み経歴一覧 (カテゴリ別・アコーディオン) --}}
     <div class="pt-8 space-y-4">
         <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み経歴一覧 (ドラッグで並び替え可能)</h3>
 
@@ -83,7 +135,6 @@
                             @foreach($careersInCategory as $career)
                                 <li class="p-3 bg-gray-50 border border-gray-200 rounded-md cursor-move" data-id="{{ $career->CAREER_ID }}">
                                     <div class="flex items-start justify-between gap-4">
-                                        {{-- ★★★ ここからが修正箇所 ★★★ --}}
                                         <div class="flex-shrink-0 w-24 text-xs font-semibold text-gray-600">
                                             @if($career->ACTIVE_DATE)
                                                 @switch($career->SPARE2)
@@ -104,7 +155,6 @@
                                         <div class="flex-grow text-sm font-medium text-gray-800">
                                             {!! nl2br(e($career->CONTENT)) !!}
                                         </div>
-                                        {{-- ★★★ 修正箇所ここまで ★★★ --}}
                                         <div class="flex items-center flex-shrink-0 space-x-4">
                                             <button type="button" onclick='editCareer({!! json_encode($career) !!})' class="text-sm font-medium text-indigo-600 hover:text-indigo-800">編集</button>
                                             <form action="{{ route('admin.talent.career.delete') }}" method="POST" onsubmit="return confirm('この経歴を削除しますか？');" class="inline">
@@ -216,7 +266,6 @@
         cancelBtn.addEventListener('click', resetCareerForm);
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script>
     // Alpine.jsで動的フォームを管理
     function careerForm() {
