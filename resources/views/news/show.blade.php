@@ -32,18 +32,6 @@
                     </p>
                 </div>
 
-                @if($newsItem->tags->isNotEmpty())
-                    <div class="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-gray-300">
-                        @foreach($newsItem->tags as $tag)
-                            <a href="{{ route('tags.search', ['tagName' => $tag->TAG_NAME]) }}"
-                                class="px-3 py-1 text-xs font-medium text-white rounded-full transition-transform transform hover:scale-105"
-                                style="background-color: {{ $tag->TAG_COLOR }};">
-                                #{{ $tag->TAG_NAME }}
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-
                 {{-- Image Gallery --}}
                 @php
                     // ->values() を使ってキーを0からの連番にリセットする
@@ -57,12 +45,24 @@
                             @foreach ($images as $index => $img)
                                 <div class="overflow-hidden rounded-lg shadow-md">
                                     {{-- onclickで画像のインデックスを渡す --}}
-                                    <img class="object-cover w-full h-full cursor-pointer aspect-video transition-transform duration-300 ease-in-out hover:scale-110"
+                                    <img class="object-contain w-full h-full cursor-pointer aspect-video transition-transform duration-300 ease-in-out hover:scale-110"
                                         src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="{{ $img->COMMENT }}"
                                         onclick="openImagePreview({{ $index }})">
                                 </div>
                             @endforeach
                         </div>
+                    </div>
+                @endif
+
+                @if($newsItem->tags->isNotEmpty())
+                    <div class="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-gray-300">
+                        @foreach($newsItem->tags as $tag)
+                            <a href="{{ route('tags.search', ['tagName' => $tag->TAG_NAME]) }}"
+                                class="px-3 py-1 text-xs font-medium text-white rounded-full transition-transform transform hover:scale-105"
+                                style="background-color: {{ $tag->TAG_COLOR }};">
+                                #{{ $tag->TAG_NAME }}
+                            </a>
+                        @endforeach
                     </div>
                 @endif
 

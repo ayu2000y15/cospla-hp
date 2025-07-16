@@ -82,7 +82,7 @@
             <h2 class="mb-4 text-4xl font-bold text-center text-white text-shadow-md">NEWS</h2>
             <section id="news" class="p-6 bg-white bg-opacity-75 md:p-8 rounded-2xl shadow-lg">
                 <div class="space-y-4">
-                    @forelse($newsTitle as $item)
+                    @forelse($newsTitle->slice(0, 5) as $item)
                         <a href="{{ route('news.show', $item->NEWS_ID) }}" class="block no-underline group text-inherit">
                             <div
                                 class="flex items-center justify-between p-4 transition duration-300 ease-in-out bg-white bg-opacity-50 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
@@ -103,6 +103,14 @@
                         <p class="p-4 text-center text-gray-500">新しいニュースはありません。</p>
                     @endforelse
                 </div>
+                @if(count($newsTitle) > 5)
+                    <div class="flex justify-center mt-6">
+                        <a href="{{ route('news.index') }}"
+                            class="px-6 py-2 text-white bg-pink-500 rounded-full shadow-md hover:bg-pink-600 transition-colors font-semibold">
+                            もっと見る
+                        </a>
+                    </div>
+                @endif
             </section>
         </div>
     </main>
