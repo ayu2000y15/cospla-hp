@@ -22,11 +22,11 @@ class FileUploadService
             if ($file->isValid()) {
                 $originalFileName = $file->getClientOriginalName();
                 $size = $file->getSize();
-                $maxSize = 50 * 1024 * 1024; // 50MB
+                $maxSize = 100 * 1024 * 1024; // 100MB
 
                 // ファイルサイズチェック
                 if ($size > $maxSize) {
-                    $errors[] = "「{$originalFileName}」はサイズ上限(50MB)を超えています。";
+                    $errors[] = "「{$originalFileName}」はサイズ上限(100MB)を超えています。";
                     Log::warning("ファイルサイズが制限を超えています: {$originalFileName}, サイズ: {$size}");
                     continue;
                 }

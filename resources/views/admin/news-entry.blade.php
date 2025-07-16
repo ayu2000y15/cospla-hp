@@ -93,7 +93,7 @@
                             </label>
                             <p class="pl-1">またはドラッグ＆ドロップ</p>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF, MP4, MOV up to 50MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, GIF, MP4, MOV（最大100MBまでアップロード可能です）</p>
                     </div>
                 </div>
                 <div id="preview-container" class="grid grid-cols-3 gap-4 mt-4 sm:grid-cols-4 md:grid-cols-6"></div>
@@ -277,33 +277,68 @@
             dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-indigo-500', 'bg-indigo-50'), false);
         });
 
+        // ★★★ ここから handleFiles 関数を修正 ★★★
         const handleFiles = (files) => {
-            previewContainer.innerHTML = '';
-            fileInput.files = files;
-            if (files.length > 0) {
-                for (const file of files) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const div = document.createElement('div');
-                        div.className = 'relative group aspect-square';
-                        let mediaPreview;
-                        if (file.type.startsWith('video/')) {
-                            mediaPreview = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
-                        } else {
-                            mediaPreview = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
-                        }
-                        div.innerHTML = `
-                            ${mediaPreview}
-                            <div class="absolute bottom-0 right-0 px-1 py-0.5 text-xs text-white bg-black bg-opacity-60 rounded-tl-md">
-                                ${formatBytes(file.size)}
-                            </div>
-                        `;
-                        previewContainer.appendChild(div);
-                    };
-                    reader.readAsDataURL(file);
+            const fileList = Array.from(files);
+            const errors = [];
+            const validFiles = [];
+
+            // --- クライアントサイドでのバリデーション設定 ---
+            const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+            const ALLOWED_MIME_TYPES = [
+                'image/jpeg', 'image/png', 'image/gif',
+                'video/mp4', 'video/quicktime', 'video/webm'
+            ];
+
+            // 1. 全てのファイルに対してバリデーションを実行
+            fileList.forEach(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    errors.push(`「${file.name}」はサイズ上限(100MB)を超えています。`);
+                } else if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+                    errors.push(`「${file.name}」は許可されていないファイル形式です。`);
+                } else {
+                    validFiles.push(file);
                 }
+            });
+
+            // 2. エラーがあればアラートで通知
+            if (errors.length > 0) {
+                alert("以下のファイルに問題があるため、添付できませんでした:\n\n" + errors.join("\n"));
             }
+
+            // 3. 有効なファイルのみをプレビューし、フォームの対象にする
+            previewContainer.innerHTML = '';
+            const dataTransfer = new DataTransfer();
+
+            validFiles.forEach(file => {
+                dataTransfer.items.add(file); // 有効なファイルだけをDataTransferに追加
+
+                // プレビュー表示
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'relative group aspect-square';
+                    let mediaPreview;
+                    if (file.type.startsWith('video/')) {
+                        mediaPreview = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
+                    } else {
+                        mediaPreview = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
+                    }
+                    div.innerHTML = `
+                        ${mediaPreview}
+                        <div class="absolute bottom-0 right-0 px-1 py-0.5 text-xs text-white bg-black bg-opacity-60 rounded-tl-md">
+                            ${formatBytes(file.size)}
+                        </div>
+                    `;
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // 最終的に有効なファイルリストをinput要素に設定
+            fileInput.files = dataTransfer.files;
         };
+        // ★★★ ここまで handleFiles 関数を修正 ★★★
 
         dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
         fileInput.addEventListener('change', e => handleFiles(e.target.files), false);
