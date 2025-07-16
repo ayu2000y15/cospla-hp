@@ -51,11 +51,21 @@
                         <div class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
                             @foreach($talent as $t)
                                 <div class="flex flex-col items-center text-center">
-                                    {{-- 画像サイズのレスポンシブ対応 --}}
-                                    <img style="background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(216, 236, 255, 1) 100%, rgba(149, 233, 243, 1));"
-                                        class="w-full h-auto object-cover mb-2 rounded-lg p-2.5 max-w-[180px] sm:max-w-none sm:w-48 sm:h-60"
-                                        src="{{ asset($t->FILE_PATH . $t->FILE_NAME) }}" alt="タレント {{ $t->ALT }}">
-                                    <p class="mt-1 font-semibold">{{ $t->LAYER_NAME }}</p>
+                                    {{-- フォームでラップしてクリックで遷移可能にする --}}
+                                    <form action="{{ route('talent.show') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $t->TALENT_ID }}">
+                                        {{-- ボタン化してフォームを送信 --}}
+                                        <button type="submit"
+                                            class="p-0 text-left bg-transparent border-none cursor-pointer group">
+                                            <div class="overflow-hidden rounded-lg">
+                                                <img style="background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(216, 236, 255, 1) 100%, rgba(149, 233, 243, 1));"
+                                                    class="w-full h-auto object-cover mb-2 rounded-lg p-2.5 max-w-[180px] sm:max-w-none sm:w-48 sm:h-60 transition-transform duration-300 ease-in-out group-hover:scale-105"
+                                                    src="{{ asset($t->FILE_PATH . $t->FILE_NAME) }}" alt="タレント {{ $t->ALT }}">
+                                            </div>
+                                            <p class="mt-1 text-center font-semibold">{{ $t->LAYER_NAME }}</p>
+                                        </button>
+                                    </form>
                                 </div>
                             @endforeach
                         </div>
@@ -85,12 +95,55 @@
                     @forelse($newsTitle->slice(0, 5) as $item)
                         <a href="{{ route('news.show', $item->NEWS_ID) }}" class="block no-underline group text-inherit">
                             <div
-                                class="flex items-center justify-between p-4 transition duration-300 ease-in-out bg-white bg-opacity-50 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
-                                <div class="flex items-center gap-4">
-                                    <p class="m-0 text-sm font-medium text-gray-500 whitespace-nowrap">
+                                class="flex items-start gap-4 p-4 transition duration-300 ease-in-out bg-white bg-opacity-50 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
+
+                                @php $firstMedia = $item->images->first(); @endphp
+
+                                {{-- サムネイル領域（常に表示し、レイアウトを固定） --}}
+                                <div class="relative w-24 h-16 md:w-32 md:h-20 flex-shrink-0 rounded-md overflow-hidden bg-gray-200">
+                                    @if($firstMedia)
+                                        @php
+                                            $isVideo = in_array(strtolower(pathinfo($firstMedia->FILE_NAME, PATHINFO_EXTENSION)), ['mp4', 'mov', 'webm']);
+                                        @endphp
+                                        @if($isVideo)
+                                            {{-- 動画の場合 --}}
+                                            <video src="{{ asset($firstMedia->FILE_PATH . $firstMedia->FILE_NAME) }}#t=0.1"
+                                                class="object-cover w-full h-full" muted loop playsinline preload="metadata"></video>
+                                            {{-- 再生アイコンのオーバーレイ --}}
+                                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 pointer-events-none">
+                                                <svg class="w-8 h-8 text-white drop-shadow" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                        @else
+                                            {{-- 画像の場合 --}}
+                                            <img src="{{ asset($firstMedia->FILE_PATH . $firstMedia->FILE_NAME) }}"
+                                                alt="{{ $item->TITLE }}" class="object-cover w-full h-full">
+                                        @endif
+                                    @else
+                                        {{-- メディアがない場合のプレースホルダー --}}
+                                        <div class="flex items-center justify-center w-full h-full bg-white">
+                                            <img src="{{ asset($previewImg->FILE_PATH . $previewImg->FILE_NAME) }}"
+                                                alt="ロゴ" class="object-contain w-full h-20">
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="flex-grow">
+                                    <p class="m-0 text-sm font-medium text-gray-500">
                                         {{ \Carbon\Carbon::parse($item->POST_DATE)->format('Y/m/d') }}
                                     </p>
-                                    <p class="m-0 font-semibold text-gray-800">{{ $item->TITLE }}</p>
+                                    <p class="m-0 mt-1 font-semibold text-gray-800">{{ $item->TITLE }}</p>
+                                    @if($item->tags->isNotEmpty())
+                                        <div class="flex flex-wrap items-center gap-2 mt-2">
+                                            @foreach($item->tags as $tag)
+                                                <span class="px-2 py-1 text-xs font-medium text-white rounded-full"
+                                                    style="background-color: {{ $tag->TAG_COLOR }};">
+                                                    {{ $tag->TAG_NAME }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

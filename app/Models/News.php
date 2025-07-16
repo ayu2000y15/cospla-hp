@@ -36,4 +36,13 @@ class News extends Model
     {
         return $this->belongsToMany(Tag::class, 'news_tags', 'news_id', 'tag_id');
     }
+
+    /**
+     * ニュースに紐づく画像・動画を取得するリレーション
+     */
+    public function images()
+    {
+        // VIEW_FLG 'S501' をニュース用のメディアとする
+        return $this->hasMany(Image::class, 'NEWS_ID', 'NEWS_ID')->where('VIEW_FLG', 'S501');
+    }
 }

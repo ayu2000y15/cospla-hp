@@ -15,12 +15,14 @@ class NewsController extends Controller
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG', 'S003')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $previewImg = Image::where('VIEW_FLG', 'S998')->active()->visible()->first();
+
         $sns = Company::first();
 
         // すべてのニュースを投稿日の降順で取得
         $newsItems = News::with('tags')->orderBy('POST_DATE', 'desc')->get();
 
-        return view('news.index', compact('newsItems', 'topImg', 'backImg', 'logoImg', 'sns'));
+        return view('news.index', compact('newsItems', 'topImg', 'backImg', 'logoImg', 'previewImg', 'sns'));
     }
 
     public function show($id)
@@ -30,9 +32,23 @@ class NewsController extends Controller
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        $newsItem = News::with('tags')->findOrFail($id);
-        $newsImgList = Image::where('VIEW_FLG',  'S501')->orderBy('NEWS_ID')->get();
+        $newsItem = News::with(['images', 'tags'])->findOrFail($id);
 
-        return view('news.show', compact('newsItem', 'topImg', 'backImg', 'logoImg', 'sns', 'newsImgList'));
+        // --- ここからが追加・変更箇所 ---
+        $videoExtensions = ['mp4', 'mov', 'webm'];
+
+        // ニュースに紐づくメディア情報を加工して、ビューで使いやすい形式に変換する
+        $mediaItems = $newsItem->images->map(function ($image) use ($videoExtensions) {
+            $extension = strtolower(pathinfo($image->FILE_NAME, PATHINFO_EXTENSION));
+            return [
+                'src' => asset($image->FILE_PATH . $image->FILE_NAME),
+                'alt' => $image->COMMENT,
+                'isVideo' => in_array($extension, $videoExtensions),
+            ];
+        });
+        // --- ここまでが追加・変更箇所 ---
+
+        // 加工済みの $mediaItems をビューに渡す
+        return view('news.show', compact('newsItem', 'topImg', 'backImg', 'logoImg', 'sns', 'mediaItems'));
     }
 }

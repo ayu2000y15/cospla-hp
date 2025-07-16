@@ -22,10 +22,9 @@ class NewsAdminController extends Controller
 
     public function entry()
     {
-        $newsList = News::all()->sortByDesc('POST_DATE');
-        $newsImgList = Image::whereRaw('NEWS_ID is not null')->orderBy('NEWS_ID');
+        $newsList = News::with(['tags', 'images'])->orderBy('POST_DATE', 'desc')->get();
         session()->flash('activeTab', 'news-entry');
-        return view('admin', compact('newsList', 'newsImgList'));
+        return view('admin', compact('newsList',));
     }
 
     public function store(Request $request)
@@ -107,9 +106,11 @@ class NewsAdminController extends Controller
 
     public function getImages($id)
     {
-        $images = DB::table('images')
-            ->where('NEWS_ID', $id)
+        // Eloquentを使用して、必要なカラムのみを明示的に取得する
+        $images = Image::where('NEWS_ID', $id)
+            ->select('FILE_NAME', 'FILE_PATH', 'NEWS_ID', 'TALENT_ID') // 必要なカラムを明記
             ->get();
+
         return response()->json($images);
     }
 

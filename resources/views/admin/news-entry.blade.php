@@ -60,7 +60,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">画像 (ドラッグ＆ドロップ対応)</label>
+                <label class="block text-sm font-medium text-gray-700">画像・動画 (ドラッグ＆ドロップ対応)</label>
                 <div id="drop-zone"
                     class="flex justify-center w-full px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md">
                     <div class="space-y-1 text-center">
@@ -75,18 +75,18 @@
                                 class="relative font-medium text-indigo-600 bg-white rounded-md cursor-pointer focus-within:outline-none hover:text-indigo-500">
                                 <span>ファイルを選択</span>
                                 <input id="photo-upload" name="upfile[]" type="file" class="sr-only" multiple
-                                    accept="image/*">
+                                    accept="image/*,video/*">
                             </label>
                             <p class="pl-1">またはドラッグ＆ドロップ</p>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, GIF, MP4, MOV up to 10MB</p>
                     </div>
                 </div>
                 <div id="preview-container" class="grid grid-cols-3 gap-4 mt-4 sm:grid-cols-4 md:grid-cols-6"></div>
             </div>
 
             <div id="current-images-section" class="hidden">
-                <label class="block text-sm font-medium text-gray-700">登録済みの画像</label>
+                <label class="block text-sm font-medium text-gray-700">登録済みのメディア</label>
                 <div id="current-images-container" class="grid grid-cols-3 gap-4 mt-2 sm:grid-cols-4 md:grid-cols-6">
                 </div>
             </div>
@@ -115,7 +115,7 @@
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">タグ
                         </th>
                         <th scope="col"
-                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">画像
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">メディア
                         </th>
                         <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Actions</span>
                         </th>
@@ -151,19 +151,31 @@
                             </td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                                 <div class="flex -space-x-1 overflow-hidden">
-                                    @foreach ($newsImgList->where('NEWS_ID', $news->NEWS_ID)->take(4) as $img)
-                                        <img class="inline-block object-cover w-8 h-8 rounded-full ring-2 ring-white"
-                                            src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="">
+                                    @foreach ($news->images->take(4) as $img)
+                                        @php
+                                            $isVideo = in_array(strtolower(pathinfo($img->FILE_NAME, PATHINFO_EXTENSION)), ['mp4', 'mov', 'webm']);
+                                        @endphp
+                                        @if($isVideo)
+                                            <div class="relative inline-block w-8 h-8 overflow-hidden bg-black rounded-full ring-2 ring-white">
+                                                <video src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}#t=0.1" class="object-cover w-full h-full" muted playsinline preload="metadata"></video>
+                                                <div class="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-40">
+                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+                                                </div>
+                                             </div>
+                                        @else
+                                            <img class="inline-block object-cover w-8 h-8 rounded-full ring-2 ring-white"
+                                                src="{{ asset($img->FILE_PATH . $img->FILE_NAME) }}" alt="">
+                                        @endif
                                     @endforeach
-                                    @if($newsImgList->where('NEWS_ID', $news->NEWS_ID)->count() > 4)
+                                    @if($news->images->count() > 4)
                                         <div
                                             class="inline-flex items-center justify-center w-8 h-8 text-xs font-medium text-gray-500 bg-gray-100 rounded-full ring-2 ring-white">
-                                            +{{ $newsImgList->where('NEWS_ID', $news->NEWS_ID)->count() - 4 }}</div>
+                                            +{{ $news->images->count() - 4 }}</div>
                                     @endif
                                 </div>
                             </td>
                             <td class="py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                <button onclick='editItem({!! json_encode($news->toArray()) !!})'
+                                <button onclick='editItem({!! json_encode($news->load('tags')) !!})'
                                     class="text-indigo-600 hover:text-indigo-900">編集</button>
                                 <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" method="POST"
                                     class="inline ml-4" onsubmit="return confirm('本当に削除しますか？');">
@@ -208,7 +220,11 @@
                     reader.onload = (e) => {
                         const div = document.createElement('div');
                         div.className = 'relative aspect-square';
-                        div.innerHTML = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
+                        if (file.type.startsWith('video/')) {
+                            div.innerHTML = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
+                        } else {
+                            div.innerHTML = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
+                        }
                         previewContainer.appendChild(div);
                     };
                     reader.readAsDataURL(file);
@@ -254,7 +270,6 @@
         document.getElementById('POST_DATE').value = item.POST_DATE;
         document.getElementById('CONTENT').value = item.CONTENT;
 
-        // タグ情報を設定
         if (item.tags && Array.isArray(item.tags)) {
             document.getElementById('tags-input').value = item.tags.map(tag => tag.TAG_NAME).join(', ');
         } else {
@@ -264,7 +279,7 @@
         adminForm.action = `{{ url('admin/news') }}/${item.NEWS_ID}`;
 
         submitBtn.textContent = '更新';
-        document.getElementById('preview-container').innerHTML = ''; // Clear file list on edit
+        document.getElementById('preview-container').innerHTML = '';
         loadCurrentImages(item.NEWS_ID);
 
         adminForm.scrollIntoView({ behavior: 'smooth' });
@@ -296,8 +311,15 @@
                 images.forEach(img => {
                     const div = document.createElement('div');
                     div.className = 'relative group';
+                    const isVideo = ['.mp4', '.mov', '.webm'].some(ext => img.FILE_NAME.toLowerCase().endsWith(ext));
+                    let mediaElement;
+                    if (isVideo) {
+                        mediaElement = `<video src="{{ asset('/') }}${img.FILE_PATH}${img.FILE_NAME}#t=0.1" class="object-contain w-full h-32 bg-black rounded-md" controls playsinline preload="metadata"></video>`;
+                    } else {
+                        mediaElement = `<img src="{{ asset('/') }}${img.FILE_PATH}${img.FILE_NAME}" class="object-contain w-full h-32 bg-black rounded-md">`;
+                    }
                     div.innerHTML = `
-                        <img src="{{ asset('/') }}${img.FILE_PATH}${img.FILE_NAME}" class="object-cover w-full h-24 rounded-md">
+                        ${mediaElement}
                         <button type="button" onclick="confirmDeleteImage('${img.FILE_NAME}')" class="absolute top-1 right-1 p-0.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -305,15 +327,15 @@
                     container.appendChild(div);
                 });
             } else {
-                container.innerHTML = '<p class="text-sm text-gray-500 col-span-full">登録済みの画像はありません。</p>';
+                container.innerHTML = '<p class="text-sm text-gray-500 col-span-full">登録済みのメディアはありません。</p>';
             }
         } catch (error) {
-            container.innerHTML = '<p class="text-sm text-red-500 col-span-full">画像の読み込みに失敗しました。</p>';
+            container.innerHTML = '<p class="text-sm text-red-500 col-span-full">メディアの読み込みに失敗しました。</p>';
         }
     }
 
     function confirmDeleteImage(fileName) {
-        if (confirm(`画像「${fileName}」を削除しますか？この操作は元に戻せません。`)) {
+        if (confirm(`メディア「${fileName}」を削除しますか？この操作は元に戻せません。`)) {
             deleteImage(fileName);
         }
     }
@@ -331,7 +353,7 @@
                 alert('エラー: ' + result.error);
             }
         } catch (error) {
-            alert('画像の削除中にエラーが発生しました。');
+            alert('メディアの削除中にエラーが発生しました。');
         }
     }
 </script>

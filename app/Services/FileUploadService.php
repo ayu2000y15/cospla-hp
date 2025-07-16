@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Image;
+use Illuminate\Support\Facades\Log;
 
 class FileUploadService
 {
@@ -29,16 +30,23 @@ class FileUploadService
                 // ファイルサイズ（バイト）
                 $size = $file->getSize();
 
-                // ファイルサイズの制限（5MB）
-                $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                // ★★★ ファイルサイズの制限を50MBに変更 ★★★
+                $maxSize = 50 * 1024 * 1024; // 50MB in bytes
 
                 if ($size > $maxSize) {
                     \Log::warning("ファイルサイズが制限を超えています: {$originalFileName}, サイズ: {$size}");
                     continue; // 次のファイルへ
                 }
 
-                // 許可されるMIMEタイプ
-                $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                // ★★★ 許可されるMIMEタイプに動画形式を追加 ★★★
+                $allowedMimeTypes = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'video/mp4',
+                    'video/quicktime', // .mov ファイル
+                    'video/webm'
+                ];
 
                 if (!in_array($mimeType, $allowedMimeTypes)) {
                     \Log::warning("無効なファイルタイプです: {$originalFileName}, タイプ: {$mimeType}");
@@ -83,7 +91,6 @@ class FileUploadService
 
     public function deleteFile($filePath)
     {
-
         if (Storage::disk('public')->delete(str_replace('storage/', '', $filePath))) {
             return true;
         }

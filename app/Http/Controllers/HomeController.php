@@ -19,7 +19,8 @@ class HomeController extends Controller
                 'img.FILE_PATH as FILE_PATH',
                 'img.FILE_NAME as FILE_NAME',
                 'img.COMMENT as ALT',
-                't.LAYER_NAME as LAYER_NAME'
+                't.LAYER_NAME as LAYER_NAME',
+                't.TALENT_ID as TALENT_ID'
             )
             ->join('talents as t', 't.TALENT_ID', '=', 'img.TALENT_ID')
             ->where('VIEW_FLG', '01')
@@ -44,9 +45,11 @@ class HomeController extends Controller
         $topImg = Image::where('VIEW_FLG', 'S204')->active()->visible()->get();
         $backImg = Image::where('VIEW_FLG', 'S001')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $previewImg = Image::where('VIEW_FLG', 'S998')->active()->visible()->first();
+
         $sns = Company::first();
 
-        return view('home', compact('talent', 'cosplay', 'slides', 'slidesCnt', 'newsTitle', 'topImg', 'backImg', 'logoImg', 'sns'));
+        return view('home', compact('talent', 'cosplay', 'slides', 'slidesCnt', 'newsTitle', 'topImg', 'backImg', 'logoImg', 'sns', 'previewImg'));
     }
 
     public function privacyPolicy()
