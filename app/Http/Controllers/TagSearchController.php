@@ -46,7 +46,8 @@ class TagSearchController extends Controller
             'topImg',
             'backImg',
             'logoImg',
-            'sns'
+            'sns',
+            'previewImg'
         ));
     }
 }
