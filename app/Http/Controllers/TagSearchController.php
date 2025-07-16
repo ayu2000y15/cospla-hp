@@ -35,6 +35,8 @@ class TagSearchController extends Controller
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
         $backImg = Image::where('VIEW_FLG', 'S003')->active()->visible()->first();
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
+        $previewImg = Image::where('VIEW_FLG', 'S998')->active()->visible()->first();
+
         $sns = Company::first();
 
         return view('tag-search', compact(
