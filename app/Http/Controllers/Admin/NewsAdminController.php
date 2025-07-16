@@ -30,6 +30,7 @@ class NewsAdminController extends Controller
     public function store(Request $request)
     {
         $newsInfo = $request->only(['TITLE', 'POST_DATE', 'CONTENT']);
+        $newsInfo['published_status'] = $request->has('published_status') ? 1 : 0;
         $news = News::create($newsInfo);
         $newsId = $news->NEWS_ID;
 
@@ -59,6 +60,7 @@ class NewsAdminController extends Controller
         $news = News::findOrFail($id);
 
         $newsInfo = $request->only(['TITLE', 'POST_DATE', 'CONTENT']);
+        $newsInfo['published_status'] = $request->has('published_status') ? 1 : 0;
         $news->update($newsInfo);
 
         $this->syncTags($news, $request->input('tags'));

@@ -18,7 +18,12 @@ class News extends Model
         'POST_DATE',
         'SPARE1',
         'SPARE2',
-        'DEL_FLG'
+        'DEL_FLG',
+        'published_status'
+    ];
+
+    protected $casts = [
+        'published_status' => 'boolean',
     ];
 
     protected $dates = ['POST_DATE', 'INS_DATE', 'UPD_DATE'];

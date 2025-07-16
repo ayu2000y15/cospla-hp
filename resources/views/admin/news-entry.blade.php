@@ -33,6 +33,21 @@
                 </div>
             </div>
 
+            <div>
+                <label for="published_status" class="block text-sm font-medium text-gray-700">公開設定</label>
+                <div class="mt-2">
+                    <label for="published_status" class="inline-flex items-center cursor-pointer">
+                        <span class="relative">
+                            <input id="published_status" name="published_status" type="checkbox" class="sr-only" value="1">
+                            <div class="block w-10 h-6 bg-gray-300 rounded-full"></div>
+                            <div class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition"></div>
+                        </span>
+                        <span id="published_status_text" class="ml-3 text-sm font-medium text-gray-700">下書き</span>
+                    </label>
+                </div>
+            </div>
+
+
             <div class="pt-4 border-t border-gray-200">
                 <label class="block text-sm font-medium text-gray-700">タグ</label>
                 <p class="text-xs text-gray-500">複数のタグをカンマ（,）で区切って入力してください。<br>
@@ -47,7 +62,6 @@
                     <h4 class="text-xs font-medium text-gray-600">既存のタグ</h4>
                     <p class="text-xs text-gray-500">クリックしてタグを追加できます。</p>
                     <div id="existing-tags-container" class="flex flex-wrap gap-2 mt-1">
-                        {{-- AdminControllerから渡された$tagListを使ってタグを表示 --}}
                         @foreach($tagList as $tag)
                             <button type="button"
                                 class="existing-tag-btn px-2 py-1 text-xs font-medium text-white rounded-full shadow-sm"
@@ -112,6 +126,9 @@
                         <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                             タイトル</th>
                         <th scope="col"
+                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">公開設定
+                        </th>
+                        <th scope="col"
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">タグ
                         </th>
                         <th scope="col"
@@ -136,6 +153,17 @@
                                         {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}
                                     </dd>
                                 </dl>
+                            </td>
+                            <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                                @if($news->published_status)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        公開中
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        下書き
+                                    </span>
+                                @endif
                             </td>
                             <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                                 <div class="flex flex-wrap gap-1">
@@ -191,6 +219,17 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* トグルスイッチ用のCSS */
+    input:checked ~ .dot {
+        transform: translateX(100%);
+        background-color: #fff;
+    }
+    input:checked ~ .block {
+        background-color: #4f46e5; /* indigo-600 */
+    }
+</style>
 
 <script>
     function setupDragAndDrop(dropZoneId, fileInputId, previewContainerId) {
@@ -258,6 +297,20 @@
                 }
             });
         }
+
+        const toggle = document.getElementById('published_status');
+        const toggleText = document.getElementById('published_status_text');
+
+        const updateToggleText = () => {
+            if (toggle.checked) {
+                toggleText.textContent = '公開中';
+            } else {
+                toggleText.textContent = '下書き';
+            }
+        };
+
+        toggle.addEventListener('change', updateToggleText);
+        updateToggleText();
     });
 
     const adminForm = document.getElementById('adminForm');
@@ -269,6 +322,10 @@
         document.getElementById('TITLE').value = item.TITLE;
         document.getElementById('POST_DATE').value = item.POST_DATE;
         document.getElementById('CONTENT').value = item.CONTENT;
+
+        const toggle = document.getElementById('published_status');
+        toggle.checked = item.published_status == 1;
+        toggle.dispatchEvent(new Event('change'));
 
         if (item.tags && Array.isArray(item.tags)) {
             document.getElementById('tags-input').value = item.tags.map(tag => tag.TAG_NAME).join(', ');
@@ -285,11 +342,18 @@
         adminForm.scrollIntoView({ behavior: 'smooth' });
     }
 
+
+
     function resetForm() {
         adminForm.reset();
         newsIdInput.value = '';
         adminForm.action = "{{ route('admin.news.store') }}";
         submitBtn.textContent = '登録';
+
+        const toggle = document.getElementById('published_status');
+        toggle.checked = false;
+        toggle.dispatchEvent(new Event('change'));
+
         document.getElementById('tags-input').value = '';
         document.getElementById('preview-container').innerHTML = '';
         document.getElementById('current-images-section').classList.add('hidden');
