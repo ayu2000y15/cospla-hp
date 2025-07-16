@@ -68,28 +68,26 @@
                     <div x-show="activeTab === 'news'" x-cloak>
                         <div class="space-y-4">
                             @forelse($news as $item)
+                                @php
+                                    $firstMedia = $item->images->first();
+                                    $hasVideo = $firstMedia && in_array(strtolower(pathinfo($firstMedia->FILE_NAME, PATHINFO_EXTENSION)), ['mp4', 'mov', 'webm']);
+                                @endphp
                                 <a href="{{ route('news.show', $item->NEWS_ID) }}"
-                                    class="block no-underline group text-inherit">
+                                    class="block no-underline group text-inherit @if($hasVideo) video-thumbnail-container @endif">
                                     <div
                                         class="flex flex-col md:flex-row items-start gap-4 p-4 transition duration-300 ease-in-out bg-white bg-opacity-70 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
-
-                                        @php $firstMedia = $item->images->first(); @endphp
 
                                         {{-- サムネイル領域（常に表示し、レイアウトを固定） --}}
                                         <div
                                             class="relative w-full md:w-48 h-32 flex-shrink-0 rounded-md overflow-hidden bg-gray-200">
                                             @if($firstMedia)
-                                                @php
-                                                    $isVideo = in_array(strtolower(pathinfo($firstMedia->FILE_NAME, PATHINFO_EXTENSION)), ['mp4', 'mov', 'webm']);
-                                                @endphp
-                                                @if($isVideo)
+                                                @if($hasVideo)
                                                     {{-- 動画の場合 --}}
                                                     <video src="{{ asset($firstMedia->FILE_PATH . $firstMedia->FILE_NAME) }}#t=0.1"
-                                                        class="object-cover w-full h-full" muted loop playsinline
-                                                        preload="metadata"></video>
+                                                        class="object-cover w-full h-full" muted playsinline preload="metadata"></video>
                                                     {{-- 再生アイコンのオーバーレイ --}}
                                                     <div
-                                                        class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 pointer-events-none">
+                                                        class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 pointer-events-none transition-opacity duration-300 group-hover:opacity-0">
                                                         <svg class="w-8 h-8 text-white drop-shadow" fill="currentColor"
                                                             viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd"
@@ -151,3 +149,24 @@
         </div>
     </main>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoContainers = document.querySelectorAll('.video-thumbnail-container');
+
+            videoContainers.forEach(container => {
+                const video = container.querySelector('video');
+                if (video) {
+                    container.addEventListener('mouseenter', () => {
+                        video.play();
+                    });
+                    container.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                }
+            });
+        });
+    </script>
+@endpush

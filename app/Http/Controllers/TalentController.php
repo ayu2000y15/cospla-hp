@@ -62,18 +62,23 @@ class TalentController extends Controller
             ->where('t.TALENT_ID', $request['id'])
             ->orderBy('tag.TAG_ID')
             ->get();
-        $careerCategory = DB::table('talent_careers as tc')
-            ->select(
-                'c.CAREER_CATEGORY_NAME as CAREER_CATEGORY_NAME',
-                'c.CAREER_CATEGORY_ID as CAREER_CATEGORY_ID'
-            )
+
+        $orderedCategories = $talent->careerCategories;
+        $orderedCategoryIds = $orderedCategories->pluck('CAREER_CATEGORY_ID');
+
+        // 2. 経歴が存在するが、並び順が未設定のカテゴリを取得
+        $unOrderedCategories = DB::table('talent_careers as tc')
             ->join('career_categories as c', 'tc.CAREER_CATEGORY_ID', '=', 'c.CAREER_CATEGORY_ID')
             ->where('tc.TALENT_ID', $request['id'])
-            ->groupBy('c.CAREER_CATEGORY_ID')
-            ->groupBy('c.CAREER_CATEGORY_NAME')
-            ->orderByRaw("c.CAREER_CATEGORY_ID = '0' ")
-            ->orderBy('c.CAREER_CATEGORY_ID')
+            ->whereNotIn('c.CAREER_CATEGORY_ID', $orderedCategoryIds) // 並び順設定済みのものを除外
+            ->select('c.CAREER_CATEGORY_ID', 'c.CAREER_CATEGORY_NAME')
+            ->distinct()
+            ->orderBy('c.CAREER_CATEGORY_ID') // 未設定のものはID順で表示
             ->get();
+
+        // 3. 2つのコレクションを結合して最終的なカテゴリリストを作成
+        $careerCategory = $orderedCategories->concat($unOrderedCategories);
+
         $talentCareer = TalentCareer::where('TALENT_ID', $request['id'])
             // 1. SPARE1 (優先度) が NULL でないものを先に、昇順で並べる
             // 2. 次に ACTIVE_DATE (活動日) の降順で並べる

@@ -92,8 +92,14 @@
             <h2 class="mb-4 text-4xl font-bold text-center text-white text-shadow-md">NEWS</h2>
             <section id="news" class="p-6 bg-white bg-opacity-75 md:p-8 rounded-2xl shadow-lg">
                 <div class="space-y-4">
-                    @forelse($newsTitle->slice(0, 5) as $item)
-                        <a href="{{ route('news.show', $item->NEWS_ID) }}" class="block no-underline group text-inherit">
+                     @forelse($newsTitle->slice(0, 5) as $item)
+                        {{-- ▼▼▼ 変更箇所 ▼▼▼ --}}
+                        @php
+                            $firstMedia = $item->images->first();
+                            $hasVideo = $firstMedia && in_array(strtolower(pathinfo($firstMedia->FILE_NAME, PATHINFO_EXTENSION)), ['mp4', 'mov', 'webm']);
+                        @endphp
+                        <a href="{{ route('news.show', $item->NEWS_ID) }}"
+                            class="block no-underline group text-inherit @if($hasVideo) video-thumbnail-container @endif">
                             <div
                                 class="flex items-start gap-4 p-4 transition duration-300 ease-in-out bg-white bg-opacity-50 border-l-4 border-transparent rounded-lg shadow-sm group-hover:shadow-md group-hover:border-pink-400 group-hover:bg-opacity-100">
 
@@ -108,9 +114,9 @@
                                         @if($isVideo)
                                             {{-- 動画の場合 --}}
                                             <video src="{{ asset($firstMedia->FILE_PATH . $firstMedia->FILE_NAME) }}#t=0.1"
-                                                class="object-cover w-full h-full" muted loop playsinline preload="metadata"></video>
+                                                class="object-cover w-full h-full" muted playsinline preload="metadata"></video>
                                             {{-- 再生アイコンのオーバーレイ --}}
-                                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 pointer-events-none">
+                                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 pointer-events-none transition-opacity duration-300 group-hover:opacity-0">
                                                 <svg class="w-8 h-8 text-white drop-shadow" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
                                                 </svg>
@@ -180,4 +186,25 @@
             text-shadow: 2px 2px 4px rgb(0 0 0 / 0.5);
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoContainers = document.querySelectorAll('.video-thumbnail-container');
+
+            videoContainers.forEach(container => {
+                const video = container.querySelector('video');
+                if (video) {
+                    container.addEventListener('mouseenter', () => {
+                        video.play();
+                    });
+                    container.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                }
+            });
+        });
+    </script>
 @endpush

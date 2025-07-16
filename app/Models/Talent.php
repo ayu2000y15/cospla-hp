@@ -83,4 +83,14 @@ class Talent extends Model
     {
         return $query->where('DEL_FLG', '0')->where('RETIREMENT_DATE', '>', now())->where('SPARE1', '1');
     }
+
+    /**
+     * タレントに紐づく経歴カテゴリを取得する（並び順を考慮）
+     */
+    public function careerCategories()
+    {
+        return $this->belongsToMany(CareerCategory::class, 'talent_career_category_orders', 'talent_id', 'career_category_id')
+            ->withPivot('priority')
+            ->orderBy('priority');
+    }
 }

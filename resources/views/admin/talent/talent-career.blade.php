@@ -117,68 +117,70 @@
 
     {{-- 3. 登録済み経歴一覧 (カテゴリ別・アコーディオン) --}}
     <div class="pt-8 space-y-4">
-        <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み経歴一覧 (ドラッグで並び替え可能)</h3>
+        <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み経歴一覧 (ドラッグ＆ドロップでカテゴリ・経歴の並び替え可能)</h3>
 
-        @forelse($careerCategories as $category)
-            @php
-                $careersInCategory = $talentCareer->where('CAREER_CATEGORY_ID', $category->CAREER_CATEGORY_ID)->sortBy('SPARE1');
-            @endphp
+        <div id="category-list" class="space-y-4">
+            @forelse($careerCategories as $category)
+                @php
+                    $careersInCategory = $talentCareer->where('CAREER_CATEGORY_ID', $category->CAREER_CATEGORY_ID)->sortBy('SPARE1');
+                @endphp
 
-            @if($careersInCategory->isNotEmpty())
-                <details class="bg-white rounded-lg shadow group" open>
-                    <summary class="flex items-center justify-between p-4 font-medium list-none cursor-pointer">
-                        <h4 class="text-base font-semibold text-purple-800">{{ $category->CAREER_CATEGORY_NAME }}</h4>
-                        <svg class="w-5 h-5 transition-transform duration-300 transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </summary>
-                    <div class="p-4 border-t border-gray-200">
-                        <ul class="space-y-3 sortable-list" id="category-{{ $category->CAREER_CATEGORY_ID }}">
-                            @foreach($careersInCategory as $career)
-                                <li class="p-3 bg-gray-50 border border-gray-200 rounded-md cursor-move" data-id="{{ $career->CAREER_ID }}">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div class="flex-shrink-0 w-24 text-xs font-semibold text-gray-600">
-                                            @if($career->ACTIVE_DATE)
-                                                @switch($career->SPARE2)
-                                                    @case('1')
-                                                        {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y/n/j') }}
-                                                        @break
-                                                    @case('2')
-                                                        {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y/n') }}
-                                                        @break
-                                                    @case('3')
-                                                        {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y') }}
-                                                        @break
-                                                    @default
-                                                        {{-- 日付指定なしの場合は何も表示しない --}}
-                                                @endswitch
-                                            @endif
+                @if($careersInCategory->isNotEmpty())
+                    <details class="bg-white rounded-lg shadow group" open data-id="{{ $category->CAREER_CATEGORY_ID }}">
+                        <summary class="flex items-center justify-between p-4 font-medium list-none cursor-pointer">
+                            <h4 class="text-base font-semibold text-purple-800">{{ $category->CAREER_CATEGORY_NAME }}</h4>
+                            <svg class="w-5 h-5 transition-transform duration-300 transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </summary>
+                        <div class="p-4 border-t border-gray-200">
+                            <ul class="space-y-3 sortable-list" id="category-{{ $category->CAREER_CATEGORY_ID }}">
+                                @foreach($careersInCategory as $career)
+                                    <li class="p-3 bg-gray-50 border border-gray-200 rounded-md cursor-move" data-id="{{ $career->CAREER_ID }}">
+                                        <div class="flex items-start justify-between gap-4">
+                                            <div class="flex-shrink-0 w-24 text-xs font-semibold text-gray-600">
+                                                @if($career->ACTIVE_DATE)
+                                                    @switch($career->SPARE2)
+                                                        @case('1')
+                                                            {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y/n/j') }}
+                                                            @break
+                                                        @case('2')
+                                                            {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y/n') }}
+                                                            @break
+                                                        @case('3')
+                                                            {{ \Carbon\Carbon::parse($career->ACTIVE_DATE)->format('Y') }}
+                                                            @break
+                                                        @default
+                                                            {{-- 日付指定なしの場合は何も表示しない --}}
+                                                    @endswitch
+                                                @endif
+                                            </div>
+                                            <div class="flex-grow text-sm font-medium text-gray-800">
+                                                {!! nl2br(e($career->CONTENT)) !!}
+                                            </div>
+                                            <div class="flex items-center flex-shrink-0 space-x-4">
+                                                <button type="button" onclick='editCareer({!! json_encode($career) !!})' class="text-sm font-medium text-indigo-600 hover:text-indigo-800">編集</button>
+                                                <form action="{{ route('admin.talent.career.delete') }}" method="POST" onsubmit="return confirm('この経歴を削除しますか？');" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                                                    <input type="hidden" name="CAREER_ID" value="{{ $career->CAREER_ID }}">
+                                                    <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-900">削除</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="flex-grow text-sm font-medium text-gray-800">
-                                            {!! nl2br(e($career->CONTENT)) !!}
-                                        </div>
-                                        <div class="flex items-center flex-shrink-0 space-x-4">
-                                            <button type="button" onclick='editCareer({!! json_encode($career) !!})' class="text-sm font-medium text-indigo-600 hover:text-indigo-800">編集</button>
-                                            <form action="{{ route('admin.talent.career.delete') }}" method="POST" onsubmit="return confirm('この経歴を削除しますか？');" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
-                                                <input type="hidden" name="CAREER_ID" value="{{ $career->CAREER_ID }}">
-                                                <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-900">削除</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </details>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </details>
+                @endif
+            @empty
+                 <div class="p-6 text-sm text-center text-gray-500 bg-white rounded-lg shadow">経歴カテゴリが登録されていません。</div>
+            @endforelse
+
+            @if($talentCareer->isEmpty() && $careerCategories->isNotEmpty())
+                 <div class="p-6 text-sm text-center text-gray-500 bg-white rounded-lg shadow">このタレントの経歴はまだ登録されていません。</div>
             @endif
-        @empty
-             <div class="p-6 text-sm text-center text-gray-500 bg-white rounded-lg shadow">経歴カテゴリが登録されていません。</div>
-        @endforelse
-
-        @if($talentCareer->isEmpty() && $careerCategories->isNotEmpty())
-             <div class="p-6 text-sm text-center text-gray-500 bg-white rounded-lg shadow">このタレントの経歴はまだ登録されていません。</div>
-        @endif
+        </div>
     </div>
 </div>
 
@@ -217,6 +219,41 @@
             });
         });
     });
+
+    const categoryList = document.getElementById('category-list');
+        if (categoryList) {
+            new Sortable(categoryList, {
+                animation: 150,
+                ghostClass: 'bg-blue-100',
+                handle: 'summary', // <summary> タグをドラッグハンドルに設定
+                onEnd: function (evt) {
+                    const order = Array.from(evt.target.children).map(item => item.dataset.id);
+                    const talentId = '{{ $talent->TALENT_ID }}';
+
+                    fetch('{{ route("admin.talent.career.categories.reorder") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            order: order,
+                            talent_id: talentId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status !== 'success') {
+                           alert('カテゴリの並び替え保存に失敗しました。');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('カテゴリの並び替え保存中にエラーが発生しました。');
+                    });
+                }
+            });
+        }
 
     const form = document.getElementById('careerAdminForm');
     const formTitle = document.getElementById('career-form-title');

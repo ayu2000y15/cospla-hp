@@ -38,13 +38,14 @@
                         <h2 class="mb-4 text-xl font-bold text-gray-800">関連メディア</h2>
                         <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                             @foreach ($mediaItems as $index => $media)
-                                <div class="relative overflow-hidden rounded-lg shadow-md group bg-black">
+                                <div
+                                    class="relative overflow-hidden rounded-lg shadow-md group  @if($media['isVideo']) video-thumbnail-container @endif">
                                     @if($media['isVideo'])
                                         <video
                                             class="object-cover w-full h-full aspect-video transition-transform duration-300 group-hover:scale-110"
-                                            src="{{ $media['src'] }}#t=0.1" playsinline muted loop preload="metadata"></video>
+                                            src="{{ $media['src'] }}#t=0.1" playsinline muted preload="metadata"></video>
                                         {{-- Clickable Overlay with Play Icon --}}
-                                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 cursor-pointer"
+                                        <div class="absolute inset-0 flex items-center justify-center bg-opacity-20 cursor-pointer transition-opacity duration-300 group-hover:opacity-0"
                                             onclick="openMediaPreview({{ $index }})">
                                             <svg class="w-12 h-12 text-white transition-transform duration-300 opacity-80 drop-shadow-lg group-hover:scale-125"
                                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -54,7 +55,7 @@
                                             </svg>
                                         </div>
                                     @else
-                                        <img class="object-cover w-full h-full cursor-pointer aspect-video transition-transform duration-300 ease-in-out group-hover:scale-110"
+                                        <img class="object-contain w-full h-full cursor-pointer aspect-video transition-transform duration-300 ease-in-out group-hover:scale-110"
                                             src="{{ $media['src'] }}" alt="{{ $media['alt'] }}"
                                             onclick="openMediaPreview({{ $index }})">
                                     @endif
@@ -126,6 +127,11 @@
         let currentIndex = 0;
 
         function openMediaPreview(index) {
+            // サムネイル動画が再生中であれば停止する
+            document.querySelectorAll('.video-thumbnail-container video').forEach(video => {
+                video.pause();
+            });
+
             currentIndex = index;
             updatePreview();
             previewOverlay.style.display = 'flex';
@@ -181,5 +187,25 @@
                 if (e.key === 'ArrowRight') nextMedia();
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoContainers = document.querySelectorAll('.video-thumbnail-container');
+
+            videoContainers.forEach(container => {
+                const video = container.querySelector('video');
+                if (video) {
+                    container.addEventListener('mouseenter', () => {
+                        // モーダルが表示されていないときだけ再生
+                        if (previewOverlay.style.display !== 'flex') {
+                            video.play();
+                        }
+                    });
+                    container.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                }
+            });
+        });
     </script>
 @endpush

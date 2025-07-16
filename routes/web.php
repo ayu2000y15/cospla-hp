@@ -100,6 +100,8 @@ Route::delete('/admin/talent-admin/career/delete', [TalentAdminController::class
 Route::post('/admin/talent-admin/career/reorder', [TalentAdminController::class, 'reorderCareers'])->name('admin.talent.career.reorder');
 Route::post('/admin/talent-admin/career/store-multiple', [TalentAdminController::class, 'storeMultipleCareers'])->name('admin.talent.career.store-multiple');
 
+Route::post('/admin/talent/career-categories/reorder', [TalentAdminController::class, 'reorderCareerCategories'])->name('admin.talent.career.categories.reorder');
+
 //タレントタグ
 Route::post('/admin/talent-admin/tags/update', [TalentAdminController::class, 'updateTalentTags'])->name('admin.talent.tags.update');
 

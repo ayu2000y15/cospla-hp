@@ -134,8 +134,20 @@ class TalentAdminController extends Controller
             ->distinct()->get();
 
         //タレント経歴
-        //タレントが持っている経歴ジャンル
-        $careerCategories = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
+
+        // タレントに紐づく経歴カテゴリを並び順で取得
+        $sortedCategories = $talent->careerCategories;
+        // 全てのカテゴリIDを取得
+        $allCategoryIds = CareerCategory::active()->pluck('CAREER_CATEGORY_ID');
+        // 並び替え済みのカテゴリIDを取得
+        $sortedCategoryIds = $sortedCategories->pluck('CAREER_CATEGORY_ID');
+        // 未設定のカテゴリIDを取得
+        $unCategorizedIds = $allCategoryIds->diff($sortedCategoryIds);
+        // 未設定のカテゴリを取得
+        $unCategorized = CareerCategory::whereIn('CAREER_CATEGORY_ID', $unCategorizedIds)->get();
+        // 結合して最終的なカテゴリリストを作成
+        $careerCategories = $sortedCategories->concat($unCategorized);
+
         //タレント経歴
         if (!Session::has('careerFilter') || Session::get('careerFilter') == 'ALL') {
             $talentCareer = DB::table('talent_careers as tc')
@@ -227,6 +239,31 @@ class TalentAdminController extends Controller
             )
         );
     }
+
+    /**
+     * タレント経歴カテゴリの並び順を更新する
+     */
+    public function reorderCareerCategories(Request $request)
+    {
+        $request->validate([
+            'talent_id' => 'required|integer|exists:talents,TALENT_ID',
+            'order' => 'required|array',
+            'order.*' => 'integer|exists:career_categories,CAREER_CATEGORY_ID',
+        ]);
+
+        $talentId = $request->talent_id;
+
+        foreach ($request->order as $index => $categoryId) {
+            // updateOrCreateで更新または新規作成
+            DB::table('talent_career_category_orders')->updateOrInsert(
+                ['talent_id' => $talentId, 'career_category_id' => $categoryId],
+                ['priority' => $index, 'created_at' => now(), 'updated_at' => now()]
+            );
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'カテゴリの並び順を更新しました。']);
+    }
+
     public function detail(Request $request)
     {
         Session::put('talentId', $request->TALENT_ID);
