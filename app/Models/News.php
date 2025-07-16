@@ -47,7 +47,9 @@ class News extends Model
      */
     public function images()
     {
-        // VIEW_FLG 'S501' をニュース用のメディアとする
-        return $this->hasMany(Image::class, 'NEWS_ID', 'NEWS_ID')->where('VIEW_FLG', 'S501');
+        // ★★★ 並び順の処理をここに追加 ★★★
+        return $this->hasMany(Image::class, 'NEWS_ID', 'NEWS_ID')
+            ->where('VIEW_FLG', 'S501')
+            ->orderBy('PRIORITY', 'asc'); // PRIORITYの昇順で並び替え
     }
 }

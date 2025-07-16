@@ -41,16 +41,18 @@ class NewsAdminController extends Controller
         $filePath = 'img/news/' . $newsId;
         session()->flash('activeTab', 'news-entry');
 
-        if ($uploadedFiles <> null) {
+        if ($uploadedFiles !== null) {
+            $filePath = 'img/news/' . $newsId;
             $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, $newsId, $request->PRIORITY);
-            if ($result['success']) {
-                return redirect()->route('admin', ['tab' => 'news-entry'])
-                    ->with('message', 'ニュースが登録されました');
-            } else {
-                return redirect()->route('admin', ['tab' => 'news-entry'])
-                    ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
+
+            // エラーがあった場合、内容をフラッシュメッセージにセットして前のページに戻る
+            if (!empty($result['errors'])) {
+                // エラーメッセージを改行で連結
+                $errorString = implode('<br>', $result['errors']);
+                return redirect()->back()->withInput()->with('error', $errorString);
             }
         }
+
         return redirect()->route('admin', ['tab' => 'news-entry'])
             ->with('message', 'ニュースが登録されました');
     }
@@ -69,16 +71,18 @@ class NewsAdminController extends Controller
         $filePath = 'img/news/' . $id;
         session()->flash('activeTab', 'news-entry');
 
-        if ($uploadedFiles <> null) {
+        if ($uploadedFiles !== null) {
+            $filePath = 'img/news/' . $id;
             $result = $this->fileUploadService->uploadFiles($uploadedFiles, $filePath, null, $id, $request->PRIORITY);
-            if ($result['success']) {
-                return redirect()->route('admin', ['tab' => 'news-entry'])
-                    ->with('message', 'ニュースが更新されました');
-            } else {
-                return redirect()->route('admin', ['tab' => 'news-entry'])
-                    ->with('error', 'ファイルのアップロードに失敗しました: ' . $result['message']);
+
+            // エラーがあった場合、内容をフラッシュメッセージにセットして前のページに戻る
+            if (!empty($result['errors'])) {
+                // エラーメッセージを改行で連結
+                $errorString = implode('<br>', $result['errors']);
+                return redirect()->back()->withInput()->with('error', 'ファイルのアップロードに失敗しました:' . $errorString);
             }
         }
+
         return redirect()->route('admin', ['tab' => 'news-entry'])
             ->with('message', 'ニュースが更新されました');
     }
@@ -110,8 +114,19 @@ class NewsAdminController extends Controller
     {
         // Eloquentを使用して、必要なカラムのみを明示的に取得する
         $images = Image::where('NEWS_ID', $id)
-            ->select('FILE_NAME', 'FILE_PATH', 'NEWS_ID', 'TALENT_ID') // 必要なカラムを明記
+            ->select('FILE_NAME', 'FILE_PATH', 'NEWS_ID', 'TALENT_ID', 'PRIORITY')
+            ->orderBy('PRIORITY')
             ->get();
+
+        // 各メディアファイルのサイズを取得して追加
+        $images->each(function ($image) {
+            $filePath = $image->FILE_PATH . $image->FILE_NAME;
+            if (Storage::disk('public')->exists($filePath)) {
+                $image->size = Storage::disk('public')->size($filePath);
+            } else {
+                $image->size = 0; // ファイルが存在しない場合
+            }
+        });
 
         return response()->json($images);
     }
@@ -165,5 +180,32 @@ class NewsAdminController extends Controller
         }
 
         $news->tags()->sync($tagIds);
+    }
+
+    /**
+     * ★★★ このメソッドを追記 ★★★
+     * 登録済みメディアの並び順を更新
+     */
+    public function updateOrder(Request $request)
+    {
+        $orderedFilenames = $request->input('order', []);
+
+        if (empty($orderedFilenames)) {
+            return response()->json(['success' => false, 'error' => 'No order data provided.'], 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($orderedFilenames as $priority => $filename) {
+                DB::table('images')
+                    ->where('FILE_NAME', $filename)
+                    ->update(['PRIORITY' => $priority]);
+            }
+            DB::commit();
+            return response()->json(['success' => true, 'message' => '並び順を更新しました。']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'error' => 'データベースエラーが発生しました。', 'details' => $e->getMessage()], 500);
+        }
     }
 }

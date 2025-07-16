@@ -15,78 +15,72 @@ class FileUploadService
             $files = [$files];
         }
 
+        $errors = []; // エラーメッセージを格納する配列
+        $successCount = 0; // 成功したファイルの数をカウント
+
         foreach ($files as $file) {
-            // ファイルが有効かチェック
             if ($file->isValid()) {
-                // 元のファイル名
                 $originalFileName = $file->getClientOriginalName();
-
-                // ファイルの拡張子
-                $extension = $file->getClientOriginalExtension();
-
-                // ファイルのMIMEタイプ
-                $mimeType = $file->getMimeType();
-
-                // ファイルサイズ（バイト）
                 $size = $file->getSize();
+                $maxSize = 50 * 1024 * 1024; // 50MB
 
-                // ★★★ ファイルサイズの制限を50MBに変更 ★★★
-                $maxSize = 50 * 1024 * 1024; // 50MB in bytes
-
+                // ファイルサイズチェック
                 if ($size > $maxSize) {
-                    \Log::warning("ファイルサイズが制限を超えています: {$originalFileName}, サイズ: {$size}");
-                    continue; // 次のファイルへ
+                    $errors[] = "「{$originalFileName}」はサイズ上限(50MB)を超えています。";
+                    Log::warning("ファイルサイズが制限を超えています: {$originalFileName}, サイズ: {$size}");
+                    continue;
                 }
 
-                // ★★★ 許可されるMIMEタイプに動画形式を追加 ★★★
+                $mimeType = $file->getMimeType();
                 $allowedMimeTypes = [
                     'image/jpeg',
                     'image/png',
                     'image/gif',
                     'video/mp4',
-                    'video/quicktime', // .mov ファイル
+                    'video/quicktime',
                     'video/webm'
                 ];
 
+                // MIMEタイプチェック
                 if (!in_array($mimeType, $allowedMimeTypes)) {
-                    \Log::warning("無効なファイルタイプです: {$originalFileName}, タイプ: {$mimeType}");
-                    continue; // 次のファイルへ
+                    $errors[] = "「{$originalFileName}」は許可されていないファイル形式です。";
+                    Log::warning("無効なファイルタイプです: {$originalFileName}, タイプ: {$mimeType}");
+                    continue;
                 }
 
                 try {
-                    // ユニークなIDを生成
+                    $extension = $file->getClientOriginalExtension();
                     $uniqueId = uniqid();
-
-                    // 新しいファイル名を生成（元のファイル名 + ユニークID + 拡張子）
                     $newFileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . $uniqueId . '.' . $extension;
 
-                    // ファイルを保存
-                    $storedPath = $file->storeAs($uploadDir, $newFileName, 'public');
-                    $viewFlg = '00';
-                    $pr = 0;
-                    if ($newsId <> null) {
-                        $viewFlg = 'S501';
-                        $pr = 0;
-                    }
-                    // DBへ保存
+                    $file->storeAs($uploadDir, $newFileName, 'public');
+
                     Image::create([
                         'FILE_NAME' => $newFileName,
                         'FILE_PATH' => 'storage/' . $uploadDir . '/',
                         'TALENT_ID' => $talentId,
                         'NEWS_ID' => $newsId,
-                        'VIEW_FLG' => $viewFlg,
-                        'PRIORITY' => $pr
+                        'VIEW_FLG' => ($newsId !== null) ? 'S501' : '00',
+                        'PRIORITY' => 0
                     ]);
 
-                    \Log::info("ファイルがアップロードされました: 元のファイル名: {$originalFileName}, 新しいファイル名: {$newFileName}, サイズ: {$size}, タイプ: {$mimeType}, 保存先: {$storedPath}");
+                    $successCount++;
                 } catch (\Exception $e) {
-                    \Log::error("ファイルのアップロード中にエラーが発生しました: {$originalFileName}. エラー: " . $e->getMessage());
+                    $errors[] = "「{$originalFileName}」のアップロード中にサーバーエラーが発生しました。";
+                    Log::error("ファイルのアップロード中にエラーが発生しました: {$originalFileName}. エラー: " . $e->getMessage());
                 }
             } else {
-                \Log::warning("無効なファイルです: {$file->getClientOriginalName()}");
+                $errors[] = "無効なファイルが選択されました。";
+                Log::warning("無効なファイルです。");
             }
         }
-        return ['success' => true, 'message' => 'ファイルが正常にアップロードされました。'];
+
+        // 成功メッセージとエラーメッセージを返すように変更
+        return [
+            'success' => $successCount > 0 && empty($errors),
+            'errors' => $errors,
+            'message' => $successCount > 0 ? "{$successCount}件のファイルがアップロードされました。" : ''
+        ];
     }
 
     public function deleteFile($filePath)

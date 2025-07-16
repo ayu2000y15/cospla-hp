@@ -93,14 +93,14 @@
                             </label>
                             <p class="pl-1">またはドラッグ＆ドロップ</p>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF, MP4, MOV up to 10MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, GIF, MP4, MOV up to 50MB</p>
                     </div>
                 </div>
                 <div id="preview-container" class="grid grid-cols-3 gap-4 mt-4 sm:grid-cols-4 md:grid-cols-6"></div>
             </div>
 
             <div id="current-images-section" class="hidden">
-                <label class="block text-sm font-medium text-gray-700">登録済みのメディア</label>
+                <label class="block text-sm font-medium text-gray-700">登録済みのメディア（ドラッグ＆ドロップで並び替え可能）</label>
                 <div id="current-images-container" class="grid grid-cols-3 gap-4 mt-2 sm:grid-cols-4 md:grid-cols-6">
                 </div>
             </div>
@@ -151,6 +151,14 @@
                                     <dt class="sr-only">投稿日</dt>
                                     <dd class="mt-1 text-gray-500 truncate">
                                         {{ \Carbon\Carbon::parse($news->POST_DATE)->format('Y-m-d') }}
+                                    </dd>
+                                    <dt class="sr-only sm:hidden">公開設定</dt>
+                                    <dd class="mt-1 text-gray-500 truncate sm:hidden">
+                                        @if($news->published_status)
+                                            公開中
+                                        @else
+                                            下書き
+                                        @endif
                                     </dd>
                                 </dl>
                             </td>
@@ -229,9 +237,28 @@
     input:checked ~ .block {
         background-color: #4f46e5; /* indigo-600 */
     }
+    /* ドラッグ中のゴースト要素のスタイル */
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #a5b4fc; /* indigo-300 */
+    }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
 <script>
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes'
+
+        const k = 1024
+        const dm = decimals < 0 ? 0 : decimals
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+    }
+
     function setupDragAndDrop(dropZoneId, fileInputId, previewContainerId) {
         const dropZone = document.getElementById(dropZoneId);
         const fileInput = document.getElementById(fileInputId);
@@ -252,18 +279,25 @@
 
         const handleFiles = (files) => {
             previewContainer.innerHTML = '';
-            fileInput.files = files; // Store files in the input
+            fileInput.files = files;
             if (files.length > 0) {
                 for (const file of files) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         const div = document.createElement('div');
-                        div.className = 'relative aspect-square';
+                        div.className = 'relative group aspect-square';
+                        let mediaPreview;
                         if (file.type.startsWith('video/')) {
-                            div.innerHTML = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
+                            mediaPreview = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
                         } else {
-                            div.innerHTML = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
+                            mediaPreview = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
                         }
+                        div.innerHTML = `
+                            ${mediaPreview}
+                            <div class="absolute bottom-0 right-0 px-1 py-0.5 text-xs text-white bg-black bg-opacity-60 rounded-tl-md">
+                                ${formatBytes(file.size)}
+                            </div>
+                        `;
                         previewContainer.appendChild(div);
                     };
                     reader.readAsDataURL(file);
@@ -342,8 +376,6 @@
         adminForm.scrollIntoView({ behavior: 'smooth' });
     }
 
-
-
     function resetForm() {
         adminForm.reset();
         newsIdInput.value = '';
@@ -374,26 +406,47 @@
             if (images.length > 0) {
                 images.forEach(img => {
                     const div = document.createElement('div');
-                    div.className = 'relative group';
-                    const isVideo = ['.mp4', '.mov', '.webm'].some(ext => img.FILE_NAME.toLowerCase().endsWith(ext));
+                    div.className = 'relative group cursor-move';
+                    div.dataset.filename = img.FILE_NAME;
+
+                    const isVideo = ['.mp4', '.mov', 'webm'].some(ext => img.FILE_NAME.toLowerCase().endsWith(ext));
                     let mediaElement;
                     if (isVideo) {
                         mediaElement = `<video src="{{ asset('/') }}${img.FILE_PATH}${img.FILE_NAME}#t=0.1" class="object-contain w-full h-32 bg-black rounded-md" controls playsinline preload="metadata"></video>`;
                     } else {
                         mediaElement = `<img src="{{ asset('/') }}${img.FILE_PATH}${img.FILE_NAME}" class="object-contain w-full h-32 bg-black rounded-md">`;
                     }
+
+                    const fileSizeDisplay = img.size ? `
+                        <div class="absolute bottom-0 right-0 px-1 py-0.5 text-xs text-white bg-black bg-opacity-60 rounded-tl-md">
+                            ${formatBytes(img.size)}
+                        </div>
+                    ` : '';
+
                     div.innerHTML = `
                         ${mediaElement}
+                        ${fileSizeDisplay}
                         <button type="button" onclick="confirmDeleteImage('${img.FILE_NAME}')" class="absolute top-1 right-1 p-0.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
                     `;
                     container.appendChild(div);
                 });
+
+                new Sortable(container, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd: function (evt) {
+                        const items = Array.from(container.children).map(child => child.dataset.filename);
+                        updateMediaOrder(items);
+                    }
+                });
+
             } else {
                 container.innerHTML = '<p class="text-sm text-gray-500 col-span-full">登録済みのメディアはありません。</p>';
             }
         } catch (error) {
+            console.error('Error loading images:', error);
             container.innerHTML = '<p class="text-sm text-red-500 col-span-full">メディアの読み込みに失敗しました。</p>';
         }
     }
@@ -418,6 +471,33 @@
             }
         } catch (error) {
             alert('メディアの削除中にエラーが発生しました。');
+        }
+    }
+
+    async function updateMediaOrder(orderedFilenames) {
+        try {
+            const response = await fetch('{{ route("admin.news.updateOrder") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ order: orderedFilenames })
+            });
+
+            if (!response.ok) {
+                throw new Error('Server responded with an error.');
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                console.log(result.message || '並び順を更新しました。');
+            } else {
+                alert('並び順の更新に失敗しました: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error updating media order:', error);
+            alert('並び順の更新中にエラーが発生しました。');
         }
     }
 </script>
