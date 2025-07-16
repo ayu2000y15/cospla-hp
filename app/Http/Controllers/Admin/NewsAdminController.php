@@ -112,15 +112,16 @@ class NewsAdminController extends Controller
 
     public function getImages($id)
     {
-        // Eloquentを使用して、必要なカラムのみを明示的に取得する
         $images = Image::where('NEWS_ID', $id)
             ->select('FILE_NAME', 'FILE_PATH', 'NEWS_ID', 'TALENT_ID', 'PRIORITY')
             ->orderBy('PRIORITY')
             ->get();
 
-        // 各メディアファイルのサイズを取得して追加
+        // 各メディアファイルのサイズを取得してレスポンスに追加
         $images->each(function ($image) {
-            $filePath = $image->FILE_PATH . $image->FILE_NAME;
+            // 'storage/' を除外して、正しいファイルパスを生成します
+            $filePath = str_replace('storage/', '', $image->FILE_PATH . $image->FILE_NAME);
+
             if (Storage::disk('public')->exists($filePath)) {
                 $image->size = Storage::disk('public')->size($filePath);
             } else {
