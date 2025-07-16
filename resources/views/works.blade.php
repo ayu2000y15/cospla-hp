@@ -13,34 +13,34 @@
 
         <div class="container px-4 mx-auto max-w-6xl">
             <div x-data="{
-                                    isPreviewOpen: false,
-                                    previewImageSrc: '',
-                                    currentImages: [],
-                                    currentImageIndex: 0,
-                                    openPreview(images, index) {
-                                        this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
-                                        this.currentImageIndex = index;
-                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                                        this.isPreviewOpen = true;
-                                        document.body.style.overflow = 'hidden';
-                                    },
-                                    closePreview() {
-                                        this.isPreviewOpen = false;
-                                        document.body.style.overflow = '';
-                                    },
-                                    nextImage() {
-                                        if (this.currentImageIndex < this.currentImages.length - 1) {
-                                            this.currentImageIndex++;
-                                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                                        }
-                                    },
-                                    prevImage() {
-                                        if (this.currentImageIndex > 0) {
-                                            this.currentImageIndex--;
-                                            this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
-                                        }
-                                    }
-                                }" @keydown.escape.window="closePreview()"
+                                                isPreviewOpen: false,
+                                                previewImageSrc: '',
+                                                currentImages: [],
+                                                currentImageIndex: 0,
+                                                openPreview(images, index) {
+                                                    this.currentImages = images.map(img => ({ src: img.src, alt: img.alt }));
+                                                    this.currentImageIndex = index;
+                                                    this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                                    this.isPreviewOpen = true;
+                                                    document.body.style.overflow = 'hidden';
+                                                },
+                                                closePreview() {
+                                                    this.isPreviewOpen = false;
+                                                    document.body.style.overflow = '';
+                                                },
+                                                nextImage() {
+                                                    if (this.currentImageIndex < this.currentImages.length - 1) {
+                                                        this.currentImageIndex++;
+                                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                                    }
+                                                },
+                                                prevImage() {
+                                                    if (this.currentImageIndex > 0) {
+                                                        this.currentImageIndex--;
+                                                        this.previewImageSrc = this.currentImages[this.currentImageIndex].src;
+                                                    }
+                                                }
+                                            }" @keydown.escape.window="closePreview()"
                 class="p-8 my-16 bg-white/60 text-purple-900 rounded-3xl">
 
                 <section class="order-page space-y-12">
@@ -132,13 +132,13 @@
                                     })->toJson();
                                 @endphp
                                 <div class="flex items-center justify-center max-w-4xl gap-2 mx-auto md:gap-4" x-data="{
-                                                activeSlide: 0,
-                                                slideCount: {{ $client->images->count() }},
-                                                interval: null,
-                                                startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
-                                                stopAutoSlide() { clearInterval(this.interval); },
-                                                restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
-                                            }" x-init="startAutoSlide()">
+                                                                                    activeSlide: 0,
+                                                                                    slideCount: {{ $client->images->count() }},
+                                                                                    interval: null,
+                                                                                    startAutoSlide() { if (this.slideCount > 1) { this.interval = setInterval(() => { this.activeSlide = (this.activeSlide + 1) % this.slideCount }, 5000); } },
+                                                                                    stopAutoSlide() { clearInterval(this.interval); },
+                                                                                    restartAutoSlide() { this.stopAutoSlide(); this.startAutoSlide(); }
+                                                                                }" x-init="startAutoSlide()">
 
                                     {{-- 「前へ」ボタン --}}
                                     @if($client->images->count() > 1)
@@ -154,7 +154,7 @@
                                     @endif
 
                                     {{-- 画像とインジケーターのコンテナ --}}
-                                    <div class="flex-grow w-full max-w-3xl">
+                                    <div class="mb-4 flex-grow w-full max-w-3xl">
                                         <div class="relative w-full overflow-hidden bg-transparent rounded-xl">
                                             <div class="w-full aspect-[4/3]">
                                                 @foreach($client->images as $index => $image)
