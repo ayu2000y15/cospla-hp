@@ -75,7 +75,6 @@
 
                                         @php $firstMedia = $item->images->first(); @endphp
 
-                                        {{-- ★★★ ここから修正 ★★★ --}}
                                         {{-- サムネイル領域（常に表示し、レイアウトを固定） --}}
                                         <div
                                             class="relative w-full md:w-48 h-32 flex-shrink-0 rounded-md overflow-hidden bg-gray-200">
@@ -111,8 +110,6 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        {{-- ★★★ ここまで修正 ★★★ --}}
-
 
                                         {{-- テキストコンテンツ --}}
                                         <div class="flex-grow">
