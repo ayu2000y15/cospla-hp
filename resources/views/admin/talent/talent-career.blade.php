@@ -117,7 +117,14 @@
 
     {{-- 3. 登録済み経歴一覧 (カテゴリ別・アコーディオン) --}}
     <div class="pt-8 space-y-4">
-        <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み経歴一覧 (ドラッグ＆ドロップでカテゴリ・経歴の並び替え可能)</h3>
+        <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium leading-6 text-gray-900">登録済み経歴一覧 (ドラッグ＆ドロップでカテゴリ・経歴の並び替え可能)</h3>
+            <div>
+                <button id="save-all-order-btn" type="button" class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-pink-500 hover:bg-pink-600 rounded-md shadow" title="現在の表示順でカテゴリ・経歴を一括登録">
+                    並び順を確定して登録
+                </button>
+            </div>
+        </div>
 
         <div id="category-list" class="space-y-4">
             @forelse($careerCategories as $category)
@@ -301,6 +308,62 @@
 
     if (cancelBtn) {
         cancelBtn.addEventListener('click', resetCareerForm);
+    }
+
+    // 並び順一括登録ボタンの処理
+    const saveAllBtn = document.getElementById('save-all-order-btn');
+    if (saveAllBtn) {
+        saveAllBtn.addEventListener('click', async function () {
+            if (!confirm('表示されているカテゴリと経歴の並び順で一括登録しますか？')) return;
+
+            // 1) カテゴリ順を収集
+            const categoryElems = Array.from(document.querySelectorAll('#category-list > details'));
+            const categoryOrder = categoryElems.map(el => el.dataset.id);
+
+            // 2) 各カテゴリ内の経歴順を収集
+            const perCategoryOrders = {};
+            categoryElems.forEach(el => {
+                const catId = el.dataset.id;
+                const list = el.querySelector('.sortable-list');
+                if (list) {
+                    perCategoryOrders[catId] = Array.from(list.children).map(li => li.dataset.id);
+                } else {
+                    perCategoryOrders[catId] = [];
+                }
+            });
+
+            // 3) サーバへ順序を送信（カテゴリ順 → 各カテゴリの経歴順）
+            try {
+                // カテゴリ順の送信
+                const csrftoken = '{{ csrf_token() }}';
+                const respCat = await fetch('{{ route("admin.talent.career.categories.reorder") }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrftoken },
+                    body: JSON.stringify({ order: categoryOrder, talent_id: '{{ $talent->TALENT_ID }}' })
+                });
+                const dataCat = await respCat.json();
+                if (!respCat.ok || dataCat.status !== 'success') throw new Error('カテゴリ並び替えの保存に失敗しました。');
+
+                // 各カテゴリ内の経歴順を逐次送信
+                for (const catId of Object.keys(perCategoryOrders)) {
+                    const order = perCategoryOrders[catId];
+                    const resp = await fetch('{{ route('admin.talent.career.reorder') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrftoken },
+                        body: JSON.stringify({ order: order })
+                    });
+                    const json = await resp.json();
+                    if (!resp.ok || json.status !== 'success') throw new Error('経歴の並び替え保存に失敗しました。');
+                }
+
+                alert('並び順を保存しました。');
+                // 必要ならページリロードやUI更新を行う
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert(err.message || '保存中にエラーが発生しました。');
+            }
+        });
     }
 </script>
 <script>
