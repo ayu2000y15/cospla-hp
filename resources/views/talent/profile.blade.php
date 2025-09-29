@@ -17,13 +17,19 @@
             <section class="flex flex-col items-center">
 
                 {{-- プロフィール全体を囲むコンテナ --}}
-                <div class="flex flex-col w-full gap-8 md:flex-row">
+                <div class="flex flex-col w-full gap-4 md:flex-row">
 
                     {{-- 左側: 画像 --}}
                     <div class="w-full md:w-1/3">
                         @if($talentImgTop)
-                            <img src="{{ asset($talentImgTop->FILE_PATH . $talentImgTop->FILE_NAME) }}"
-                                 alt="{{ $talent->LAYER_NAME }}" class="object-cover w-full h-auto rounded-lg shadow-lg">
+                            {{-- index と同じ比率ボックス + absolute 画像配置に揃える --}}
+                            <div class="relative w-full mb-4 talent-image-container" style="padding-top: 133.33%;">
+                                <div class="absolute inset-0">
+                                    <img class="absolute inset-0 object-cover w-full h-full p-2.5 transition-opacity duration-500 ease-in-out rounded-2xl "
+                                        src="{{ asset($talentImgTop->FILE_PATH . $talentImgTop->FILE_NAME) }}"
+                                        alt="{{ $talent->LAYER_NAME }}">
+                                </div>
+                            </div>
                         @endif
                     </div>
 

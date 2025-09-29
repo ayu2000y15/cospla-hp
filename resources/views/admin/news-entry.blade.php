@@ -277,71 +277,118 @@
             dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-indigo-500', 'bg-indigo-50'), false);
         });
 
-        // ★★★ ここから handleFiles 関数を修正 ★★★
-        const handleFiles = (files) => {
-            const fileList = Array.from(files);
-            const errors = [];
-            const validFiles = [];
+        // Persistent DataTransfer to keep previously selected files across selections
+        let currentDataTransfer = new DataTransfer();
 
-            // --- クライアントサイドでのバリデーション設定 ---
-            const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-            const ALLOWED_MIME_TYPES = [
-                'image/jpeg', 'image/png', 'image/gif',
-                'video/mp4', 'video/quicktime', 'video/webm'
-            ];
+        const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+        const ALLOWED_MIME_TYPES = [
+            'image/jpeg', 'image/png', 'image/gif',
+            'video/mp4', 'video/quicktime', 'video/webm'
+        ];
 
-            // 1. 全てのファイルに対してバリデーションを実行
-            fileList.forEach(file => {
-                if (file.size > MAX_FILE_SIZE) {
-                    errors.push(`「${file.name}」はサイズ上限(100MB)を超えています。`);
-                } else if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-                    errors.push(`「${file.name}」は許可されていないファイル形式です。`);
-                } else {
-                    validFiles.push(file);
-                }
-            });
-
-            // 2. エラーがあればアラートで通知
-            if (errors.length > 0) {
-                alert("以下のファイルに問題があるため、添付できませんでした:\n\n" + errors.join("\n"));
-            }
-
-            // 3. 有効なファイルのみをプレビューし、フォームの対象にする
+        // Helper: render preview based on currentDataTransfer.files
+        const renderPreview = () => {
             previewContainer.innerHTML = '';
-            const dataTransfer = new DataTransfer();
-
-            validFiles.forEach(file => {
-                dataTransfer.items.add(file); // 有効なファイルだけをDataTransferに追加
-
-                // プレビュー表示
+            Array.from(currentDataTransfer.files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const div = document.createElement('div');
                     div.className = 'relative group aspect-square';
                     let mediaPreview;
-                    if (file.type.startsWith('video/')) {
+                    if (file.type && file.type.startsWith('video/')) {
                         mediaPreview = `<video src="${e.target.result}" class="object-cover w-full h-full rounded-md" muted playsinline controls></video>`;
                     } else {
                         mediaPreview = `<img src="${e.target.result}" class="object-cover w-full h-full rounded-md">`;
                     }
+
+                    // ×ボタン（個別キャンセル）
+                    const removeBtn = `<button type="button" data-index="${index}" aria-label="削除" class="absolute top-1 right-1 p-1 bg-black bg-opacity-60 text-white rounded-full hover:bg-opacity-80">×</button>`;
+
                     div.innerHTML = `
                         ${mediaPreview}
+                        ${removeBtn}
                         <div class="absolute bottom-0 right-0 px-1 py-0.5 text-xs text-white bg-black bg-opacity-60 rounded-tl-md">
                             ${formatBytes(file.size)}
                         </div>
                     `;
+
+                    // click handler for remove button
+                    div.querySelector('button[data-index]')?.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        const idx = Number(ev.currentTarget.dataset.index);
+                        removeFileByIndex(idx);
+                    });
+
                     previewContainer.appendChild(div);
                 };
                 reader.readAsDataURL(file);
             });
-
-            // 最終的に有効なファイルリストをinput要素に設定
-            fileInput.files = dataTransfer.files;
         };
+
+        // Remove file from DataTransfer by index and re-render
+        const removeFileByIndex = (index) => {
+            const dt = new DataTransfer();
+            Array.from(currentDataTransfer.files).forEach((f, i) => {
+                if (i !== index) dt.items.add(f);
+            });
+            currentDataTransfer = dt;
+            fileInput.files = currentDataTransfer.files;
+            renderPreview();
+        };
+
+        // Add new files to the persistent DataTransfer, avoiding duplicates
+        const handleFiles = (files) => {
+            const fileList = Array.from(files || []);
+            const errors = [];
+
+            fileList.forEach(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    errors.push(`「${file.name}」はサイズ上限(100MB)を超えています。`);
+                    return;
+                }
+                if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+                    errors.push(`「${file.name}」は許可されていないファイル形式です。`);
+                    return;
+                }
+
+                // 重複チェック（名前 + サイズ + lastModified）
+                const exists = Array.from(currentDataTransfer.files).some(f => (
+                    f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+                ));
+
+                if (!exists) {
+                    currentDataTransfer.items.add(file);
+                }
+            });
+
+            if (errors.length > 0) {
+                alert("以下のファイルに問題があるため、添付できませんでした:\n\n" + errors.join("\n"));
+            }
+
+            // Apply to the real file input and update preview
+            fileInput.files = currentDataTransfer.files;
+            renderPreview();
+        };
+
+        // Expose clear function so other code (reset/edit) can clear selections
+        const clearFiles = () => {
+            currentDataTransfer = new DataTransfer();
+            fileInput.files = currentDataTransfer.files;
+            previewContainer.innerHTML = '';
+        };
+
+        // Expose helpers globally for reset/editItem to call
+        window.addNewsFiles = handleFiles;
+        window.clearNewsFiles = clearFiles;
+
         // ★★★ ここまで handleFiles 関数を修正 ★★★
 
-        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
-        fileInput.addEventListener('change', e => handleFiles(e.target.files), false);
+        dropZone.addEventListener('drop', e => {
+            handleFiles(e.dataTransfer.files);
+        }, false);
+        fileInput.addEventListener('change', e => {
+            handleFiles(e.target.files);
+        }, false);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -405,8 +452,9 @@
         adminForm.action = `{{ url('admin/news') }}/${item.NEWS_ID}`;
 
         submitBtn.textContent = '更新';
-        document.getElementById('preview-container').innerHTML = '';
-        loadCurrentImages(item.NEWS_ID);
+    // 保持しているファイル選択をクリアしてから、既存のメディアを読み込む
+    if (window.clearNewsFiles) window.clearNewsFiles();
+    loadCurrentImages(item.NEWS_ID);
 
         adminForm.scrollIntoView({ behavior: 'smooth' });
     }
@@ -422,7 +470,8 @@
         toggle.dispatchEvent(new Event('change'));
 
         document.getElementById('tags-input').value = '';
-        document.getElementById('preview-container').innerHTML = '';
+        // clear persistent file selection and previews
+        if (window.clearNewsFiles) window.clearNewsFiles();
         document.getElementById('current-images-section').classList.add('hidden');
         document.getElementById('current-images-container').innerHTML = '';
     }

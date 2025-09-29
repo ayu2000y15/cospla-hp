@@ -76,7 +76,7 @@ class AdminController extends Controller
         //問い合わせカテゴリ登録・削除
         $contactList = ContactCategory::all()->sortBy('CONTACT_CATEGORY_ID');
         //ニュース登録・変更
-        $newsList = News::with('tags')->orderBy('POST_DATE', 'desc')->get();
+        $newsList = News::with('tags')->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
         $newsImgList = Image::whereRaw('NEWS_ID is not null')->orderBy('NEWS_ID')->orderBy('PRIORITY')->get();
 
         // $newsList = DB::table('news as n')

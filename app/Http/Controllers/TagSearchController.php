@@ -29,7 +29,7 @@ class TagSearchController extends Controller
             ->get();
 
         // タグに紐づくお知らせを新しい順に取得
-        $news = $tag->news()->orderBy('POST_DATE', 'desc')->get();
+        $news = $tag->news()->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
 
         // 共通のビューデータを取得
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();

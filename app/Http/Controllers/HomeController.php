@@ -27,7 +27,6 @@ class HomeController extends Controller
             ->whereRaw('img.PRIORITY > 0')
             ->where('t.DEL_FLG', '0')
             ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
-            ->where('t.SPARE1', '1')
             ->orderBy('t.PRIORITY', 'asc')
             ->take(4)->get();
 
@@ -40,7 +39,7 @@ class HomeController extends Controller
             ->orderByRaw('PRIORITY = 0')
             ->orderBy('PRIORITY')->get();
         $slidesCnt = $slides->count();
-        $newsTitle = News::active()->where('published_status', true)->orderBy('POST_DATE', 'desc')->take(6)->get();
+        $newsTitle = News::active()->where('published_status', true)->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->take(6)->get();
 
         $topImg = Image::where('VIEW_FLG', 'S204')->active()->visible()->get();
         $backImg = Image::where('VIEW_FLG', 'S001')->active()->visible()->first();

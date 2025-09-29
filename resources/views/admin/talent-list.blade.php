@@ -21,7 +21,10 @@
 </form>
 
 <p class="mt-2 text-sm text-gray-500">ドラッグ＆ドロップでタレントの表示順を変更できます。<br>
-    タレント詳細にて、写真の登録を行わないとホームページにタレント情報が掲載されません。
+    タレント詳細にて、写真の登録を行わないとホームページにタレント情報が掲載されません。<br>
+    写真は左が初期表示、右が切り替え後の表示です。<br>
+    グレーは画像未登録を示します。<br>
+    右左どちらも写真を登録しないとHPに掲載されません。
 </p>
 
 {{-- タレント一覧テーブル --}}
@@ -34,11 +37,17 @@
                         <th scope="col" class="relative px-7 sm:w-12 sm:px-6">
                             {{-- Checkbox --}}
                         </th>
-                        {{-- ★★★ このヘッダーを追記 ★★★ --}}
-                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 w-12">
+                        {{-- ドラッグハンドル列 --}}
+                        <th scope="col"
+                            class="col-span-2 y-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 w-6">
+
                         </th>
-                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">表示順</th>
-                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 w-6"></th>
+                        {{-- サムネイル列 --}}
+                        <th scope="col" class="py-3.5 pl-4 pr-6 text-left text-sm font-semibold text-gray-900 w-20">
+                            写真
+                        </th>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 ">
                             レイヤーネーム</th>
                         <th scope="col"
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">在籍状況
@@ -55,14 +64,42 @@
                                     class="talent-checkbox absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     form="bulkUpdateTalentForm">
                             </td>
+                            {{-- ドラッグハンドル --}}
                             <td class="whitespace-nowrap px-3 py-4 text-center text-gray-400">
                                 <span class="drag-handle cursor-move text-xl text-gray-400 hover:text-gray-600">⠿</span>
                             </td>
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">
+                            {{-- 表示順 (No.) --}}
+                            <td class="whitespace-nowrap px-3 py-4 pr-3 text-sm text-gray-500 pl-0">
                                 {{ $loop->iteration }}
                             </td>
-                            <td
-                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 cursor-pointer">
+                            {{-- サムネイル表示（存在する場合のみ）および VIEW_FLG '01' '02' のプレビュー --}}
+                            <td class="whitespace-nowrap px-3 py-4 text-center">
+                                @php $firstImg = $talent->images->first(); @endphp
+                                @php
+                                    $view01 = $talent->images->where('VIEW_FLG', '01')->first();
+                                    $view02 = $talent->images->where('VIEW_FLG', '02')->first();
+                                @endphp
+                                <div class="flex items-center justify-center gap-2">
+
+                                    {{-- VIEW_FLG 01 / 02 の小プレビュー --}}
+                                    <div class="flex items-center gap-1">
+                                        @if($view01)
+                                            <img src="{{ asset($view01->FILE_PATH . $view01->FILE_NAME) }}" alt="view01"
+                                                title="VIEW 01" class="w-6 h-6 object-cover rounded-full border">
+                                        @else
+                                            <span class="w-6 h-6 rounded-full bg-gray-600 inline-block"></span>
+                                        @endif
+
+                                        @if($view02)
+                                            <img src="{{ asset($view02->FILE_PATH . $view02->FILE_NAME) }}" alt="view02"
+                                                title="VIEW 02" class="w-6 h-6 object-cover rounded-full border">
+                                        @else
+                                            <span class="w-6 h-6 rounded-full bg-gray-600 inline-block"></span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900  cursor-pointer">
                                 {{ $talent->LAYER_NAME }}
                                 <dl class="font-normal md:hidden">
                                     <dt class="sr-only">在籍状況</dt>
@@ -104,7 +141,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-500">
+                            <td colspan="8" class="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-500">
                                 タレントはまだ登録されていません。
                             </td>
                         </tr>
@@ -202,7 +239,7 @@
                             // 並び替え後にNo.を再採番する
                             const rows = tbody.querySelectorAll('tr');
                             rows.forEach((row, index) => {
-                                // 3番目のセル(No.列)のテキストを更新
+                                // 3番目のセル(No.列)のテキストを更新（ドラッグハンドルを先頭に移動したためインデックスを調整）
                                 row.cells[2].textContent = index + 1;
                             });
                         }).catch(() => {

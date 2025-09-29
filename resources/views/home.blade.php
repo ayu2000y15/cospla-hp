@@ -58,9 +58,11 @@
                                         {{-- ボタン化してフォームを送信 --}}
                                         <button type="submit"
                                             class="p-0 text-left bg-transparent border-none cursor-pointer group">
-                                            <div class="overflow-hidden rounded-lg">
-                                                <img style="background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(216, 236, 255, 1) 100%, rgba(149, 233, 243, 1));"
-                                                    class="w-full h-auto object-cover mb-2 rounded-lg p-2.5 max-w-[180px] sm:max-w-none sm:w-48 sm:h-60 transition-transform duration-300 ease-in-out group-hover:scale-105"
+                                            {{-- 固定サイズのラッパーで幅・高さを統一（モバイル: w-40 h-48、sm以上: w-48 h-60） --}}
+                                            <div style="background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(216, 236, 255, 1) 100%, rgba(149, 233, 243, 1));"
+                                                class="overflow-hidden rounded-lg p-2.5 w-40 h-48 sm:w-48 sm:h-60 max-w-[180px] transition-transform duration-300 ease-in-out group-hover:scale-105">
+                                                <img
+                                                    class="w-full h-full object-cover rounded-lg"
                                                     src="{{ asset($t->FILE_PATH . $t->FILE_NAME) }}" alt="タレント {{ $t->ALT }}">
                                             </div>
                                             <p class="mt-1 text-center font-semibold">{{ $t->LAYER_NAME }}</p>

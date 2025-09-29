@@ -20,7 +20,7 @@ class NewsController extends Controller
         $sns = Company::first();
 
         // すべてのニュースを投稿日の降順で取得
-        $newsItems = News::with('tags')->where('published_status', true)->orderBy('POST_DATE', 'desc')->get();
+        $newsItems = News::with('tags')->where('published_status', true)->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
 
         return view('news.index', compact('newsItems', 'topImg', 'backImg', 'logoImg', 'previewImg', 'sns'));
     }
