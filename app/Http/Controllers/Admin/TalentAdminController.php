@@ -168,7 +168,8 @@ class TalentAdminController extends Controller
                 ->orderByRaw("cc.CAREER_CATEGORY_ID")
                 ->orderByRaw('tc.SPARE1 is null')
                 ->orderByRaw('tc.SPARE1 = 0')
-                ->orderByRaw('LENGTH(tc.SPARE1), tc.SPARE1')
+                // 数値としてソートするために CAST を使用
+                ->orderByRaw('CAST(tc.SPARE1 AS SIGNED) ASC')
                 ->orderByDesc('tc.ACTIVE_DATE')
                 ->orderBy('tc.CAREER_ID')
                 ->get();

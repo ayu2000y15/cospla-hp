@@ -129,7 +129,12 @@
         <div id="category-list" class="space-y-4">
             @forelse($careerCategories as $category)
                 @php
-                    $careersInCategory = $talentCareer->where('CAREER_CATEGORY_ID', $category->CAREER_CATEGORY_ID)->sortBy('SPARE1');
+                    // 数値として比較するため、NULLは大きな値にして数値キャストでソート
+                    $careersInCategory = $talentCareer->where('CAREER_CATEGORY_ID', $category->CAREER_CATEGORY_ID)
+                        ->sortBy(function($c) {
+                            if (is_null($c->SPARE1) || $c->SPARE1 === '') return PHP_INT_MAX;
+                            return (int)$c->SPARE1;
+                        });
                 @endphp
 
                 @if($careersInCategory->isNotEmpty())

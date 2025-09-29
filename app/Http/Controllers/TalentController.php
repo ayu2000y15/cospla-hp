@@ -80,9 +80,9 @@ class TalentController extends Controller
         $careerCategory = $orderedCategories->concat($unOrderedCategories);
 
         $talentCareer = TalentCareer::where('TALENT_ID', $request['id'])
-            // 1. SPARE1 (優先度) が NULL でないものを先に、昇順で並べる
+            // 1. SPARE1 (優先度) が NULL でないものを先に、数値として昇順で並べる
             // 2. 次に ACTIVE_DATE (活動日) の降順で並べる
-            ->orderByRaw('SPARE1 IS NULL, SPARE1 ASC')
+            ->orderByRaw('SPARE1 IS NULL, CAST(SPARE1 AS SIGNED) ASC')
             ->orderBy('ACTIVE_DATE', 'desc')
             ->get();
         $topImg = Image::where('VIEW_FLG', 'S103')->active()->visible()->first();
