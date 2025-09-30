@@ -24,7 +24,6 @@ class HomeController extends Controller
             )
             ->join('talents as t', 't.TALENT_ID', '=', 'img.TALENT_ID')
             ->where('VIEW_FLG', '01')
-            ->whereRaw('img.PRIORITY > 0')
             ->where('t.DEL_FLG', '0')
             ->whereRaw('t.RETIREMENT_DATE > CURDATE()')
             ->orderBy('t.PRIORITY', 'asc')
