@@ -3,6 +3,20 @@
 @section('title', 'TALENT - コスプラットフォーム株式会社')
 
 @section('content')
+    <style>
+        /* ページ全体のスムーズスクロール */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 横スクロールのギャラリーも滑らかに */
+        .photos-grid,
+        .photos-slider-container,
+        .photos-info {
+            scroll-behavior: smooth;
+        }
+    </style>
+
     <main class="pt-16">
         <section class="relative h-[300px] bg-cover bg-center pt-16"
             style="background-image: url('{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}')">

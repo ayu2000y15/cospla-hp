@@ -4,6 +4,16 @@
 
 @section('content')
 <main class="pt-16">
+    <style>
+        /* ページ全体のスムーズスクロール */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* 画像ギャラリーやモーダルでのスクロールも滑らかに */
+        .photos-grid, .photos-slider-container, #preview-overlay {
+            scroll-behavior: smooth;
+        }
+    </style>
     <section class="relative h-[300px] bg-cover bg-center"
              style="background-image: url('{{ asset($topImg->FILE_PATH . $topImg->FILE_NAME) }}')">
     </section>
