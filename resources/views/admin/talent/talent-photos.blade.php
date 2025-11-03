@@ -11,6 +11,7 @@
             @csrf
             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
             <input type="hidden" name="LAYER_NAME" value="{{ $talent->LAYER_NAME }}">
+            <input type="hidden" name="activeTab" :value="activeTab">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">画像ファイル (複数選択可)</label>
@@ -75,6 +76,7 @@
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                                        <input type="hidden" name="activeTab" :value="activeTab">
                                         <input type="hidden" name="FILE_NAME" value="{{ $img->FILE_NAME }}">
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600">表示先</label>
@@ -118,6 +120,7 @@
     @csrf
     @method('DELETE')
     <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+    <input type="hidden" name="activeTab" value="photos">
     <input type="hidden" name="FILE_NAME" id="individualPhotoNameToDelete">
 </form>
 

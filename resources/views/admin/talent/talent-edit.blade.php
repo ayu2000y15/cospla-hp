@@ -4,6 +4,7 @@
         @csrf
         @method('PUT')
         <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+        <input type="hidden" name="activeTab" :value="activeTab">
 
         {{-- 基本情報セクション --}}
         <div>

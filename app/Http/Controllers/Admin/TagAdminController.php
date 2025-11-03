@@ -13,7 +13,8 @@ class TagAdminController extends Controller
 {
     public function entry()
     {
-        $tagList = Tag::all()->sortBy('TAG_ID');
+        // 並び順カラムがあればそれで並べる
+        $tagList = Tag::orderBy('SORT_ORDER')->get();
         return view('admin', compact('tagList'));
     }
 
@@ -35,6 +36,27 @@ class TagAdminController extends Controller
 
         return redirect()->route('admin', ['tab' => 'categories'])
             ->with('message', '新しいタグが追加されました。');
+    }
+
+    /**
+     * タグの並び順を更新する
+     * 期待する入力: { order: [TAG_ID, TAG_ID, ...] }
+     */
+    public function updateOrder(Request $request)
+    {
+        $data = $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'integer',
+        ]);
+
+        $order = $data['order'];
+
+        foreach ($order as $index => $tagId) {
+            // indexは0始まりのため、1を足すかそのままでも良い
+            Tag::where('TAG_ID', $tagId)->update(['SORT_ORDER' => $index]);
+        }
+
+        return response()->json(['success' => true, 'message' => '並び順を保存しました。']);
     }
 
     public function delete($id)

@@ -22,7 +22,10 @@ class NewsAdminController extends Controller
 
     public function entry()
     {
-        $newsList = News::with(['tags', 'images'])->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
+        // tags を SORT_ORDER 順で取得する
+        $newsList = News::with(['tags' => function ($q) {
+            $q->orderBy('SORT_ORDER');
+        }, 'images'])->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
         session()->flash('activeTab', 'news-entry');
         return view('admin', compact('newsList',));
     }

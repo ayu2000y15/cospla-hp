@@ -25,6 +25,18 @@ class TalentAdminController extends Controller
     {
         $this->fileUploadService = $fileUploadService;
     }
+    /**
+     * リクエストに含まれる 'activeTab' または 'tab' をセッションに永続化する
+     * これによりフォーム送信後のリダイレクトで元のタブが開いたままになる
+     */
+    private function persistActiveTab(Request $request)
+    {
+        if ($request->has('activeTab')) {
+            Session::put('activeTabT', $request->input('activeTab'));
+        } elseif ($request->has('tab')) {
+            Session::put('activeTabT', $request->input('tab'));
+        }
+    }
     public function list()
     {
         $talentList = Talent::all()->sortByDesc('TALENT_ID');
@@ -217,7 +229,7 @@ class TalentAdminController extends Controller
             $tagItem[] = $tag->TAG_ID;
         }
 
-        $allTags = Tag::orderBy('TAG_NAME')->get();
+        $allTags = Tag::orderBy('SORT_ORDER')->get();
 
         //ロゴ
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
@@ -289,6 +301,7 @@ class TalentAdminController extends Controller
     // タレント情報編集画面を表示
     public function edit(Request $request)
     {
+        $this->persistActiveTab($request);
         $talent = Talent::where('TALENT_ID', $request->TALENT_ID)->first();
         $talentInfoCtl = TalentInfoControl::where('TALENT_ID', $request->TALENT_ID)->first();
         $retirementDate = '2099-01-01';
@@ -374,6 +387,7 @@ class TalentAdminController extends Controller
     // タレント写真をアップロード
     public function uploadPhotos(Request $request)
     {
+        $this->persistActiveTab($request);
         $uploadedFiles = $request->file('photos');
         $filePath = 'img/' . $request->TALENT_ID . '_' . $request->LAYER_NAME;
 
@@ -391,6 +405,7 @@ class TalentAdminController extends Controller
     // タレント写真の表示設定を更新
     public function updatePhoto(Request $request)
     {
+        $this->persistActiveTab($request);
         $photo = Image::where('TALENT_ID', $request->TALENT_ID)
             ->where('FILE_NAME', $request->FILE_NAME);
 
@@ -407,6 +422,7 @@ class TalentAdminController extends Controller
     // タレント写真を削除
     public function deletePhoto(Request $request)
     {
+        $this->persistActiveTab($request);
         $img = Image::where('TALENT_ID', $request->TALENT_ID)
             ->where('FILE_NAME', $request->FILE_NAME)->first();
         session()->flash('activeTabT', 'photos');
@@ -425,6 +441,7 @@ class TalentAdminController extends Controller
     //タレント写真を一括変更
     public function bulkUpdatePhoto(Request $request)
     {
+        $this->persistActiveTab($request);
         foreach ($request->SELECTED_PHOTOS as $photo) {
             $img = Image::where('FILE_NAME', $photo);
             $img->update([
@@ -449,6 +466,7 @@ class TalentAdminController extends Controller
 
     public function storeCareer(Request $request)
     {
+        $this->persistActiveTab($request);
         $validatedData = $request->validate([
             'TALENT_ID' => 'required|integer',
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
@@ -474,6 +492,7 @@ class TalentAdminController extends Controller
     // タレント経歴を更新
     public function updateCareer(Request $request)
     {
+        $this->persistActiveTab($request);
         $validatedData = $request->validate([
             'CAREER_CATEGORY_ID' => 'required|exists:career_categories,CAREER_CATEGORY_ID',
             'CONTENT' => 'required|string',
@@ -495,6 +514,7 @@ class TalentAdminController extends Controller
     // タレント経歴を削除
     public function deleteCareer(Request $request)
     {
+        $this->persistActiveTab($request);
         $career = TalentCareer::where('CAREER_ID', $request->CAREER_ID);
         $career->delete();
 
@@ -530,6 +550,7 @@ class TalentAdminController extends Controller
      */
     public function storeMultipleCareers(Request $request)
     {
+        $this->persistActiveTab($request);
         $request->validate([
             'TALENT_ID' => 'required|integer|exists:talents,TALENT_ID',
             'CAREER_CATEGORY_ID' => 'required|integer|exists:career_categories,CAREER_CATEGORY_ID',
@@ -565,6 +586,7 @@ class TalentAdminController extends Controller
      */
     public function updateTalentTags(Request $request)
     {
+        $this->persistActiveTab($request);
         $request->validate([
             'TALENT_ID' => 'required|integer|exists:talents,TALENT_ID',
             'tags' => 'nullable|string',
@@ -596,9 +618,35 @@ class TalentAdminController extends Controller
     }
 
 
+    /**
+     * タレントに紐づくタグの並び順を更新する
+     * 保存先: talent_tags.SPARE1 を優先度として使用
+     */
+    public function reorderTalentTags(Request $request)
+    {
+        $request->validate([
+            'TALENT_ID' => 'required|integer|exists:talents,TALENT_ID',
+            'order' => 'required|array',
+            'order.*' => 'integer|exists:tags,TAG_ID',
+        ]);
+
+        $talentId = $request->input('TALENT_ID');
+
+        foreach ($request->input('order') as $index => $tagId) {
+            // 存在する pivot レコードを更新
+            \App\Models\TalentTag::where('TALENT_ID', $talentId)
+                ->where('TAG_ID', $tagId)
+                ->update(['SPARE1' => $index]);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'タグの並び順を更新しました。']);
+    }
+
+
     // タレント退職処理
     public function retire(Request $request)
     {
+        $this->persistActiveTab($request);
         $validatedData = $request->validate([
             'RETIREMENT_DATE' => 'required|date',
         ]);

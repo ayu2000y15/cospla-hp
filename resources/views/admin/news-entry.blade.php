@@ -60,15 +60,26 @@
 
                 <div class="mt-2">
                     <h4 class="text-xs font-medium text-gray-600">既存のタグ</h4>
-                    <p class="text-xs text-gray-500">クリックしてタグを追加できます。</p>
-                    <div id="existing-tags-container" class="flex flex-wrap gap-2 mt-1">
-                        @foreach($tagList as $tag)
-                            <button type="button"
-                                class="existing-tag-btn px-2 py-1 text-xs font-medium text-white rounded-full shadow-sm"
-                                style="background-color: {{ $tag->TAG_COLOR }};" data-tag-name="{{ $tag->TAG_NAME }}">
-                                #{{ $tag->TAG_NAME }}
-                            </button>
-                        @endforeach
+                    <p class="text-xs text-gray-500">クリックしてタグを追加できます。ドラッグで並び替え、並び順を保存できます。</p>
+
+                    <div class="mt-1">
+                        <ul id="all-tags-list" class="mt-2 space-y-2 p-3 bg-gray-50 rounded-md border">
+                            @foreach($tagList as $tag)
+                                <li data-id="{{ $tag->TAG_ID }}" data-tag-name="{{ $tag->TAG_NAME }}" class="existing-tag-btn flex items-center justify-between gap-2 px-2 py-1 rounded shadow-sm">
+                                    <span class="drag-handle cursor-move text-gray-500 mr-2" title="ドラッグ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M7 4a1 1 0 112 0 1 1 0 11-2 0zM7 8a1 1 0 112 0 1 1 0 11-2 0zM7 12a1 1 0 112 0 1 1 0 11-2 0zM11 4a1 1 0 112 0 1 1 0 11-2 0zM11 8a1 1 0 112 0 1 1 0 11-2 0zM11 12a1 1 0 112 0 1 1 0 11-2 0z" />
+                                        </svg>
+                                    </span>
+                                    <div class="flex items-center gap-2 cursor-pointer all-tag-label flex-1">
+                                        <span class="px-2 py-1 text-xs font-medium text-white rounded-full" style="background-color: {{ $tag->TAG_COLOR }};">#{{ $tag->TAG_NAME }}</span>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="mt-3">
+                            <button id="save-all-tags-order" type="button" class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">順序を保存</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,7 +222,7 @@
                                 </div>
                             </td>
                             <td class="py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                <button onclick='editItem({!! json_encode($news->load('tags')) !!})'
+                                <button onclick='editItem({!! json_encode($news) !!})'
                                     class="text-indigo-600 hover:text-indigo-900">編集</button>
                                 <form action="{{ route('admin.news.delete', $news->NEWS_ID) }}" method="POST"
                                     class="inline ml-4" onsubmit="return confirm('本当に削除しますか？');">
@@ -241,6 +252,9 @@
     .sortable-ghost {
         opacity: 0.4;
         background-color: #a5b4fc; /* indigo-300 */
+    }
+    .drag-handle {
+        cursor: move;
     }
 </style>
 
@@ -395,21 +409,53 @@
         setupDragAndDrop('drop-zone', 'photo-upload', 'preview-container');
 
         const tagsInput = document.getElementById('tags-input');
-        const existingTagsContainer = document.getElementById('existing-tags-container');
+        const allTagsList = document.getElementById('all-tags-list');
+        const saveAllTagsOrderBtn = document.getElementById('save-all-tags-order');
 
-        if (tagsInput && existingTagsContainer) {
-            existingTagsContainer.addEventListener('click', function (e) {
-                if (e.target.classList.contains('existing-tag-btn')) {
-                    const tagName = e.target.dataset.tagName;
-                    let currentTags = tagsInput.value
-                        .split(',')
-                        .map(t => t.trim())
-                        .filter(t => t.length > 0);
+        if (tagsInput && allTagsList) {
+            // クリックイベントはイベントデリゲーションで処理（ハンドルクリックは無視）
+            allTagsList.addEventListener('click', function (e) {
+                const li = e.target.closest('.existing-tag-btn');
+                if (!li) return;
 
-                    if (!currentTags.includes(tagName)) {
-                        currentTags.push(tagName);
-                        tagsInput.value = currentTags.join(', ');
+                if (e.target.closest('.drag-handle')) return;
+
+                const tagName = li.dataset.tagName;
+                let currentTags = tagsInput.value
+                    .split(',')
+                    .map(t => t.trim())
+                    .filter(t => t.length > 0);
+
+                if (!currentTags.includes(tagName)) {
+                    currentTags.push(tagName);
+                    tagsInput.value = currentTags.join(', ');
+                }
+            });
+        }
+
+        if (allTagsList) {
+            new Sortable(allTagsList, { animation: 150, handle: '.drag-handle', ghostClass: 'sortable-ghost' });
+        }
+
+        if (saveAllTagsOrderBtn && allTagsList) {
+            saveAllTagsOrderBtn.addEventListener('click', async function () {
+                const order = Array.from(allTagsList.querySelectorAll('li')).map(li => li.dataset.id);
+                try {
+                    const resp = await fetch('{{ route("admin.tags.reorder") }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ order })
+                    });
+                    if (!resp.ok) throw new Error('サーバーエラー');
+                    const json = await resp.json();
+                    if (json.success) {
+                        alert('タグの並び順を保存しました。');
+                    } else {
+                        alert('保存に失敗しました: ' + (json.message || json.error || '不明なエラー'));
                     }
+                } catch (err) {
+                    console.error(err);
+                    alert('並び順の保存中にエラーが発生しました。コンソールを確認してください。');
                 }
             });
         }

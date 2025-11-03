@@ -19,8 +19,10 @@ class NewsController extends Controller
 
         $sns = Company::first();
 
-        // すべてのニュースを投稿日の降順で取得
-        $newsItems = News::with('tags')->where('published_status', true)->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
+        // すべてのニュースを投稿日の降順で取得（tags は SORT_ORDER 順で取得）
+        $newsItems = News::with(['tags' => function ($q) {
+            $q->orderBy('SORT_ORDER');
+        }])->where('published_status', true)->orderBy('POST_DATE', 'desc')->orderBy('NEWS_ID', 'desc')->get();
 
         return view('news.index', compact('newsItems', 'topImg', 'backImg', 'logoImg', 'previewImg', 'sns'));
     }
@@ -32,7 +34,10 @@ class NewsController extends Controller
         $logoImg = Image::where('VIEW_FLG', 'S999')->active()->visible()->first();
         $sns = Company::first();
 
-        $newsItem = News::with(['images', 'tags'])->where('published_status', true)->findOrFail($id);
+        // 画像はそのまま、タグは SORT_ORDER 順で取得する
+        $newsItem = News::with(['images', 'tags' => function ($q) {
+            $q->orderBy('SORT_ORDER');
+        }])->where('published_status', true)->findOrFail($id);
 
         // --- ここからが追加・変更箇所 ---
         $videoExtensions = ['mp4', 'mov', 'webm'];

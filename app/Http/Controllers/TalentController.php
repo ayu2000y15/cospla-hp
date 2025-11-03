@@ -60,7 +60,7 @@ class TalentController extends Controller
             )
             ->join('tags as tag', 't.TAG_ID', '=', 'tag.TAG_ID')
             ->where('t.TALENT_ID', $request['id'])
-            ->orderBy('tag.TAG_ID')
+            ->orderBy('tag.SORT_ORDER')
             ->get();
 
         $orderedCategories = $talent->careerCategories;

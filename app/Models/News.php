@@ -39,7 +39,9 @@ class News extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'news_tags', 'news_id', 'tag_id');
+        // デフォルトでタグを SORT_ORDER の昇順で返すようにする
+        return $this->belongsToMany(Tag::class, 'news_tags', 'news_id', 'tag_id')
+            ->orderBy('SORT_ORDER');
     }
 
     /**

@@ -105,6 +105,9 @@ Route::post('/admin/talent/career-categories/reorder', [TalentAdminController::c
 //タレントタグ
 Route::post('/admin/talent-admin/tags/update', [TalentAdminController::class, 'updateTalentTags'])->name('admin.talent.tags.update');
 
+// タレント個別タグの並び替え保存
+Route::post('/admin/talent-admin/tags/reorder', [TalentAdminController::class, 'reorderTalentTags'])->name('admin.talent.tags.reorder');
+
 //タレント退職
 Route::put('/admin/talent-admin/retire', [TalentAdminController::class, 'retire'])->name('admin.talent.retire');
 
@@ -143,6 +146,8 @@ Route::get('/admin/tag', [TagAdminController::class, 'entry'])->name('admin.tag.
 Route::post('/admin/tag', [TagAdminController::class, 'store'])->name('admin.tag.store');
 Route::delete('/admin/tag/{id}', [TagAdminController::class, 'delete'])->name('admin.tag.delete');
 Route::post('/admin/tags/{tag}/update-color', [TagAdminController::class, 'updateColor'])->name('admin.tags.updateColor');
+// タグの順序保存
+Route::post('/admin/tags/reorder', [TagAdminController::class, 'updateOrder'])->name('admin.tags.reorder');
 
 //会社情報・問い合わせメール管理
 Route::post('/admin/company/mail', [CompanyAdminController::class, 'mail'])->name('admin.company.mail');

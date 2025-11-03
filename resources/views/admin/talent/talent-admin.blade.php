@@ -5,7 +5,8 @@
     Alpine.jsのx-dataで、セッションから 'activeTabT' の値を取得します。
     セッションに値がなければ、デフォルトで 'edit' タブを開きます。
     --}}
-    <div x-data="{ activeTab: '{{ session('activeTabT', 'edit') }}' }">
+    <div x-data="{ activeTab: (sessionStorage.getItem('talent_active_tab_{{ $talent->TALENT_ID }}') || '{{ session('activeTabT', 'edit') }}') }"
+        x-init="$watch('activeTab', value => sessionStorage.setItem('talent_active_tab_{{ $talent->TALENT_ID }}', value))">
         <div class="sm:flex sm:items-center sm:justify-between pb-6 border-b border-gray-200">
             <div>
                 <h2 class="text-2xl font-semibold text-gray-900">タレント詳細設定</h2>

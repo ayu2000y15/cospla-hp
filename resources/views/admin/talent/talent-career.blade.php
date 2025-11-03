@@ -8,6 +8,7 @@
         <form :action="formAction" method="POST" class="mt-6 space-y-6" onsubmit="return confirm('入力された経歴を登録しますか？');">
             @csrf
             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+            <input type="hidden" name="activeTab" :value="activeTab">
 
             {{-- カテゴリ選択 --}}
             <div>
@@ -70,6 +71,7 @@
         <form id="careerAdminForm" action="{{ route('admin.talent.career.store') }}" method="POST" class="mt-6 space-y-6" onsubmit="return confirm('入力内容を保存しますか？');">
             @csrf
             <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+            <input type="hidden" name="activeTab" :value="activeTab">
             <input type="hidden" id="CAREER_ID" name="CAREER_ID" value="">
             {{-- editCareer関数で 'PUT' メソッドを挿入する場所 --}}
 
@@ -174,6 +176,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <input type="hidden" name="TALENT_ID" value="{{ $talent->TALENT_ID }}">
+                                                    <input type="hidden" name="activeTab" value="career">
                                                     <input type="hidden" name="CAREER_ID" value="{{ $career->CAREER_ID }}">
                                                     <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-900">削除</button>
                                                 </form>

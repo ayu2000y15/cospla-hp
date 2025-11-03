@@ -70,7 +70,7 @@ class AdminController extends Controller
         //タレント一覧
         $talentList = Talent::orderBy('PRIORITY')->orderBy('LAYER_NAME')->get();
         //タグ登録・削除
-        $tagList = Tag::all()->sortBy('TAG_ID');
+        $tagList = Tag::all()->sortBy('SORT_ORDER');
         //経歴カテゴリ登録・削除
         $careerList = CareerCategory::all()->sortBy('CAREER_CATEGORY_ID');
         //問い合わせカテゴリ登録・削除

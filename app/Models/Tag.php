@@ -15,6 +15,7 @@ class Tag extends Model
     protected $fillable = [
         'TAG_NAME',
         'TAG_COLOR',
+        'SORT_ORDER',
         'SPARE1',
         'SPARE2',
         'DEL_FLG'
