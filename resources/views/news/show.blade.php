@@ -28,7 +28,11 @@
                 {{-- News Content --}}
                 <div class="prose max-w-none prose-lg text-gray-700 leading-relaxed">
                     <p>
-                        {!! nl2br(e($newsItem->CONTENT)) !!}
+                        {!! nl2br(preg_replace(
+        '/(https?:\/\/[^\s<]+)/i',
+        '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">$1</a>',
+        e($newsItem->CONTENT)
+    )) !!}
                     </p>
                 </div>
 
